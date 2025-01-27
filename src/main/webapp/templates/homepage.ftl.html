@@ -1,0 +1,21 @@
+
+
+<#if logininfo??>
+<h2>Welcome back, ${logininfo.username} </h2>
+<p>You IP address is: ${logininfo.ip} </p>
+<p>Your connection started on: ${logininfo.sessionStartTs.format('dd/MM/yyyy HH:mm:ss')}</p>
+<p>Now you can access both</p>
+<ul>
+    <li>the <a href='secured'>secured page</a></li>
+    <li>the <a href='public'>public page</a></li>
+</ul>
+
+<#else>
+<h2>Welcome, anonymous user</h2>
+<p>You can try to access</p>
+<ul>
+    <li>the <a href='secured'>secured page</a></li>
+    <li>the <a href='public'>public page</a></li>
+</ul>
+
+</#if>
