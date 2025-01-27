@@ -1,0 +1,18 @@
+<h1>Articles available</h1>
+<#if (articles?size > 0)>
+<ul>
+    <#list articles as article>
+    <li><b>${article.title}</b>
+        <br/><em>by ${article.author.name} ${article.author.surname}</em>
+        <br/><small>
+        <#if article.issue??>
+        published on issue #${article.issue.number}
+        <#else>
+        <em>unpublished</em>
+        </#if>
+        </small>
+        </li>
+    </#list>
+</ul>
+</#if>
+

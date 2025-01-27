@@ -1,0 +1,8 @@
+<h1>Sample Application</h1>
+<#if logininfo??>
+Logged as:  ${logininfo.username} (<a href="logout?referrer=${thispageurl?url}">logout</a>)
+<#else>
+<em>Not logged in</em> (<a href="login?referrer=${thispageurl?url}">login</a>)
+</#if>
+<p><a href="homepage">Go to homepage</a></p></body>
+<hr/>
