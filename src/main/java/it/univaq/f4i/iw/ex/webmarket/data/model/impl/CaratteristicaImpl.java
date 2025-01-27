@@ -7,7 +7,6 @@ import it.univaq.f4i.iw.framework.data.DataItemImpl;
 
 public class CaratteristicaImpl extends DataItemImpl<Integer> implements Caratteristica{
 
-    private int id;
     private String nome;
     private Categoria categoria;
     
@@ -17,20 +16,19 @@ public class CaratteristicaImpl extends DataItemImpl<Integer> implements Caratte
         categoria = null;
     }
 
-    public CaratteristicaImpl(int id, String nome, Categoria categoria) {
-        this.id= id;
+    public CaratteristicaImpl(String nome, Categoria categoria) {
         this.nome= nome;
         this.categoria= categoria;
     }
 
     @Override
     public int getId() {
-        return id;
+        return this.getKey();
     }
 
     @Override
     public void setId(int id) {
-        this.id= id;
+        this.setKey(id);
     }
 
     @Override

@@ -6,36 +6,32 @@ import it.univaq.f4i.iw.framework.data.DataItemImpl;
 import java.util.List;
 
 
-
-
 public class CategoriaImpl extends DataItemImpl<Integer> implements Categoria {
 
-    private int id;
     private String nome;
-    private Integer padre; //  permette valori nulli
+    private Integer padre;
     private List<Caratteristica> caratteristiche;
 
-    // Costruttori
+
     public CategoriaImpl() {
         super();
         nome = "";
         padre = null;
     }
 
-    public CategoriaImpl(int id, String nome, int padre) {
-        this.id= id;
+    public CategoriaImpl(String nome, int padre) {
         this.nome= nome;
         this.padre= padre;
     }
 
     @Override
     public int getId() {
-        return id;
+        return this.getKey();
     }
 
     @Override
     public void setId(int id) {
-        this.id=id;
+        this.setKey(id);
     }
 
     @Override
