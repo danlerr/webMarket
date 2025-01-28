@@ -23,7 +23,7 @@ public class RichiestaImpl extends DataItemImpl<Integer> implements Richiesta {
         super();
         this.note = "";
         this.stato = StatoRichiesta.IN_ATTESA; // Stato di default
-        this.data = new Date();
+        this.data = null;
         this.codiceRichiesta = "";
         this.ordinante = null;
         this.tecnico = null;
