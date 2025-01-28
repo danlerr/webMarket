@@ -15,7 +15,7 @@ public interface CategoriaDAO {
 
     void deleteCategoria(Categoria categoria) throws DataException;
     
-//---------------------------------CRUD-------------------------------
+//----------------------------------------------------------------
 
 }
 

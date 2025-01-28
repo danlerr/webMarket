@@ -73,6 +73,7 @@ public class CategoriaDAO_MySQL extends DAO implements CategoriaDAO {
         super.destroy();
     }
 
+//--------------------------CRUD--------------------------------------------
     /**
      * Crea una nuova istanza di Categoria.
      * 
@@ -184,4 +185,5 @@ public class CategoriaDAO_MySQL extends DAO implements CategoriaDAO {
             throw new DataException("Unable to delete Categoria", ex);
         }
     }
+//----------------------------------------------------------------------
 }
