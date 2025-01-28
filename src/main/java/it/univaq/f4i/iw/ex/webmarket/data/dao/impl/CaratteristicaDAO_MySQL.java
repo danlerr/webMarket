@@ -4,7 +4,6 @@ import it.univaq.f4i.iw.ex.webmarket.data.dao.CaratteristicaDAO;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Caratteristica;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Categoria;
 import it.univaq.f4i.iw.ex.webmarket.data.model.impl.proxy.CaratteristicaProxy;
-import it.univaq.f4i.iw.examples.application.ApplicationDataLayer;
 import it.univaq.f4i.iw.framework.data.DAO;
 import it.univaq.f4i.iw.framework.data.DataException;
 import it.univaq.f4i.iw.framework.data.DataLayer;
@@ -13,8 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
+
 
 public class CaratteristicaDAO_MySQL extends DAO implements CaratteristicaDAO {
 
