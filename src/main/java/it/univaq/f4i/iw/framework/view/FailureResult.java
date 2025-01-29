@@ -13,7 +13,7 @@
  * the class uses simple http errors.
  * 
  */
-package it.univaq.f4i.iw.framework.view;
+package it.univaq.f4i.iw.framework.result;
 
 import java.io.IOException;
 import java.util.logging.Level;

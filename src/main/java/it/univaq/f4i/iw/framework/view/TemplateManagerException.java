@@ -1,4 +1,4 @@
-package it.univaq.f4i.iw.framework.view;
+package it.univaq.f4i.iw.framework.result;
 
 /**
  *

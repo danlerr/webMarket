@@ -8,7 +8,7 @@
  * (as downloadable files)
  * 
  */
-package it.univaq.f4i.iw.framework.view;
+package it.univaq.f4i.iw.framework.result;
 
 import java.io.File;
 import java.io.FileInputStream;
