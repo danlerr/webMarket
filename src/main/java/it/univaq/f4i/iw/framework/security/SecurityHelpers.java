@@ -7,13 +7,12 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
+
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.*;
 
 public class SecurityHelpers {
 
@@ -153,6 +152,21 @@ public class SecurityHelpers {
         return s;
     }
 
+    public static boolean accessControl(String requestedPage, String tipo) {
+    requestedPage = requestedPage.toLowerCase();
+
+    // Mappa che associa ogni ruolo alle pagine consentite
+    Map<String, List<String>> rolePages = new HashMap<>();
+    rolePages.put("AMMINISTRATORE", Arrays.asList("/homepageadmin", "/gestioneutenti", "/gestionecategorie", "/gestisci_caratteristiche", "categoria"));
+    rolePages.put("TECNICO", Arrays.asList("tecnico", "/invioproposta", "/richiesta_inattesa", "/cambio_password"));
+    rolePages.put("ORDINANTE", Arrays.asList("ord", "nuova_richiesta", "/motiva_rifiuto"));
+
+    // Controllo se il ruolo esiste nella mappa e verifico se la pagina richiesta è permessa
+    return rolePages.getOrDefault(tipo, Collections.emptyList())
+                    .stream()
+                    .anyMatch(requestedPage::contains);
+    }
+    
     //--------- CONNECTION SECURITY ------------
     public static String checkHttps(HttpServletRequest request) {
         //possiamo usare questa tecnica per controllare se la richiesta è
