@@ -152,6 +152,9 @@ public class SecurityHelpers {
         return s;
     }
 
+    /**
+     * Verifica se una determinata pagina è accessibile da un utente in base al suo ruolo.
+     */
     public static boolean accessControl(String requestedPage, String tipo) {
     requestedPage = requestedPage.toLowerCase();
 
@@ -166,7 +169,7 @@ public class SecurityHelpers {
                     .stream()
                     .anyMatch(requestedPage::contains);
     }
-    
+
     //--------- CONNECTION SECURITY ------------
     public static String checkHttps(HttpServletRequest request) {
         //possiamo usare questa tecnica per controllare se la richiesta è
