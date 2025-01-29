@@ -6,7 +6,6 @@ import it.univaq.f4i.iw.framework.data.DataException;
 
 public interface CategoriaDAO {
 
-//---------------------------------CRUD-------------------------------
     Categoria createCategoria();
 
     Categoria getCategoria(int categoria_key) throws DataException;
@@ -15,8 +14,6 @@ public interface CategoriaDAO {
 
     void deleteCategoria(Categoria categoria) throws DataException;
     
-//----------------------------------------------------------------
-
 }
 
 

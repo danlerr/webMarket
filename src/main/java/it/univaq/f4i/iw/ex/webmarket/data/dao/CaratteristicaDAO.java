@@ -6,7 +6,6 @@ import it.univaq.f4i.iw.framework.data.DataException;
 
 public interface CaratteristicaDAO {
 
-//---------------------------------CRUD-------------------------------
     Caratteristica createCaratteristica();
 
     Caratteristica getCaratteristica(int Caratteristica_key) throws DataException;
@@ -15,5 +14,4 @@ public interface CaratteristicaDAO {
 
     void deleteCaratteristica(int caratteristica_key) throws DataException;
 
-//----------------------------------------------------------------
 }

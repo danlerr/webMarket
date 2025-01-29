@@ -4,7 +4,6 @@ package it.univaq.f4i.iw.ex.webmarket.data.dao.impl;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import it.univaq.f4i.iw.ex.webmarket.data.dao.CategoriaDAO;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Categoria;
 import it.univaq.f4i.iw.ex.webmarket.data.model.impl.proxy.CategoriaProxy;
@@ -12,15 +11,11 @@ import it.univaq.f4i.iw.framework.data.DAO;
 import it.univaq.f4i.iw.framework.data.DataException;
 import it.univaq.f4i.iw.framework.data.DataItemProxy;
 import it.univaq.f4i.iw.framework.data.DataLayer;
-import it.univaq.f4i.iw.framework.data.OptimisticLockException;
 
 public class CategoriaDAO_MySQL extends DAO implements CategoriaDAO {
 
-    private PreparedStatement sCategoriaByID; // Query per recuperare una categoria per ID
-    private PreparedStatement iCategoria;    // Query per inserire una nuova categoria
-    private PreparedStatement uCategoria;    // Query per aggiornare una categoria
-    private PreparedStatement dCategoria;    // Query per eliminare una categoria
-
+    private PreparedStatement sCategoria, iCategoria, uCategoria, dCategoria;
+    
     /**
      * Costruttore della classe.
      * 
@@ -40,15 +35,19 @@ public class CategoriaDAO_MySQL extends DAO implements CategoriaDAO {
         try {
             super.init();
 
-            sCategoriaByID = connection.prepareStatement("SELECT * FROM categoria WHERE ID=?");
+            sCategoria = connection.prepareStatement(
+                "SELECT * FROM categoria WHERE ID=?"
+                );
             iCategoria = connection.prepareStatement(
                 "INSERT INTO categoria(nome, padre) VALUES (?, ?)", 
                 PreparedStatement.RETURN_GENERATED_KEYS
-            );
+                );
             uCategoria = connection.prepareStatement(
                 "UPDATE categoria SET nome=?, version=? WHERE ID=? AND version=?"
-            );
-            dCategoria = connection.prepareStatement("DELETE FROM categoria WHERE ID=?");
+                );
+            dCategoria = connection.prepareStatement(
+                "DELETE FROM categoria WHERE ID=?"
+                );
 
         } catch (SQLException e) {
             throw new DataException("Error initializing CategoriaDAO_MySQL", e);
@@ -63,7 +62,7 @@ public class CategoriaDAO_MySQL extends DAO implements CategoriaDAO {
     @Override
     public void destroy() throws DataException {
         try {
-            sCategoriaByID.close();
+            sCategoria.close();
             iCategoria.close();
             uCategoria.close();
             dCategoria.close();
@@ -73,7 +72,6 @@ public class CategoriaDAO_MySQL extends DAO implements CategoriaDAO {
         super.destroy();
     }
 
-//--------------------------CRUD--------------------------------------------
     /**
      * Crea una nuova istanza di Categoria.
      * 
@@ -87,25 +85,25 @@ public class CategoriaDAO_MySQL extends DAO implements CategoriaDAO {
     /**
      * Crea una CategoriaProxy a partire da un ResultSet.
      * 
-     * @param rs il ResultSet da cui creare la CategoriaProxy
+     * @param results il ResultSet da cui creare la CategoriaProxy
      * @return una nuova istanza di CategoriaProxy
      * @throws DataException se si verifica un errore durante la creazione
      */
-    private Categoria createCategoria(ResultSet rs) throws DataException {
+    private Categoria createCategoria(ResultSet results) throws DataException {
         try {
-            CategoriaProxy cp = (CategoriaProxy) createCategoria();
-            cp.setKey(rs.getInt("ID"));
-            cp.setNome(rs.getString("nome"));
-            cp.setPadre(rs.getInt("padre"));
-            cp.setVersion(rs.getLong("version"));
-            return cp;
-        } catch (SQLException ex) {
-            throw new DataException("Unable to create Categoria object from ResultSet", ex);
+            CategoriaProxy cproxy = (CategoriaProxy) createCategoria();
+            cproxy.setKey(results.getInt("ID"));
+            cproxy.setNome(results.getString("nome"));
+            cproxy.setPadre(results.getInt("padre"));
+            cproxy.setVersion(results.getLong("version"));
+            return cproxy;
+        } catch (SQLException exc) {
+            throw new DataException("Unable to create Categoria object from ResultSet", exc);
         }
     }
 
     /**
-     * Recupera una categoria dato il suo ID.
+     * Recupera categoria dato il suo ID.
      * 
      * @param categoria_key l'ID della categoria
      * @return la categoria corrispondente all'ID
@@ -115,8 +113,8 @@ public class CategoriaDAO_MySQL extends DAO implements CategoriaDAO {
     public Categoria getCategoria(int categoria_key) throws DataException {
         Categoria categoria = null;
         try {
-            sCategoriaByID.setInt(1, categoria_key);
-            try (ResultSet rs = sCategoriaByID.executeQuery()) {
+            sCategoria.setInt(1, categoria_key);
+            try (ResultSet rs = sCategoria.executeQuery()) {
                 if (rs.next()) {
                     categoria = createCategoria(rs);
                 }
@@ -134,37 +132,29 @@ public class CategoriaDAO_MySQL extends DAO implements CategoriaDAO {
      * @throws DataException se si verifica un errore durante la memorizzazione
      */
     @Override
+
     public void storeCategoria(Categoria categoria) throws DataException {
         try {
-            if (categoria.getKey() != null && categoria.getKey() > 0) { // Aggiornamento
-                if (categoria instanceof CategoriaProxy && !((CategoriaProxy) categoria).isModified()) {
-                    return; // Nessuna modifica, salvataggio non necessario
-                }
-                uCategoria.setString(1, categoria.getNome());
-                long oldVersion = categoria.getVersion();
-                long newVersion = oldVersion + 1;
-                uCategoria.setLong(2, newVersion);
-                uCategoria.setInt(3, categoria.getKey());
-                uCategoria.setLong(4, oldVersion);
-                if (uCategoria.executeUpdate() == 0) {
-                    throw new OptimisticLockException(categoria);
-                } else {
-                    categoria.setVersion(newVersion);
-                }
-            } else { // Inserimento
+            // Logica per l'inserimento della categoria
+            if (categoria.getKey() == null || categoria.getKey() <= 0) { // Se la categoria non ha una chiave, è un inserimento
                 iCategoria.setString(1, categoria.getNome());
                 iCategoria.setInt(2, categoria.getPadre());
+
+                // Esegui l'inserimento
                 if (iCategoria.executeUpdate() == 1) {
                     try (ResultSet keys = iCategoria.getGeneratedKeys()) {
                         if (keys.next()) {
-                            categoria.setKey(keys.getInt(1));
+                            categoria.setKey(keys.getInt(1)); // Imposta la chiave generata
                         }
                     }
                 }
             }
+            
+            // Se la categoria è un DataItemProxy, segna come non modificata
             if (categoria instanceof DataItemProxy) {
                 ((DataItemProxy) categoria).setModified(false);
             }
+
         } catch (SQLException ex) {
             throw new DataException("Unable to store Categoria", ex);
         }
@@ -185,5 +175,4 @@ public class CategoriaDAO_MySQL extends DAO implements CategoriaDAO {
             throw new DataException("Unable to delete Categoria", ex);
         }
     }
-//----------------------------------------------------------------------
 }

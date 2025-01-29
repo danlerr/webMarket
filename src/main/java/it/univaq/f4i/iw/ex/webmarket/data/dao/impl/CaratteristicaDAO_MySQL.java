@@ -16,7 +16,7 @@ import java.sql.Statement;
 
 public class CaratteristicaDAO_MySQL extends DAO implements CaratteristicaDAO {
 
-    private PreparedStatement sCaratteristicaByID, sCaratteristiche, iCaratteristica, uCaratteristica, dCaratteristica;
+    private PreparedStatement sCaratteristica, sCaratteristiche, iCaratteristica, uCaratteristica, dCaratteristica;
 
     public CaratteristicaDAO_MySQL(DataLayer d) {
         super(d);
@@ -27,13 +27,21 @@ public class CaratteristicaDAO_MySQL extends DAO implements CaratteristicaDAO {
         try {
             super.init();
 
-            sCaratteristicaByID = connection.prepareStatement("SELECT * FROM caratteristica WHERE ID = ?");
-            sCaratteristiche = connection.prepareStatement("SELECT * FROM caratteristica");
+            sCaratteristica = connection.prepareStatement(
+                "SELECT * FROM caratteristica WHERE ID = ?"
+                );
+            sCaratteristiche = connection.prepareStatement(
+                "SELECT * FROM caratteristica"
+                );
             iCaratteristica = connection.prepareStatement(
-                "INSERT INTO caratteristica (nome, categoria_id) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS);
+                "INSERT INTO caratteristica (nome, categoria_id) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS
+                );
             uCaratteristica = connection.prepareStatement(
-                "UPDATE caratteristica SET nome=?, categoria_id=?, version=? WHERE ID=? AND version=?");
-            dCaratteristica = connection.prepareStatement("DELETE FROM caratteristica WHERE ID=?");
+                "UPDATE caratteristica SET nome=?, categoria_id=?, version=? WHERE ID=? AND version=?"
+                );
+            dCaratteristica = connection.prepareStatement(
+                "DELETE FROM caratteristica WHERE ID=?"
+                );
         } catch (SQLException ex) {
             throw new DataException("Error initializing caratteristica data layer", ex);
         }
@@ -42,7 +50,7 @@ public class CaratteristicaDAO_MySQL extends DAO implements CaratteristicaDAO {
     @Override
     public void destroy() throws DataException {
         try {
-            sCaratteristicaByID.close();
+            sCaratteristica.close();
             sCaratteristiche.close();
             iCaratteristica.close();
             uCaratteristica.close();
@@ -53,7 +61,6 @@ public class CaratteristicaDAO_MySQL extends DAO implements CaratteristicaDAO {
         super.destroy();
     }
 
-//--------------------------CRUD--------------------------------------------
 /**
      * Crea una nuova istanza di Caratteristica.
      * 
@@ -69,21 +76,21 @@ public class CaratteristicaDAO_MySQL extends DAO implements CaratteristicaDAO {
     /**
      * Crea una CaratteristicaProxy a partire da un ResultSet.
      * 
-     * @param rs il ResultSet da cui creare la CaratteristicaProxy
+     * @param results il ResultSet da cui creare la CaratteristicaProxy
      * @return una nuova istanza di CaratteristicaProxy
      * @throws DataException se si verifica un errore durante la creazione
      */
-    private CaratteristicaProxy createCaratteristica(ResultSet rs) throws DataException {
+    private CaratteristicaProxy createCaratteristica(ResultSet results) throws DataException {
         try {
-            CaratteristicaProxy c = (CaratteristicaProxy) createCaratteristica();
-            c.setKey(rs.getInt("ID"));
-            c.setNome(rs.getString("nome"));
-            c.setVersion(rs.getLong("version"));
-             int categoriaId = rs.getInt("categoria_id");
+            CaratteristicaProxy cProxy = (CaratteristicaProxy) createCaratteristica();
+            cProxy.setKey(results.getInt("ID"));
+            cProxy.setNome(results.getString("nome"));
+            cProxy.setVersion(results.getLong("version"));
+             int categoriaId = results.getInt("categoria_id");
             Categoria categoria = ((ApplicationDataLayer) getDataLayer()).getCategoriaDAO().getCategoria(categoriaId);
-            c.setCategoria(categoria);
+            cProxy.setCategoria(categoria);
 
-            return c;
+            return cProxy;
         } catch (SQLException ex) {
             throw new DataException("Unable to create caratteristica object from ResultSet", ex);
         }
@@ -104,8 +111,8 @@ public class CaratteristicaDAO_MySQL extends DAO implements CaratteristicaDAO {
             caratteristica = dataLayer.getCache().get(Caratteristica.class, caratteristica_key);
         } else {
             try {
-                sCaratteristicaByID.setInt(1, caratteristica_key);
-                try (ResultSet rs = sCaratteristicaByID.executeQuery()) {
+                sCaratteristica.setInt(1, caratteristica_key);
+                try (ResultSet rs = sCaratteristica.executeQuery()) {
                     if (rs.next()) {
                         caratteristica = createCaratteristica(rs);
                         dataLayer.getCache().add(Caratteristica.class, caratteristica);
@@ -177,5 +184,4 @@ public class CaratteristicaDAO_MySQL extends DAO implements CaratteristicaDAO {
             throw new DataException("Unable to delete caratteristica", ex);
         }
     }
-//----------------------------------------------------------------------
 }
