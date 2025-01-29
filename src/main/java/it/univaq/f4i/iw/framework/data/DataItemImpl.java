@@ -5,6 +5,11 @@ package it.univaq.f4i.iw.framework.data;
  * @author giuse
  * @param <KT> the key type
  */
+/**
+ * Implementazione base dell'interfaccia DataItem.
+ * Rappresenta un oggetto che può essere memorizzato nel database e tracciato nel tempo
+ * tramite una chiave univoca e un numero di versione.
+ */
 public class DataItemImpl<KT> implements DataItem<KT> {
 
     private KT key;

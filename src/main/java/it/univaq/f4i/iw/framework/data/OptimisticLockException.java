@@ -4,6 +4,14 @@ package it.univaq.f4i.iw.framework.data;
  *
  * @author giuse
  */
+/**
+ * Eccezione che viene sollevata quando si verifica un conflitto di versione durante 
+ * l'operazione di lock ottimista, ossia quando la versione di un oggetto non corrisponde 
+ * a quella attesa, indicando che l'oggetto è stato modificato da un altro processo.
+ * 
+ * Estende {@link DataException} e fornisce informazioni specifiche sull'oggetto coinvolto 
+ * nel conflitto di versione.
+ */
 public class OptimisticLockException extends DataException {
 
     private DataItem item;
