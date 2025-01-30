@@ -20,6 +20,8 @@ public class login extends BaseController {
 
     private void action_default(HttpServletRequest request, HttpServletResponse response) throws IOException, TemplateManagerException {
         TemplateResult result = new TemplateResult(getServletContext());
+        //Il referrer è un parametro passato all'URL che indica da quale pagina l'utente proviene.
+        //Viene usato per reindirizzare l'utente alla pagina originale dopo il login, invece di mandarlo sempre a una homepage generica.
         request.setAttribute("referrer", request.getParameter("referrer"));
         result.activate("login.ftl.html", request, response);
        
@@ -72,10 +74,7 @@ public class login extends BaseController {
             }
             
         }
-        //se la validazione fallisce...
-        //if the validation fails...
-        //request.setAttribute("error", "Email o password non corretti");
-        //handleError("Login failed", request, response);
+        
     }
 
     /**
