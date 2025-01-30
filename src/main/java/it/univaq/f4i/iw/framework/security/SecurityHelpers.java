@@ -12,6 +12,9 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
+import it.univaq.f4i.iw.ex.webmarket.data.model.TipologiaUtente;
+
 import java.util.*;
 
 public class SecurityHelpers {
@@ -24,7 +27,19 @@ public class SecurityHelpers {
     //If the session exists and is valid, it is returned, otherwise
     //the session is invalidated and the method returns null
     public static HttpSession checkSession(HttpServletRequest r) {
-        return checkSession(r, false);
+        HttpSession session = checkSession(r, false);
+    
+        if (session != null) {
+            String tipo = (String) session.getAttribute("tipo");
+            String requestedPage = r.getRequestURI();
+
+            if (!accessControl(requestedPage, tipo)) {
+                session.invalidate();  //Invalidazione sessione se l'utente non può accedere a quella pagina
+                return null;
+            }
+        }
+
+        return session;
     }
 
     public static HttpSession checkSession(HttpServletRequest r, boolean loginAgeCheck) {
@@ -105,13 +120,15 @@ public class SecurityHelpers {
         }
     }
 
-    public static HttpSession createSession(HttpServletRequest request, String username, int userid) {
+    public static HttpSession createSession(HttpServletRequest request, String username, int userid, TipologiaUtente tipologia) {
         //se una sessione è già attiva, rimuoviamola e creiamone una nuova
         //if a session already exists, remove it and recreate a new one
         disposeSession(request);
         HttpSession s = request.getSession(true);
         s.setAttribute("username", username);
         s.setAttribute("userid", userid);
+        s.setAttribute("tipo", tipologia.toString());
+        
         //
         s.setAttribute("ip", request.getRemoteHost());
         //
@@ -125,6 +142,7 @@ public class SecurityHelpers {
             s.invalidate();
         }
     }
+
 
     //questo metodo rigenera la sessione invalidando quella corrente e
     //creandone una nuova con gli stessi attributi. Può essere utile per 
