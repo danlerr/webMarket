@@ -16,11 +16,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class RichiestaDAO_MySQL extends DAO implements RichiestaDAO {
 
     private PreparedStatement sRichiestaByID;
+    private PreparedStatement sRichiesteByUtente;
     private PreparedStatement iRichiesta;
     private PreparedStatement uRichiesta;
     private PreparedStatement dRichiesta;
@@ -41,8 +44,13 @@ public class RichiestaDAO_MySQL extends DAO implements RichiestaDAO {
             super.init();
 
             // PreparedStatement per recuperare una Richiesta per ID
-            sRichiestaByID = connection.prepareStatement("SELECT * FROM richiesta WHERE ID = ?");
-
+            sRichiestaByID = connection.prepareStatement(
+                "SELECT * FROM richiesta WHERE ID = ?"
+                );
+            // PreparedStatment per recuperare le richieste dato userId
+            sRichiesteByUtente = connection.prepareStatement(
+                "SELECT * FROM richiesta WHERE utente = ?"
+                );
             // PreparedStatement per inserire una nuova Richiesta
             iRichiesta = connection.prepareStatement(
                 "INSERT INTO richiesta (note, stato, data, codice_richiesta, utente, tecnico, categoria_id, version) " +
@@ -240,5 +248,21 @@ public class RichiestaDAO_MySQL extends DAO implements RichiestaDAO {
         } catch (SQLException ex) {
             throw new DataException("Impossibile eliminare la Richiesta", ex);
         }
+    }
+
+    @Override
+    public List<Richiesta> getRichiesteByUtente(int utente_key) throws DataException {
+        List<Richiesta> result = new ArrayList<>();
+        try {
+            sRichiesteByUtente.setInt(1, utente_key);
+            try (ResultSet rs = sRichiesteByUtente.executeQuery()) {
+                while (rs.next()) {
+                    result.add(getRichiesta(rs.getInt("ID")));
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DataException("Unable to load RichiesteOrdine by Utente", ex);
+        }
+        return result;
     }
 }
