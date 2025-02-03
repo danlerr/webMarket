@@ -17,17 +17,23 @@ public class Home extends BaseController {
 
     private void action_default(HttpServletRequest request, HttpServletResponse response, int userId) throws IOException, ServletException, DataException, TemplateManagerException {
         TemplateResult r = new TemplateResult(getServletContext());
-        request.setAttribute("page_title", "Ordinante Dashboard");
+        request.setAttribute("page_title", "Dashboard");
         
+        //notifiche per richieste
+
         //notifiche per proposte
-        boolean proposte = ((ApplicationDataLayer) request.getAttribute("datalayer")).getPropostaDAO().notificaProposteOrd(userId);
-        System.out.println(proposte);
-        request.setAttribute("proposte", proposte);
+        //boolean proposte = ((ApplicationDataLayer) request.getAttribute("datalayer")).getPropostaDAO().notificaProposteOrd(userId);
+        //System.out.println(proposte);
+        //request.setAttribute("proposte", proposte);
         
         //notifiche per ordini 
-        boolean ordini = ((ApplicationDataLayer) request.getAttribute("datalayer")).getOrdineDAO().notificaOrdineOrd(userId);
-        request.setAttribute("ordini", ordini);
-        r.activate("homeordinante.ftl.html", request, response);
+        //boolean ordini = ((ApplicationDataLayer) request.getAttribute("datalayer")).getOrdineDAO().notificaOrdineOrd(userId);
+        //request.setAttribute("ordini", ordini);
+
+        r.activate("home.ftl.html", request, response);
+    
+        //top tecnici 
+
     }
     
     @Override
@@ -42,7 +48,7 @@ public class Home extends BaseController {
             return;
 
         } 
-         // Recupero l'ID dell'utente dalla sessione
+         // Recupero l'id dell'utente dalla sessione
          int userId = (int) session.getAttribute("userid");
          Utente u = ((ApplicationDataLayer) request.getAttribute("datalayer")).getUtenteDAO().getUtente(userId);
         

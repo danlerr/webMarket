@@ -34,7 +34,7 @@ public class login extends BaseController {
         if (!username.isEmpty() && !password.isEmpty()) {
             try {
                 
-                System.out.println("ciao "+username);
+                //System.out.println("ciao "+username);
                 
                 Utente u = ((ApplicationDataLayer) request.getAttribute("datalayer")).getUtenteDAO().getUtenteByUsername(username);
                 
@@ -43,22 +43,28 @@ public class login extends BaseController {
                     SecurityHelpers.createSession(request, username, u.getKey(), u.getTipologiaUtente());
            
                     String redirectPage;
-                    redirectPage = switch (u.getTipologiaUtente()) {
-    
-                        case ORDINANTE -> "homepageordinante";
-                        case TECNICO -> "homepagetecnico";
-                        case AMMINISTRATORE -> "homepageadmin";
-                        default -> "login";
-                    };
+                    switch (u.getTipologiaUtente()) {
+                        case ORDINANTE:
+                            redirectPage = "Home";
+                            break;
+                        case TECNICO:
+                            redirectPage = "Home";
+                            break;
+                        case AMMINISTRATORE:
+                            redirectPage = "homepageadmin";
+                            break;
+                        default:
+                            redirectPage = "login";
+                    }
                     
                     String referrer = request.getParameter("referrer");
                  
-
+                //Se l’utente stava cercando di accedere a una pagina prima del login, tenta di reindirizzarlo lì.
                 if (referrer != null && SecurityHelpers.accessControl(referrer, u.getTipologiaUtente().toString())) {
-                        response.sendRedirect(referrer);
+                        response.sendRedirect(referrer);//Se il referrer è valido, lo porta lì.
 
                     } else if (referrer != null) {
-                        System.out.println("Referrer non autorizzato, redirigo alla homepage.");
+                        //Se il referrer non è valido, lo manda alla homepage in base al tipo di utente.
                         response.sendRedirect(redirectPage);
                     }else {
                         response.sendRedirect(redirectPage);
@@ -69,6 +75,7 @@ public class login extends BaseController {
                     action_default(request, response);
 
                }
+               //Gestione errori DB (scrittura nei log).
             } catch (DataException ex) {
                 Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -99,9 +106,7 @@ public class login extends BaseController {
             }
         } catch (IOException | TemplateManagerException ex) {
             handleError(ex, request, response);
-        } catch (NoSuchAlgorithmException ex) {
-            Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvalidKeySpecException ex) {
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
             Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
