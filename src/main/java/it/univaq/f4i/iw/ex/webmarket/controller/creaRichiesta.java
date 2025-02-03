@@ -38,7 +38,7 @@ public class creaRichiesta extends BaseController {
         request.setAttribute("subcategorie", ((ApplicationDataLayer) request.getAttribute("datalayer")).getCategoriaDAO().getCategorieByPadre(n));
 
     }
-    
+//CREA RICHIESTA + CREACARATTERISTICARICHIESTA
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         try {

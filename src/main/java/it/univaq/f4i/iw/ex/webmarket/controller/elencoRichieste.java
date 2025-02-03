@@ -6,24 +6,22 @@ import it.univaq.f4i.iw.framework.result.TemplateManagerException;
 import it.univaq.f4i.iw.framework.result.TemplateResult;
 import it.univaq.f4i.iw.framework.security.SecurityHelpers;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-public class Proposte extends BaseController {
+public class elencoRichieste extends BaseController {
 
     private void action_default(HttpServletRequest request, HttpServletResponse response, int user) throws IOException, ServletException, TemplateManagerException, DataException {
-        TemplateResult res = new TemplateResult(getServletContext());
-        request.setAttribute("page_title", "Proposte Ordinante");
-
         
-        //creo un nuovo dao che contenente una lista di proposte ricevute dall'ordinante
-        request.setAttribute("proposte", ((ApplicationDataLayer) request.getAttribute("datalayer")).getPropostaDAO().getProposteByUtente(user));
+        TemplateResult res = new TemplateResult(getServletContext());
+        request.setAttribute("page_title", "Richieste Ordinante");
+        request.setAttribute("richieste", ((ApplicationDataLayer) request.getAttribute("datalayer")).getRichiestaOrdineDAO().getRichiesteByUtente(user));
 
-        res.activate("proposte_ordinante.ftl.html", request, response);
+        res.activate("richieste_ordinante.ftl.html", request, response);
     }
 
     @Override
@@ -35,25 +33,21 @@ public class Proposte extends BaseController {
             response.sendRedirect("login");
             return;
         }
-
-        // Recupero l'ID del tecnico dalla sessione
-        int userId = (int) session.getAttribute("userid");
+        // Recupero l'ID dell'utente dalla sessione
+         int userId = (int) session.getAttribute("userid");
         
         //ho aggiunto id perchè dobbiamo filtrare le richieste che ha fatto l'utente interessato
         action_default(request, response, userId);
 
     } catch (IOException | TemplateManagerException ex) {
         handleError(ex, request, response);
-    }    catch (DataException ex) {
-            Logger.getLogger(Richieste.class.getName()).log(Level.SEVERE, null, ex);
+    }   catch (DataException ex) {
+            Logger.getLogger(elencoRichieste.class.getName()).log(Level.SEVERE, null, ex);
         }
-}
-
-
-    // Descrizione della servlet
+    }
+   
     @Override
     public String getServletInfo() {
-        return "Servlet per le proposte ricevute dall'ordinante";
+        return "Servlet per le richieste di un utente";
     }
-
 }
