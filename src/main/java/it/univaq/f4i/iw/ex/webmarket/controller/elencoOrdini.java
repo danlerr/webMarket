@@ -4,11 +4,13 @@ import it.univaq.f4i.iw.ex.webmarket.data.dao.impl.ApplicationDataLayer;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Ordine;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Recensione;
 import it.univaq.f4i.iw.ex.webmarket.data.model.StatoRichiesta;
+import it.univaq.f4i.iw.ex.webmarket.data.model.Utente;
 import it.univaq.f4i.iw.framework.data.DataException;
 import it.univaq.f4i.iw.framework.result.TemplateManagerException;
 import it.univaq.f4i.iw.framework.result.TemplateResult;
 import it.univaq.f4i.iw.framework.security.SecurityHelpers;
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -18,98 +20,121 @@ import javax.servlet.http.HttpSession;
 
 public class ElencoOrdini extends BaseController {
 
-    private void action_default(HttpServletRequest request, HttpServletResponse response, int user) 
-            throws IOException, ServletException, TemplateManagerException, DataException {
-      
-        TemplateResult res = new TemplateResult(getServletContext());
-        request.setAttribute("page_title", "Ordini");
+    /**
+     * Azione di default: mostra l'elenco degli ordini e il loro stato.
+     * Se l'utente è ordinante, nel template verrà mostrato (per ogni ordine)
+     * il bottone "recensisci tecnico" soltanto se lo stato della richiesta è "RISOLTA".
+     * Se l'utente è tecnico, il bottone non verrà visualizzato.
+     */
+    private void action_default(HttpServletRequest request, HttpServletResponse response, int user)
+        throws IOException, ServletException, TemplateManagerException, DataException {
+  
+    TemplateResult res = new TemplateResult(getServletContext());
+    request.setAttribute("page_title", "Elenco Ordini");
 
-        // Imposto nella request la lista degli ordini e delle proposte dell'utente
+    // Recupera l'utente per determinare la sua tipologia
+    Utente utente = ((ApplicationDataLayer) request.getAttribute("datalayer"))
+            .getUtenteDAO().getUtente(user);
+    // Imposta un flag per il template (true se l'utente è ordinante)
+    boolean isOrdinante = utente.getTipologiaUtente().equals("ORDINANTE");
+    request.setAttribute("isOrdinante", isOrdinante);
+
+    if (isOrdinante) {
+        // Per l'ordinante, recupera gli ordini ricevuti
         request.setAttribute("ordini", ((ApplicationDataLayer) request.getAttribute("datalayer"))
                 .getOrdineDAO().getOrdiniByUtente(user));
-        request.setAttribute("proposte", ((ApplicationDataLayer) request.getAttribute("datalayer"))
-                .getPropostaDAO().getProposteByUtente(user)); 
-        res.activate("ordini.ftl.html", request, response);
+    } else {
+        // Per il tecnico, recupera gli ordini gestiti dal tecnico.
+        // Si assume l'esistenza di un metodo apposito, ad esempio getOrdiniByTecnico(user)
+        request.setAttribute("ordini", ((ApplicationDataLayer) request.getAttribute("datalayer"))
+                .getOrdineDAO().getOrdiniByTecnico(user));
     }
     
+    res.activate("elencoOrdini.ftl.html", request, response);
+}
+
+
     /**
      * Azione per recensire il tecnico relativo ad un ordine.
-     * Questa azione è eseguita solo se la richiesta associata all'ordine ha stato "RISOLTA".
-     * 
-     * 
-     * - Il parametro "n" contiene l'id dell'ordine.
-     * - Il form di recensione invia anche il parametro "value" con il valore della recensione.
+     * Questa azione viene eseguita solo se:
+     *  - L'utente loggato è l'autore della richiesta (ordinante).
+     *  - Lo stato della richiesta collegata all'ordine è RISOLTA.
+     * Se l'utente non è ordinante (ad esempio è un tecnico) oppure la richiesta non è in stato RISOLTA,
+     * l'azione non viene eseguita.
+     *
+     * Il parametro "n" contiene l'id dell'ordine e il form invia il parametro "value" con il voto.
      */
     private void action_recensisciTecnico(HttpServletRequest request, HttpServletResponse response, int user) 
         throws IOException, ServletException, TemplateManagerException, DataException {
-    // Recupero l'id dell'ordine
-    int ordineId = Integer.parseInt(request.getParameter("n"));
-    // Recupero il valore della recensione dal parametro "value"
-    int value = Integer.parseInt(request.getParameter("value"));
-
-    // Recupero l'ordine dal DAO
-    Ordine ordine = ((ApplicationDataLayer) request.getAttribute("datalayer"))
-            .getOrdineDAO().getOrdine(ordineId);
-    
-    // Verifico che la richiesta collegata all'ordine sia in stato "RISOLTA"
-    if (ordine.getProposta().getRichiestaOrdine().getStato() != StatoRichiesta.RISOLTA) {
-        response.sendRedirect("ordini?error=Non+puoi+recensire+il+tecnico+per+questo+ordine");
-        return;
-    }
-    
-    // Controllo che l'utente loggato sia l'autore della richiesta
-    if (ordine.getProposta().getRichiestaOrdine().getAutore().getId() != user) {
-        response.sendRedirect("ordini?error=Non+sei+l'autore+della+richiesta");
-        return;
-    }
-    
-    // Verifico se l'utente ha già votato questo tecnico in una richiesta precedente
-    Recensione recensionePrecedente = ((ApplicationDataLayer) request.getAttribute("datalayer"))
-            .getRecensioneDAO().getRecensioneByAutoreDestinatario(
-                    ordine.getProposta().getRichiestaOrdine().getAutore(),
-                    ordine.getProposta().getRichiestaOrdine().getTecnico());
-    
-    if (recensionePrecedente != null) {
-        // L'utente ha già votato: verifichiamo se ha confermato l'aggiornamento del voto
-        String confirmUpdate = request.getParameter("confirmUpdate");
-        if ("true".equals(confirmUpdate)) {
-            // Aggiorno il voto con il nuovo valore
-            recensionePrecedente.setValore(value);
-            ((ApplicationDataLayer) request.getAttribute("datalayer"))
-                    .getRecensioneDAO().storeRecensione(recensionePrecedente);
-            response.sendRedirect("ordini?message=Recensione+aggiornata+con+successo");
-            return;
-        //******QUESTA PARTE FORSE NON SERVE*******/
-        } else {
-            // Non è stata confermata l'aggiornamento: 
-            // Imposto nella request la recensione esistente e il nuovo valore proposto,
-            // per mostrare un messaggio di conferma all'utente.
-            request.setAttribute("existingRecensione", recensionePrecedente);
-            request.setAttribute("newValue", value);
-            // Invia all'utente una view (ad es. un template FreeMarker) che mostra:
-            // "Hai già votato questo tecnico con il voto [valore_precedente]. Vuoi aggiornare il voto a [nuovo_valore]?"
-            // La view dovrà mostrare un form che, al submit, invia il parametro "confirmUpdate" impostato a "true".
-            TemplateResult res = new TemplateResult(getServletContext());
-            res.activate("conferma_aggiornamento_recensione.ftl.html", request, response);
+        
+        // Recupera l'utente loggato per verificare il ruolo
+        Utente utente = ((ApplicationDataLayer) request.getAttribute("datalayer"))
+                .getUtenteDAO().getUtente(user);
+        if (!utente.getTipologiaUtente().equals("ORDINANTE")) {
+            response.sendRedirect("ordini?error=Solo+l'ordinante+puo+recensire+il+tecnico");
             return;
         }
-        //******QUESTA PARTE FORSE NON SERVE*******/
-    } else {
-        // Nessuna recensione esistente: creo una nuova recensione
-        Recensione recensione = ((ApplicationDataLayer) request.getAttribute("datalayer"))
-                .getRecensioneDAO().createRecensione();
-        recensione.setValore(value);
-        recensione.setAutore(((ApplicationDataLayer) request.getAttribute("datalayer"))
-                .getUtenteDAO().getUtente(user));
-        recensione.setDestinatario(ordine.getProposta().getRichiestaOrdine().getTecnico());
         
-        ((ApplicationDataLayer) request.getAttribute("datalayer"))
-                .getRecensioneDAO().storeRecensione(recensione);
-        
-        response.sendRedirect("ordini?message=Recensione+inserita+con+successo");
-    }
-}
+        // Recupera l'id dell'ordine
+        int ordineId = Integer.parseInt(request.getParameter("n"));
+        // Recupera il valore della recensione dal parametro "value"
+        int value = Integer.parseInt(request.getParameter("value"));
 
+        // Recupera l'ordine dal DAO
+        Ordine ordine = ((ApplicationDataLayer) request.getAttribute("datalayer"))
+                .getOrdineDAO().getOrdine(ordineId);
+        
+        // Verifica che la richiesta collegata all'ordine sia in stato RISOLTA
+        if (ordine.getProposta().getRichiestaOrdine().getStato() != StatoRichiesta.RISOLTA) {
+            response.sendRedirect("ordini?error=Non+puoi+recensire+il+tecnico+per+questo+ordine");
+            return;
+        }
+        
+        // Controllo che l'utente loggato sia l'autore della richiesta
+        if (ordine.getProposta().getRichiestaOrdine().getAutore().getId() != user) {
+            response.sendRedirect("ordini?error=Non+sei+l'autore+della+richiesta");
+            return;
+        }
+        
+        // Verifica se l'utente ha già votato questo tecnico in una richiesta precedente
+        Recensione recensionePrecedente = ((ApplicationDataLayer) request.getAttribute("datalayer"))
+                .getRecensioneDAO().getRecensioneByAutoreDestinatario(
+                        ordine.getProposta().getRichiestaOrdine().getAutore(),
+                        ordine.getProposta().getRichiestaOrdine().getTecnico());
+        
+        if (recensionePrecedente != null) {
+            // L'utente ha già votato: verifichiamo se ha confermato l'aggiornamento del voto
+            String confirmUpdate = request.getParameter("confirmUpdate");
+            if ("true".equals(confirmUpdate)) {
+                // Aggiorno il voto con il nuovo valore
+                recensionePrecedente.setValore(value);
+                ((ApplicationDataLayer) request.getAttribute("datalayer"))
+                        .getRecensioneDAO().storeRecensione(recensionePrecedente);
+                response.sendRedirect("ordini?message=Recensione+aggiornata+con+successo");
+                return;
+            } else {
+                // Se non è stata confermata, inoltra ad una view per la conferma (opzionale)
+                request.setAttribute("existingRecensione", recensionePrecedente);
+                request.setAttribute("newValue", value);
+                TemplateResult res = new TemplateResult(getServletContext());
+                res.activate("conferma_aggiornamento_recensione.ftl.html", request, response);
+                return;
+            }
+        } else {
+            // Nessuna recensione esistente: creo una nuova recensione
+            Recensione recensione = ((ApplicationDataLayer) request.getAttribute("datalayer"))
+                    .getRecensioneDAO().createRecensione();
+            recensione.setValore(value);
+            recensione.setAutore(((ApplicationDataLayer) request.getAttribute("datalayer"))
+                    .getUtenteDAO().getUtente(user));
+            recensione.setDestinatario(ordine.getProposta().getRichiestaOrdine().getTecnico());
+            
+            ((ApplicationDataLayer) request.getAttribute("datalayer"))
+                    .getRecensioneDAO().storeRecensione(recensione);
+            
+            response.sendRedirect("ordini?message=Recensione+inserita+con+successo");
+        }
+    }
 
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -120,10 +145,8 @@ public class ElencoOrdini extends BaseController {
                 response.sendRedirect("login");
                 return;
             }
-            
-            // Recupero l'ID dell'utente dalla sessione
+            // Recupera l'ID dell'utente dalla sessione
             int userId = (int) session.getAttribute("userid");
-            // Controllo il parametro "action" per determinare quale azione eseguire
             String action = request.getParameter("action");
             if (action != null) {
                 if ("recensisciTecnico".equals(action)) {
@@ -131,10 +154,7 @@ public class ElencoOrdini extends BaseController {
                     return;
                 }
             }
-            
-            // Se nessuna azione specifica è richiesta, carico la pagina predefinita
             action_default(request, response, userId);
-
         } catch (IOException | TemplateManagerException ex) {
             handleError(ex, request, response);
         } catch (DataException ex) {

@@ -86,7 +86,7 @@ protected void processRequest(HttpServletRequest request, HttpServletResponse re
    
     @Override
     public String getServletInfo() {
-        return "Servlet per le richieste ";
+        return "Servlet per mostrare le richieste ";
     }
 }
 

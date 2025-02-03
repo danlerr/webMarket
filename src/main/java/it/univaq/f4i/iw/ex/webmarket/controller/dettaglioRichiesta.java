@@ -123,6 +123,6 @@ public class DettaglioRichiesta extends BaseController {
 
     @Override
     public String getServletInfo() {
-        return "Dettaglio richiesta ordinante servlet";
+        return "Dettaglio richiesta servlet";
     }
 }
