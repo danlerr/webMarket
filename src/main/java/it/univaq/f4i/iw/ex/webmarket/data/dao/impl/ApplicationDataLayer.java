@@ -1,5 +1,5 @@
 package it.univaq.f4i.iw.ex.webmarket.data.dao.impl;
-import it.univaq.f4i.iw.ex.webmarket.controller.GestioneCategoria;
+import it.univaq.f4i.iw.ex.webmarket.controller.ElencoCategorie;
 import it.univaq.f4i.iw.ex.webmarket.data.dao.CaratteristicaDAO;
 import it.univaq.f4i.iw.ex.webmarket.data.dao.CategoriaDAO;
 import it.univaq.f4i.iw.ex.webmarket.data.dao.UtenteDAO;
@@ -36,7 +36,7 @@ public class ApplicationDataLayer extends DataLayer {
         registerDAO(Ordine.class, new OrdineDAO_MySQL(this));
         registerDAO(PropostaAcquisto.class, new PropostaDAO_MySQL(this));
         registerDAO(Caratteristica.class, new CaratteristicaDAO_MySQL(this));
-        registerDAO(GestioneCategoria.class, new CaratteristicheRichiestaDAO_MySQL(this));
+        registerDAO(ElencoCategorie.class, new CaratteristicheRichiestaDAO_MySQL(this));
     
     }
     
