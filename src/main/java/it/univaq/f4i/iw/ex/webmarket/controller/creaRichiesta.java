@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class creaRichiesta extends BaseController {
+public class CreaRichiesta extends BaseController {
 
     // Metodo per gestire l'azione di default
     private void action_default(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException, DataException {
@@ -80,7 +80,7 @@ public class creaRichiesta extends BaseController {
         } catch (IOException | TemplateManagerException /* | DataException */ ex) {
             handleError(ex, request, response);
         } catch (DataException ex) {
-            Logger.getLogger(creaRichiesta.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CreaRichiesta.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

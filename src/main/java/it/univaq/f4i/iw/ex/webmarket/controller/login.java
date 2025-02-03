@@ -16,7 +16,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 
 
-public class login extends BaseController {
+public class Login extends BaseController {
 
     private void action_default(HttpServletRequest request, HttpServletResponse response) throws IOException, TemplateManagerException {
         TemplateResult result = new TemplateResult(getServletContext());
@@ -77,7 +77,7 @@ public class login extends BaseController {
                }
                //Gestione errori DB (scrittura nei log).
             } catch (DataException ex) {
-                Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
             }
             
         }
@@ -107,7 +107,7 @@ public class login extends BaseController {
         } catch (IOException | TemplateManagerException ex) {
             handleError(ex, request, response);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
-            Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

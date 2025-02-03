@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-public class elencoOrdini extends BaseController {
+public class ElencoOrdini extends BaseController {
 
     private void action_default(HttpServletRequest request, HttpServletResponse response, int user) 
             throws IOException, ServletException, TemplateManagerException, DataException {
@@ -138,7 +138,7 @@ public class elencoOrdini extends BaseController {
         } catch (IOException | TemplateManagerException ex) {
             handleError(ex, request, response);
         } catch (DataException ex) {
-            Logger.getLogger(elencoOrdini.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ElencoOrdini.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

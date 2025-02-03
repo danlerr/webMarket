@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-public class impostazioni extends BaseController {
+public class Impostazioni extends BaseController {
 
     private void action_default(HttpServletRequest request, HttpServletResponse response, int userId) throws IOException, ServletException, TemplateManagerException, DataException {
         TemplateResult res = new TemplateResult(getServletContext());
@@ -98,11 +98,11 @@ public class impostazioni extends BaseController {
     } catch (IOException | TemplateManagerException /* | DataException */ ex) {
         handleError(ex, request, response);
     }   catch (DataException ex) {
-            Logger.getLogger(impostazioni.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Impostazioni.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NoSuchAlgorithmException ex) {
-            Logger.getLogger(impostazioni.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Impostazioni.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InvalidKeySpecException ex) {
-            Logger.getLogger(impostazioni.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Impostazioni.class.getName()).log(Level.SEVERE, null, ex);
         }
 }
 

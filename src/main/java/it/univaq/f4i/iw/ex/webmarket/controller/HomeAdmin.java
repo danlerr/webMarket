@@ -1,5 +1,5 @@
 package it.univaq.f4i.iw.ex.webmarket.controller;
 
-public class creaCategoria {
+public class HomeAdmin extends BaseController{
     
 }

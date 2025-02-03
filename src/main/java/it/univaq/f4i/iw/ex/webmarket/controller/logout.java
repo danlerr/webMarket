@@ -10,7 +10,7 @@ import javax.servlet.http.*;
  * @author Ingegneria del Web
  * @version
  */
-public class logout extends BaseController {
+public class Logout extends BaseController {
 
     private void action_logout(HttpServletRequest request, HttpServletResponse response) throws IOException {
         SecurityHelpers.disposeSession(request);

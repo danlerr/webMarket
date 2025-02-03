@@ -20,7 +20,7 @@ import javax.servlet.http.HttpSession;
 
 import it.univaq.f4i.iw.ex.webmarket.data.model.Richiesta;
 
-public class dettaglioOrdine extends BaseController {
+public class DettaglioOrdine extends BaseController {
 
     private void action_default(HttpServletRequest request, HttpServletResponse response,int user) throws IOException, ServletException, TemplateManagerException, DataException {
         TemplateResult res = new TemplateResult(getServletContext());
