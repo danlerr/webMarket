@@ -15,10 +15,12 @@ import it.univaq.f4i.iw.framework.data.OptimisticLockException;
 import java.sql.*;
 //import java.util.ArrayList;
 //import java.util.List;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OrdineDAO_MySQL extends DAO implements OrdineDAO {
     
-    private PreparedStatement sOrdine, iOrdine, uOrdine, dOrdine;
+    private PreparedStatement sOrdine, iOrdine, uOrdine, dOrdine, sOrdiniByOrdinante, sOrdiniByTecnico;
 
     /**
      * Costruttore della classe.
@@ -50,7 +52,11 @@ public class OrdineDAO_MySQL extends DAO implements OrdineDAO {
             dOrdine = connection.prepareStatement(
                 "DELETE FROM ordine WHERE ID=?"
                 );
+            sOrdiniByOrdinante = connection.prepareStatement("SELECT o.* FROM ordine o JOIN proposta_acquisto pa ON o.proposta_id = pa.ID JOIN richiesta_ordine ro ON pa.richiesta_id = ro.ID WHERE ro.utente = ?  ORDER BY CASE WHEN o.stato = 'IN_ATTESA' THEN 1 ELSE 2 END, o.data DESC");
 
+            sOrdiniByTecnico = connection.prepareStatement("SELECT o.* FROM ordine o JOIN proposta_acquisto pa ON o.proposta_id = pa.ID JOIN richiesta_ordine ro ON pa.richiesta_id = ro.ID WHERE ro.tecnico = ? ORDER BY CASE WHEN (o.stato = 'RESPINTO_NON_CONFORME' OR o.stato = 'RESPINTO_NON_FUNZIONANTE') THEN 1 ELSE 2 END, o.data DESC");
+
+                
         } catch (SQLException ex) {
             throw new DataException("Error initializing ordine data layer", ex);
         }
@@ -192,5 +198,51 @@ public class OrdineDAO_MySQL extends DAO implements OrdineDAO {
         } catch (SQLException ex) {
             throw new DataException("Unable to delete ordine", ex);
         }
+    }
+
+    /**
+     * Recupera gli ordini associati a un utente.
+     * 
+     * @param utente_key l'ID dell'utente
+     * @return una lista di ordini associati all'utente
+     * @throws DataException se si verifica un errore durante il recupero
+     */
+    @Override
+    public List<Ordine> getOrdiniByOrdinante(int utente_key) throws DataException {
+        List<Ordine> ordini = new ArrayList<>();
+        try {
+            sOrdiniByOrdinante.setInt(1, utente_key);
+            try (ResultSet rs = sOrdiniByOrdinante.executeQuery()) {
+                while (rs.next()) {
+                    ordini.add(createOrdine(rs));
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DataException("Unable to load ordini by utente ID", ex);
+        }
+        return ordini;
+    }
+
+    /**
+     * Recupera gli ordini associati a un tecnico.
+     * 
+     * @param tecnico_key l'ID del tecnico
+     * @return una lista di ordini associati al tecnico
+     * @throws DataException se si verifica un errore durante il recupero
+     */
+    @Override
+    public List<Ordine> getOrdiniByTecnico(int tecnico_key) throws DataException {
+        List<Ordine> ordini = new ArrayList<>();
+        try {
+            sOrdiniByTecnico.setInt(1, tecnico_key);
+            try (ResultSet rs = sOrdiniByTecnico.executeQuery()) {
+                while (rs.next()) {
+                    ordini.add(createOrdine(rs));
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DataException("Unable to load ordini by tecnico ID", ex);
+        }
+        return ordini;
     }
 }

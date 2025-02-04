@@ -2,7 +2,7 @@ package it.univaq.f4i.iw.ex.webmarket.controller;
 
 import it.univaq.f4i.iw.ex.webmarket.data.dao.impl.ApplicationDataLayer;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Ordine;
-import it.univaq.f4i.iw.ex.webmarket.data.model.PropostaAcquisto;
+import it.univaq.f4i.iw.ex.webmarket.data.model.Proposta;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Richiesta;
 import it.univaq.f4i.iw.ex.webmarket.data.model.impl.StatoOrdine;
 import it.univaq.f4i.iw.ex.webmarket.data.model.StatoRichiesta;
@@ -51,7 +51,7 @@ public class DettaglioOrdine extends BaseController {
     boolean showAccettaRifiutaButtons = false;
     if (utente.getTipologiaUtente().equals("ORDINANTE") &&
         ordine.getStato().equals(StatoOrdine.IN_ATTESA) &&
-        ordine.getProposta().getRichiestaOrdine().getAutore().getId() == user) {
+        ordine.getProposta().getRichiesta().getAutore().getId() == user) {
         showAccettaRifiutaButtons = true;
     }
     request.setAttribute("showAccettaRifiutaButtons", showAccettaRifiutaButtons);
@@ -75,7 +75,7 @@ Ordine ordine = ((ApplicationDataLayer) request.getAttribute("datalayer"))
 int loggedUserId = (int) request.getSession(false).getAttribute("userid");
 
 // Controlla che l'utente loggato sia l'autore della richiesta associata all'ordine
-if (ordine.getProposta().getRichiestaOrdine().getAutore().getId() != loggedUserId) {
+if (ordine.getProposta().getRichiesta().getAutore().getId() != loggedUserId) {
     // Se non corrisponde, reindirizza con un messaggio di errore
     response.sendRedirect("ordini?error=Non+sei+l'autore+della+richiesta");
     return;
@@ -83,7 +83,7 @@ if (ordine.getProposta().getRichiestaOrdine().getAutore().getId() != loggedUserI
 
 // Se il controllo va a buon fine, aggiorna lo stato dell'ordine e della richiesta
 ordine.setStato(StatoOrdine.ACCETTATO);
-Richiesta richiesta = ordine.getProposta().getRichiestaOrdine();
+Richiesta richiesta = ordine.getProposta().getRichiesta();
 richiesta.setStato(StatoRichiesta.RISOLTA);
 ((ApplicationDataLayer) request.getAttribute("datalayer")).getRichiestaOrdineDAO().storeRichiesta(richiesta);
 ((ApplicationDataLayer) request.getAttribute("datalayer")).getOrdineDAO().storeOrdine(ordine);
@@ -108,7 +108,7 @@ Ordine ordine = ((ApplicationDataLayer) request.getAttribute("datalayer"))
 int loggedUserId = (int) request.getSession(false).getAttribute("userid");
 
 // Controlla che l'utente loggato sia l'autore della richiesta associata all'ordine
-if (ordine.getProposta().getRichiestaOrdine().getAutore().getId() != loggedUserId) {
+if (ordine.getProposta().getRichiesta().getAutore().getId() != loggedUserId) {
 response.sendRedirect("ordini?error=Non+sei+l'autore+della+richiesta");
 return;
 }
@@ -131,7 +131,7 @@ ordine.setStato(StatoOrdine.RIFIUTATO);
 }
 
 // Aggiorna lo stato della richiesta associata
-Richiesta richiesta = ordine.getProposta().getRichiestaOrdine();
+Richiesta richiesta = ordine.getProposta().getRichiesta();
 richiesta.setStato(StatoRichiesta.RISOLTA);
 ((ApplicationDataLayer) request.getAttribute("datalayer")).getRichiestaOrdineDAO().storeRichiesta(richiesta);
 ((ApplicationDataLayer) request.getAttribute("datalayer")).getOrdineDAO().storeOrdine(ordine);
