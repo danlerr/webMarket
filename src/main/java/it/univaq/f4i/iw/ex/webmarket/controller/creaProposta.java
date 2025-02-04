@@ -70,7 +70,7 @@ public class CreaProposta extends BaseController {
         proposta.setRichiesta(richiesta);
 
         //update del db
-        ((ApplicationDataLayer) request.getAttribute("datalayer")).getPropostaDAO().storePropostaAcquisto(proposta);
+        ((ApplicationDataLayer) request.getAttribute("datalayer")).getPropostaDAO().storeProposta(proposta);
 
         // Recupero l'email dell'utente
         String email = richiesta.getOrdinante().getEmail();
