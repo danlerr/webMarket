@@ -154,24 +154,22 @@ public class CaratteristicheRichiestaDAO_MySQL extends DAO implements Caratteris
           return c;
       }
 
-    /**
-     * Recupera le caratteristiche associate a una richiesta.
+     /**
+     * Recupera le caratteristiche richieste associate a una richiesta.
      * 
      * @param richiesta_key l'ID della richiesta
-     * @return una lista di caratteristiche associate alla richiesta
+     * @return una lista di caratteristiche richieste associate alla richiesta
      * @throws DataException se si verifica un errore durante il recupero
      */
     @Override
-    public List<Caratteristica> getCaratteristicheByRichiesta(int richiesta_key) throws DataException {
-        List<Caratteristica> caratteristiche = new ArrayList<>();
+    public List<CaratteristicheRichiesta> getCaratteristicheRichiestaByRichiesta(int richiesta_key) throws DataException {
+        List<CaratteristicheRichiesta> caratteristiche = new ArrayList<>();
         try {
             sCByRichiesta.setInt(1, richiesta_key);
             try (ResultSet rs = sCByRichiesta.executeQuery()) {
                 while (rs.next()) {
-
-                    CaratteristicheRichiesta caratteristicaRichiesta = createCR(rs);
-
-                    caratteristiche.add(caratteristicaRichiesta.getCaratteristica());
+                    CaratteristicheRichiesta caratteristicheRichiesta = createCR(rs);
+                    caratteristiche.add(caratteristicheRichiesta);
                 }
             }
         } catch (SQLException ex) {

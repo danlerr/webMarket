@@ -36,6 +36,7 @@ public class ApplicationDataLayer extends DataLayer {
         registerDAO(Ordine.class, new OrdineDAO_MySQL(this));
         registerDAO(Proposta.class, new PropostaDAO_MySQL(this));
         registerDAO(Caratteristica.class, new CaratteristicaDAO_MySQL(this));
+        registerDAO(CaratteristicheRichiesta.class, new CaratteristicheRichiestaDAO_MySQL(this));
     
     }
     
@@ -62,7 +63,7 @@ public class ApplicationDataLayer extends DataLayer {
        return (CaratteristicaDAO) getDAO(Caratteristica.class);
     }
      
-     public CaratteristicheRichiestaDAO getCaratteristicaRichiestaDAO() {
+     public CaratteristicheRichiestaDAO getCaratteristicheRichiestaDAO() {
        return (CaratteristicheRichiestaDAO) getDAO(CaratteristicheRichiesta.class);
     }
 }

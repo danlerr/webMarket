@@ -1,10 +1,12 @@
 package it.univaq.f4i.iw.ex.webmarket.controller;
 
 import it.univaq.f4i.iw.ex.webmarket.data.dao.impl.ApplicationDataLayer;
-import it.univaq.f4i.iw.ex.webmarket.data.model.PropostaAcquisto;
+import it.univaq.f4i.iw.ex.webmarket.data.model.Ordine;
+import it.univaq.f4i.iw.ex.webmarket.data.model.Proposta;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Richiesta;
 import it.univaq.f4i.iw.ex.webmarket.data.model.StatoRichiesta;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Utente;
+import it.univaq.f4i.iw.ex.webmarket.data.model.CaratteristicheRichiesta;
 import it.univaq.f4i.iw.framework.data.DataException;
 import it.univaq.f4i.iw.framework.result.TemplateManagerException;
 import it.univaq.f4i.iw.framework.result.TemplateResult;
@@ -32,10 +34,11 @@ public class DettaglioRichiesta extends BaseController {
             .getRichiestaOrdineDAO().getRichiesta(richiestaId);
     request.setAttribute("richiesta", richiesta);
 
-    // Recupera la lista delle proposte di acquisto relative alla richiesta
-    List<PropostaAcquisto> proposte = ((ApplicationDataLayer) request.getAttribute("datalayer"))
-            .getPropostaDAO().getProposteAcquistoByRichiesta(richiestaId);
-    request.setAttribute("proposte", proposte);
+    // Recupera la lista delle caratteristiche relative alla richiesta
+    List<CaratteristicheRichiesta> CaratteristicheRichiesta = ((ApplicationDataLayer) request.getAttribute("datalayer"))
+            .getCaratteristicheRichiestaDAO().getCaratteristicheRichiestaByRichiesta(richiestaId);
+    request.setAttribute("CaratteristicheRichiesta", CaratteristicheRichiesta);
+    //recupera tutte le caratteristiche della richiesta
 
     // Recupera l'utente loggato
     Utente utente = ((ApplicationDataLayer) request.getAttribute("datalayer"))
@@ -80,7 +83,7 @@ public class DettaglioRichiesta extends BaseController {
                 .getRichiestaOrdineDAO().getRichiesta(richiestaId);
 
         // Aggiorna lo stato della richiesta: in questo caso lo impostiamo a IN_ATTESA,
-        // il che, in base alla logica applicativa, farà apparire la richiesta nella lista
+        // il che farà apparire la richiesta nella lista
         // delle "richieste prese in carico".
         richiesta.setStato(StatoRichiesta.IN_ATTESA);
 
