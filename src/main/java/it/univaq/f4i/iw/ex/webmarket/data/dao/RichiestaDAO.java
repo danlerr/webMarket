@@ -13,12 +13,17 @@ public interface RichiestaDAO {
 
     Richiesta getRichiesta(int RichiestaOrdine_key) throws DataException;
 
-
     void storeRichiesta(Richiesta RichiestaOrdine) throws DataException;
+
+    void deleteRichiesta(int richiesta_key) throws DataException;
 
     List<Richiesta> getRichiesteByUtente(int utente_key) throws DataException;
 
-    void deleteRichiesta(int richiesta_key) throws DataException;
+    List<Richiesta> getRichiesteInAttesaByTecnico(int tecnico_key) throws DataException;
+
+    List<Richiesta> getRichiestePreseInCaricoByTecnico(int tecnico_key) throws DataException;
+
+    
     
   
 

@@ -49,7 +49,7 @@ if (utente.getTipologiaUtente().equals("ORDINANTE")) {
     template = "richieste_tecnico.ftl.html";
 } else {
     // Se l'utente non è né ordinante né tecnico, reindirizza ad una pagina predefinita
-    response.sendRedirect("home");
+    response.sendRedirect("Home");
     return;
 }
 

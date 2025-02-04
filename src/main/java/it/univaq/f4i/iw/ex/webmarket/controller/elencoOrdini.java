@@ -19,16 +19,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 public class ElencoOrdini extends BaseController {
+    
 
-    /**
-     * Azione di default: mostra l'elenco degli ordini e il loro stato.
-     * Se l'utente è ordinante, nel template verrà mostrato (per ogni ordine)
-     * il bottone "recensisci tecnico" soltanto se lo stato della richiesta è "RISOLTA".
-     * Se l'utente è tecnico, il bottone non verrà visualizzato.
-     */
     private void action_default(HttpServletRequest request, HttpServletResponse response, int user)
         throws IOException, ServletException, TemplateManagerException, DataException {
-  
+    
     TemplateResult res = new TemplateResult(getServletContext());
     request.setAttribute("page_title", "Elenco Ordini");
 
@@ -41,17 +36,30 @@ public class ElencoOrdini extends BaseController {
 
     if (isOrdinante) {
         // Per l'ordinante, recupera gli ordini ricevuti
-        request.setAttribute("ordini", ((ApplicationDataLayer) request.getAttribute("datalayer"))
-                .getOrdineDAO().getOrdiniByUtente(user));
+        java.util.List<Ordine> ordini = ((ApplicationDataLayer) request.getAttribute("datalayer"))
+                .getOrdineDAO().getOrdiniByUtente(user);
+        
+        // Per ogni ordine, creiamo un flag che indica se mostrare il bottone "recensisci tecnico".
+        // Il bottone sarà visibile solo se lo stato della richiesta associata all'ordine è RISOLTA.
+        java.util.Map<Integer, Boolean> recensisciFlags = new java.util.HashMap<>();
+        for (Ordine o : ordini) {
+            boolean showRecensisci = o.getProposta().getRichiestaOrdine().getStato().equals(StatoRichiesta.RISOLTA);
+            // Assumiamo che o.getKey() restituisca l'ID dell'ordine.
+            recensisciFlags.put(o.getKey(), showRecensisci);
+        }
+        request.setAttribute("ordini", ordini);
+        request.setAttribute("recensisciFlags", recensisciFlags);
     } else {
         // Per il tecnico, recupera gli ordini gestiti dal tecnico.
-        // Si assume l'esistenza di un metodo apposito, ad esempio getOrdiniByTecnico(user)
         request.setAttribute("ordini", ((ApplicationDataLayer) request.getAttribute("datalayer"))
                 .getOrdineDAO().getOrdiniByTecnico(user));
     }
     
-    res.activate("elencoOrdini.ftl.html", request, response);
+    res.activate("ElencoOrdini.ftl.html", request, response);
 }
+
+
+   
 
 
     /**
@@ -112,14 +120,7 @@ public class ElencoOrdini extends BaseController {
                         .getRecensioneDAO().storeRecensione(recensionePrecedente);
                 response.sendRedirect("ordini?message=Recensione+aggiornata+con+successo");
                 return;
-            } else {
-                // Se non è stata confermata, inoltra ad una view per la conferma (opzionale)
-                request.setAttribute("existingRecensione", recensionePrecedente);
-                request.setAttribute("newValue", value);
-                TemplateResult res = new TemplateResult(getServletContext());
-                res.activate("conferma_aggiornamento_recensione.ftl.html", request, response);
-                return;
-            }
+            } 
         } else {
             // Nessuna recensione esistente: creo una nuova recensione
             Recensione recensione = ((ApplicationDataLayer) request.getAttribute("datalayer"))

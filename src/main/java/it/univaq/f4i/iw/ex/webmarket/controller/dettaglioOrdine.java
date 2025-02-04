@@ -133,7 +133,7 @@ ordine.setStato(StatoOrdine.RIFIUTATO);
 // Aggiorna lo stato della richiesta associata
 Richiesta richiesta = ordine.getProposta().getRichiestaOrdine();
 richiesta.setStato(StatoRichiesta.RISOLTA);
-((ApplicationDataLayer) request.getAttribute("datalayer")).getRichiestaOrdineDAO().storeRichiestaOrdine(richiesta);
+((ApplicationDataLayer) request.getAttribute("datalayer")).getRichiestaOrdineDAO().storeRichiesta(richiesta);
 ((ApplicationDataLayer) request.getAttribute("datalayer")).getOrdineDAO().storeOrdine(ordine);
 
 response.sendRedirect("ordini?message=Ordine+rifiutato");

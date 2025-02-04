@@ -27,13 +27,16 @@ public class RichiestaDAO_MySQL extends DAO implements RichiestaDAO {
     private PreparedStatement iRichiesta;
     private PreparedStatement uRichiesta;
     private PreparedStatement dRichiesta;
+    private PreparedStatement sRichiestePreseInCaricoByTecnico;
+    private PreparedStatement sRichiesteInAttesaByTecnico; 
 
     
     public RichiestaDAO_MySQL(DataLayer d) {
         super(d);
     }
 
-    /**
+     
+     /**
      * Inizializza le PreparedStatement per le operazioni CRUD.
      *
      * @throws DataException se si verifica un errore durante l'inizializzazione
@@ -45,26 +48,40 @@ public class RichiestaDAO_MySQL extends DAO implements RichiestaDAO {
 
             // PreparedStatement per recuperare una Richiesta per ID
             sRichiestaByID = connection.prepareStatement(
-                "SELECT * FROM richiesta WHERE ID = ?"
+                "SELECT * FROM Richiesta WHERE ID = ?"
                 );
             // PreparedStatment per recuperare le richieste dato userId
             sRichiesteByUtente = connection.prepareStatement(
-                "SELECT * FROM richiesta WHERE utente = ?"
+                "SELECT * FROM Richiesta WHERE utente = ?"
                 );
             // PreparedStatement per inserire una nuova Richiesta
             iRichiesta = connection.prepareStatement(
-                "INSERT INTO richiesta (note, stato, data, codice_richiesta, utente, tecnico, categoria_id, version) " +
+                "INSERT INTO Richiesta (note, stato, data, codice_richiesta, utente, tecnico, categoria_id, version) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS
             );
 
             // PreparedStatement per aggiornare una Richiesta esistente
             uRichiesta = connection.prepareStatement(
-                "UPDATE richiesta SET note=?, stato=?, data=?, codice_richiesta=?, utente=?, tecnico=?, categoria_id=?, version=? " +
+                "UPDATE Richiesta SET note=?, stato=?, data=?, codice_richiesta=?, utente=?, tecnico=?, categoria_id=?, version=? " +
                 "WHERE ID=? AND version=?"
             );
 
             // PreparedStatement per eliminare una Richiesta
-            dRichiesta = connection.prepareStatement("DELETE FROM richiesta WHERE ID=?");
+            dRichiesta = connection.prepareStatement("DELETE FROM Richiesta WHERE ID=?");
+
+            // PreparedStatement per recuperare le richieste prese in carico da un tecnico
+            sRichiestePreseInCaricoByTecnico = connection.prepareStatement(
+                "SELECT r.ID FROM Richiesta r " +
+                "JOIN StatoRichiesta sr ON r.stato = sr.ID " +
+                "WHERE sr.nome = 'PRESE_IN_CARICO' AND r.tecnico = ?"
+            );
+
+            // PreparedStatement per recuperare le richieste in attesa da un tecnico
+            sRichiesteInAttesaByTecnico = connection.prepareStatement(  // <-- Aggiunto
+                "SELECT r.ID FROM Richiesta r " +
+                "JOIN StatoRichiesta sr ON r.stato = sr.ID " +
+                "WHERE sr.nome = 'IN_ATTESA' AND r.tecnico = ?"
+            );
         } catch (SQLException ex) {
             throw new DataException("Errore durante l'inizializzazione del RichiestaDAO", ex);
         }
@@ -90,11 +107,21 @@ public class RichiestaDAO_MySQL extends DAO implements RichiestaDAO {
             if (dRichiesta != null && !dRichiesta.isClosed()) {
                 dRichiesta.close();
             }
+            if (sRichiesteByUtente != null && !sRichiesteByUtente.isClosed()) {
+                sRichiesteByUtente.close();
+            }
+            if (sRichiestePreseInCaricoByTecnico != null && !sRichiestePreseInCaricoByTecnico.isClosed()) {
+                sRichiestePreseInCaricoByTecnico.close();
+            }
+            if (sRichiesteInAttesaByTecnico != null && !sRichiesteInAttesaByTecnico.isClosed()) { // <-- Aggiunto
+                sRichiesteInAttesaByTecnico.close();
+            }
         } catch (SQLException ex) {
             throw new DataException("Errore durante la chiusura del RichiestaDAO", ex);
         }
         super.destroy();
     }
+
 
     /**
      * Crea una nuova istanza di Richiesta.
@@ -262,6 +289,39 @@ public class RichiestaDAO_MySQL extends DAO implements RichiestaDAO {
             }
         } catch (SQLException ex) {
             throw new DataException("Unable to load RichiesteOrdine by Utente", ex);
+        }
+        return result;
+    }
+     @Override
+    public List<Richiesta> getRichiestePreseInCaricoByTecnico(int tecnico_key) throws DataException {
+        List<Richiesta> result = new ArrayList<>();
+    
+        try {
+            sRichiestePreseInCaricoByTecnico.setInt(1, tecnico_key);
+            try (ResultSet rs = sRichiestePreseInCaricoByTecnico.executeQuery()) {
+                while (rs.next()) {
+                    result.add(getRichiesta(rs.getInt("ID")));
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DataException("Unable to load Richieste prese in carico by Tecnico", ex);
+        }
+        return result;
+    }
+        
+    @Override
+    public List<Richiesta> getRichiesteInAttesaByTecnico(int tecnico_key) throws DataException {
+        List<Richiesta> result = new ArrayList<>();
+
+        try {
+            sRichiesteInAttesaByTecnico.setInt(1, tecnico_key);
+            try (ResultSet rs = sRichiesteInAttesaByTecnico.executeQuery()) {
+                while (rs.next()) {
+                    result.add(getRichiesta(rs.getInt("ID")));
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DataException("Unable to load Richieste in attesa by Tecnico", ex);
         }
         return result;
     }
