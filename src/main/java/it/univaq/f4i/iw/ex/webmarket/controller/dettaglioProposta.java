@@ -5,3 +5,4 @@ public class DettaglioProposta {
 }
 //approva proposta
 //respingi proposta
+//invia ordine
