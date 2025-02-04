@@ -1,5 +1,4 @@
 package it.univaq.f4i.iw.ex.webmarket.data.dao.impl;
-import it.univaq.f4i.iw.ex.webmarket.controller.ElencoCategorie;
 import it.univaq.f4i.iw.ex.webmarket.data.dao.CaratteristicaDAO;
 import it.univaq.f4i.iw.ex.webmarket.data.dao.CategoriaDAO;
 import it.univaq.f4i.iw.ex.webmarket.data.dao.UtenteDAO;
@@ -8,9 +7,10 @@ import it.univaq.f4i.iw.ex.webmarket.data.dao.PropostaDAO;
 import it.univaq.f4i.iw.ex.webmarket.data.dao.RichiestaDAO;
 import it.univaq.f4i.iw.ex.webmarket.data.dao.CaratteristicheRichiestaDAO;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Caratteristica;
+import it.univaq.f4i.iw.ex.webmarket.data.model.CaratteristicheRichiesta;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Categoria;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Ordine;
-import it.univaq.f4i.iw.ex.webmarket.data.model.PropostaAcquisto;
+import it.univaq.f4i.iw.ex.webmarket.data.model.Proposta;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Richiesta;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Utente;
 import it.univaq.f4i.iw.framework.data.DataException;
@@ -34,9 +34,8 @@ public class ApplicationDataLayer extends DataLayer {
         registerDAO(Categoria.class, new CategoriaDAO_MySQL(this));
         registerDAO(Richiesta.class, new RichiestaDAO_MySQL(this));
         registerDAO(Ordine.class, new OrdineDAO_MySQL(this));
-        registerDAO(PropostaAcquisto.class, new PropostaDAO_MySQL(this));
+        registerDAO(Proposta.class, new PropostaDAO_MySQL(this));
         registerDAO(Caratteristica.class, new CaratteristicaDAO_MySQL(this));
-        registerDAO(ElencoCategorie.class, new CaratteristicheRichiestaDAO_MySQL(this));
     
     }
     
@@ -55,7 +54,7 @@ public class ApplicationDataLayer extends DataLayer {
     public OrdineDAO getOrdineDAO() {
         return (OrdineDAO) getDAO(Ordine.class);
     }
-    public PropostaDAO getPropostaAcquistoDAO() {
+    public PropostaDAO getPropostaDAO() {
        return (PropostaDAO) getDAO(Proposta.class);
     }
     
@@ -66,7 +65,4 @@ public class ApplicationDataLayer extends DataLayer {
      public CaratteristicheRichiestaDAO getCaratteristicaRichiestaDAO() {
        return (CaratteristicheRichiestaDAO) getDAO(CaratteristicheRichiesta.class);
     }
-    
-     
-
 }

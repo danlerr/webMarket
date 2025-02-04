@@ -1,6 +1,7 @@
 package it.univaq.f4i.iw.ex.webmarket.data.model.impl;
+
 import it.univaq.f4i.iw.ex.webmarket.data.model.Ordine;
-import it.univaq.f4i.iw.ex.webmarket.data.model.PropostaAcquisto;
+import it.univaq.f4i.iw.ex.webmarket.data.model.Proposta;
 import it.univaq.f4i.iw.framework.data.DataItemImpl;
 import java.sql.Date;
 
@@ -9,7 +10,7 @@ import java.sql.Date;
 public class OrdineImpl extends DataItemImpl<Integer> implements Ordine {
     private int id;
     private StatoOrdine stato;
-    private PropostaAcquisto propostaAcquisto;
+    private Proposta propostaAcquisto;
     private Date data;
 
     // Costruttori
@@ -23,7 +24,7 @@ public class OrdineImpl extends DataItemImpl<Integer> implements Ordine {
     }
 
     // Costruttore per inizializzare l'Ordine con valori specificati
-    public OrdineImpl(int id, StatoOrdine stato, PropostaAcquisto propostaAcquisto, Date data) {
+    public OrdineImpl(int id, StatoOrdine stato, Proposta propostaAcquisto, Date data) {
         this.id = id;
         this.stato = stato;
         this.propostaAcquisto = propostaAcquisto;
@@ -51,13 +52,13 @@ public class OrdineImpl extends DataItemImpl<Integer> implements Ordine {
     }
 
     @Override
-    public PropostaAcquisto getProposta() {
+    public Proposta getProposta() {
         return propostaAcquisto;
     }
 
     @Override
-    public void setProposta(PropostaAcquisto propostaAcquisto) {
-        this.propostaAcquisto = propostaAcquisto;
+    public void setProposta(Proposta p) {
+        this.propostaAcquisto = p;
     }
 
     @Override

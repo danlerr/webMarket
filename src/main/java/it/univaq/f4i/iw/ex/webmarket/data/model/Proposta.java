@@ -6,7 +6,7 @@ import java.sql.Date;
 
 
 
-public interface PropostaAcquisto extends DataItem<Integer> {
+public interface Proposta extends DataItem<Integer> {
 
     int getId();
 
@@ -56,7 +56,7 @@ public interface PropostaAcquisto extends DataItem<Integer> {
    
     void setMotivazione(String motivazione);
 
-    RichiestaOrdine getRichiestaOrdine();
+    Richiesta getRichiesta();
    
-    void setRichiestaOrdine(RichiestaOrdine richiestaOrdine);
+    void setRichiesta(Richiesta richiestaOrdine);
 }

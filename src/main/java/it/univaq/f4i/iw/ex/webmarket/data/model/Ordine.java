@@ -14,8 +14,8 @@ public interface Ordine extends DataItem<Integer> {
     StatoOrdine getStato ();
     void setStato(StatoOrdine stato);
     
-    PropostaAcquisto getProposta();
-    void setProposta(PropostaAcquisto proposta);
+    Proposta getProposta();
+    void setProposta(Proposta proposta);
 
     Date getData ();
     void setData(Date data);

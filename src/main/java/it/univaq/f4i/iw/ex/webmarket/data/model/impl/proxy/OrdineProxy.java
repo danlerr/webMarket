@@ -2,7 +2,7 @@ package it.univaq.f4i.iw.ex.webmarket.data.model.impl.proxy;
 
 // Implementazione del Proxy che estende OrdineImpl
 
-import it.univaq.f4i.iw.ex.webmarket.data.model.PropostaAcquisto;
+import it.univaq.f4i.iw.ex.webmarket.data.model.Proposta;
 import it.univaq.f4i.iw.ex.webmarket.data.model.impl.OrdineImpl;
 import it.univaq.f4i.iw.ex.webmarket.data.model.impl.StatoOrdine;
 import it.univaq.f4i.iw.framework.data.DataItemProxy;
@@ -33,7 +33,7 @@ public class OrdineProxy extends OrdineImpl implements DataItemProxy {
     }
 
     @Override
-    public void setProposta(PropostaAcquisto proposta) {
+    public void setProposta(Proposta proposta) {
         super.setProposta(proposta);
         this.modified = true;
     }

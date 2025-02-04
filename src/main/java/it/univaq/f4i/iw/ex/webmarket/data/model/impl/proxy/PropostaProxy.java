@@ -1,19 +1,19 @@
 package it.univaq.f4i.iw.ex.webmarket.data.model.impl.proxy;
 
-import it.univaq.f4i.iw.ex.webmarket.data.model.RichiestaOrdine;
-import it.univaq.f4i.iw.ex.webmarket.data.model.impl.PropostaAcquistoImpl;
+import it.univaq.f4i.iw.ex.webmarket.data.model.Richiesta;
+import it.univaq.f4i.iw.ex.webmarket.data.model.impl.PropostaImpl;
 import it.univaq.f4i.iw.ex.webmarket.data.model.impl.StatoProposta;
 import it.univaq.f4i.iw.framework.data.DataItemProxy;
 import it.univaq.f4i.iw.framework.data.DataLayer;
 import java.sql.Date;
 
-public class PropostaAcquistoProxy extends PropostaAcquistoImpl implements DataItemProxy {
+public class PropostaProxy extends PropostaImpl implements DataItemProxy {
 
 
     protected boolean modified;
     protected DataLayer dataLayer;
 
-    public PropostaAcquistoProxy(DataLayer d) {
+    public PropostaProxy(DataLayer d) {
         super();
         //dependency injection
         this.dataLayer = d;
@@ -86,8 +86,8 @@ public class PropostaAcquistoProxy extends PropostaAcquistoImpl implements DataI
     }
 
     @Override
-    public void setRichiestaOrdine(RichiestaOrdine richiestaOrdine) {
-        super.setRichiestaOrdine(richiestaOrdine);
+    public void setRichiesta(Richiesta richiesta) {
+        super.setRichiesta(richiesta);
         this.modified = true;
     }
 

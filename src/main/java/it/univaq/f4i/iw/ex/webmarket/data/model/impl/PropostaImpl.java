@@ -1,13 +1,13 @@
 package it.univaq.f4i.iw.ex.webmarket.data.model.impl;
 
-import it.univaq.f4i.iw.ex.webmarket.data.model.PropostaAcquisto;
+import it.univaq.f4i.iw.ex.webmarket.data.model.Proposta;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Richiesta;
 import it.univaq.f4i.iw.framework.data.DataItemImpl;
 import java.sql.Date;
 
 
 
-public class PropostaAcquistoImpl extends DataItemImpl<Integer> implements PropostaAcquisto {
+public class PropostaImpl extends DataItemImpl<Integer> implements Proposta {
     private int id;
     private String produttore;
     private String prodotto;
@@ -22,7 +22,7 @@ public class PropostaAcquistoImpl extends DataItemImpl<Integer> implements Propo
     private Richiesta richiestaOrdine;
 
     // Costruttori
-    public PropostaAcquistoImpl() {
+    public PropostaImpl() {
         super();
         produttore = "";
         prodotto = "";
@@ -37,7 +37,7 @@ public class PropostaAcquistoImpl extends DataItemImpl<Integer> implements Propo
         richiestaOrdine = null;
     }
 
-    public PropostaAcquistoImpl(int id, String produttore, String prodotto, String codiceProdotto, String codice, float prezzo, String url, String note, StatoProposta stato,Date data, String motivazione, Richiesta richiestaOrdine) {
+    public PropostaImpl(int id, String produttore, String prodotto, String codiceProdotto, String codice, float prezzo, String url, String note, StatoProposta stato,Date data, String motivazione, Richiesta richiestaOrdine) {
         this.id = id;
         this.produttore = produttore;
         this.prodotto = prodotto;
@@ -163,13 +163,13 @@ public class PropostaAcquistoImpl extends DataItemImpl<Integer> implements Propo
     }
 
     @Override
-    public RichiestaOrdine getRichiestaOrdine() {
+    public Richiesta getRichiesta() {
         return richiestaOrdine;
     }
 
     @Override
-    public void setRichiestaOrdine(Richiesta richiestaOrdine) {
-        this.richiestaOrdine = richiestaOrdine;
+    public void setRichiesta(Richiesta richiesta) {
+        this.richiestaOrdine = richiesta;
     }
     @Override
     public String toString() {
@@ -188,7 +188,4 @@ public class PropostaAcquistoImpl extends DataItemImpl<Integer> implements Propo
                 ", richiestaOrdine=" + richiestaOrdine.getKey() +
                 '}';
     }
-    
-
-
 }
