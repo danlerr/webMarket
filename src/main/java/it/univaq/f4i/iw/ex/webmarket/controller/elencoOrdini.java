@@ -37,13 +37,13 @@ public class ElencoOrdini extends BaseController {
     if (isOrdinante) {
         // Per l'ordinante, recupera gli ordini ricevuti
         java.util.List<Ordine> ordini = ((ApplicationDataLayer) request.getAttribute("datalayer"))
-                .getOrdineDAO().getOrdiniByUtente(user);
+                .getOrdineDAO().getOrdiniByOrdinante(user);
         
         // Per ogni ordine, creiamo un flag che indica se mostrare il bottone "recensisci tecnico".
         // Il bottone sarà visibile solo se lo stato della richiesta associata all'ordine è RISOLTA.
         java.util.Map<Integer, Boolean> recensisciFlags = new java.util.HashMap<>();
         for (Ordine o : ordini) {
-            boolean showRecensisci = o.getProposta().getRichiestaOrdine().getStato().equals(StatoRichiesta.RISOLTA);
+            boolean showRecensisci = o.getProposta().getRichiesta().getStato().equals(StatoRichiesta.RISOLTA);
             // Assumiamo che o.getKey() restituisca l'ID dell'ordine.
             recensisciFlags.put(o.getKey(), showRecensisci);
         }
@@ -93,13 +93,13 @@ public class ElencoOrdini extends BaseController {
                 .getOrdineDAO().getOrdine(ordineId);
         
         // Verifica che la richiesta collegata all'ordine sia in stato RISOLTA
-        if (ordine.getProposta().getRichiestaOrdine().getStato() != StatoRichiesta.RISOLTA) {
+        if (ordine.getProposta().getRichiesta().getStato() != StatoRichiesta.RISOLTA) {
             response.sendRedirect("ordini?error=Non+puoi+recensire+il+tecnico+per+questo+ordine");
             return;
         }
         
         // Controllo che l'utente loggato sia l'autore della richiesta
-        if (ordine.getProposta().getRichiestaOrdine().getAutore().getId() != user) {
+        if (ordine.getProposta().getRichiesta().getAutore().getId() != user) {
             response.sendRedirect("ordini?error=Non+sei+l'autore+della+richiesta");
             return;
         }
@@ -107,8 +107,8 @@ public class ElencoOrdini extends BaseController {
         // Verifica se l'utente ha già votato questo tecnico in una richiesta precedente
         Recensione recensionePrecedente = ((ApplicationDataLayer) request.getAttribute("datalayer"))
                 .getRecensioneDAO().getRecensioneByAutoreDestinatario(
-                        ordine.getProposta().getRichiestaOrdine().getAutore(),
-                        ordine.getProposta().getRichiestaOrdine().getTecnico());
+                        ordine.getProposta().getRichiesta().getAutore(),
+                        ordine.getProposta().getRichiesta().getTecnico());
         
         if (recensionePrecedente != null) {
             // L'utente ha già votato: verifichiamo se ha confermato l'aggiornamento del voto
@@ -128,7 +128,7 @@ public class ElencoOrdini extends BaseController {
             recensione.setValore(value);
             recensione.setAutore(((ApplicationDataLayer) request.getAttribute("datalayer"))
                     .getUtenteDAO().getUtente(user));
-            recensione.setDestinatario(ordine.getProposta().getRichiestaOrdine().getTecnico());
+            recensione.setDestinatario(ordine.getProposta().getRichiesta().getTecnico());
             
             ((ApplicationDataLayer) request.getAttribute("datalayer"))
                     .getRecensioneDAO().storeRecensione(recensione);

@@ -4,6 +4,7 @@ import it.univaq.f4i.iw.ex.webmarket.data.dao.CategoriaDAO;
 import it.univaq.f4i.iw.ex.webmarket.data.dao.UtenteDAO;
 import it.univaq.f4i.iw.ex.webmarket.data.dao.OrdineDAO;
 import it.univaq.f4i.iw.ex.webmarket.data.dao.PropostaDAO;
+import it.univaq.f4i.iw.ex.webmarket.data.dao.RecensioneDAO;
 import it.univaq.f4i.iw.ex.webmarket.data.dao.RichiestaDAO;
 import it.univaq.f4i.iw.ex.webmarket.data.dao.CaratteristicheRichiestaDAO;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Caratteristica;
@@ -13,6 +14,7 @@ import it.univaq.f4i.iw.ex.webmarket.data.model.Ordine;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Proposta;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Richiesta;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Utente;
+import it.univaq.f4i.iw.ex.webmarket.data.model.Recensione;
 import it.univaq.f4i.iw.framework.data.DataException;
 import it.univaq.f4i.iw.framework.data.DataLayer;
 import java.sql.SQLException;
@@ -37,6 +39,7 @@ public class ApplicationDataLayer extends DataLayer {
         registerDAO(Proposta.class, new PropostaDAO_MySQL(this));
         registerDAO(Caratteristica.class, new CaratteristicaDAO_MySQL(this));
         registerDAO(CaratteristicheRichiesta.class, new CaratteristicheRichiestaDAO_MySQL(this));
+        registerDAO(Recensione.class, new RecensioneDAO_MySQL(this));
     
     }
     
@@ -66,4 +69,7 @@ public class ApplicationDataLayer extends DataLayer {
      public CaratteristicheRichiestaDAO getCaratteristicheRichiestaDAO() {
        return (CaratteristicheRichiestaDAO) getDAO(CaratteristicheRichiesta.class);
     }
+    public RecensioneDAO getRecensioneDAO() {
+        return (RecensioneDAO) getDAO(Recensione.class);
+     }
 }
