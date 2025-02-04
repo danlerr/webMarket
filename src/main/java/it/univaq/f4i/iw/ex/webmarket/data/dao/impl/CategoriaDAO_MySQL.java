@@ -4,6 +4,9 @@ package it.univaq.f4i.iw.ex.webmarket.data.dao.impl;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 import it.univaq.f4i.iw.ex.webmarket.data.dao.CategoriaDAO;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Categoria;
 import it.univaq.f4i.iw.ex.webmarket.data.model.impl.proxy.CategoriaProxy;
@@ -173,6 +176,27 @@ public class CategoriaDAO_MySQL extends DAO implements CategoriaDAO {
             dCategoria.executeUpdate();
         } catch (SQLException ex) {
             throw new DataException("Unable to delete Categoria", ex);
+        }
+    }
+
+    /**
+     * Recupera tutte le categorie dal db
+     * 
+     * @return lista di tutte le categorie
+     * @throws DataException errore durante il retrieve 
+     */
+    @Override
+    public List<Categoria> getAllCategorie() throws DataException {
+    List<Categoria> result = new ArrayList<>();
+        try {
+            try (ResultSet rs = sCategoria.executeQuery()) {
+                while (rs.next()) {
+                    result.add(getCategoria(rs.getInt("ID")));
+                }
+            }
+            return result;
+        } catch (SQLException ex) {
+            throw new DataException("Error loading all categories", ex);
         }
     }
 }

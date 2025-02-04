@@ -40,14 +40,12 @@ public class GestioneUtenti extends BaseController {
             response.sendRedirect("login");
             return;
         }
-
         String action = request.getParameter("action");
         if (action != null && action.equals("createUser")) {
             action_creaUtente(request, response);
         } else {
             action_default(request, response);
         }
-
     } catch (IOException | TemplateManagerException | DataException ex) {
         handleError(ex, request, response);
     }   catch (NoSuchAlgorithmException ex) {
@@ -61,7 +59,7 @@ public class GestioneUtenti extends BaseController {
     String username = request.getParameter("username");
     String email = request.getParameter("email");
     String password = request.getParameter("password");
-    String confirmPassword = request.getParameter("confirm-password");
+    String confirmPassword = request.getParameter("conferma_password");
     String roleParam = request.getParameter("ruolo");
     
     if (username == null || email == null || password == null || confirmPassword == null || roleParam == null) {
@@ -76,15 +74,13 @@ public class GestioneUtenti extends BaseController {
         return;
     }
     
-    // controllo se lo username esiste già nel database
-    Utente existingUser = ((ApplicationDataLayer) request.getAttribute("datalayer")).getUtenteDAO().getUtenteByUsername(username);
+    Utente u = ((ApplicationDataLayer) request.getAttribute("datalayer")).getUtenteDAO().getUtenteByUsername(username);
 
-    if (existingUser != null) {
+    if (u != null) {
         request.setAttribute("error", "Questo username è già utilizzato");
         action_default(request, response);
         return;
     }
-
     TipologiaUtente role = TipologiaUtente.valueOf(roleParam.toUpperCase());
     String hashedPass = SecurityHelpers.getPasswordHashPBKDF2(password);
 
@@ -133,7 +129,6 @@ public class GestioneUtenti extends BaseController {
      */
     @Override
     public String getServletInfo() {
-        return "Gestione Utenti servlet";
-    }// </editor-fold>
-
+        return "servlet per la gestione degli utenti(creazione) da parte dell'admin";
+    }
 }

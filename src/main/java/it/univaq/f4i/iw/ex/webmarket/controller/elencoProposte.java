@@ -45,7 +45,7 @@ public class ElencoProposte extends BaseController {
     } catch (IOException | TemplateManagerException ex) {
         handleError(ex, request, response);
     }    catch (DataException ex) {
-            Logger.getLogger(elencoRichieste.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ElencoRichieste.class.getName()).log(Level.SEVERE, null, ex);
         }
 }
 
