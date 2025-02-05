@@ -94,7 +94,7 @@ public class PropostaDAO_MySQL extends DAO implements PropostaDAO {
             p.setMotivazione(results.getString("motivazione"));
             p.setVersion(results.getLong("version"));
             RichiestaDAO richiestaOrdineDAO = (RichiestaDAO) dataLayer.getDAO(Richiesta.class);
-            p.setRichiestaOrdine(richiestaOrdineDAO.getRichiesta(results.getInt("richiesta_id")));
+            p.setRichiesta(richiestaOrdineDAO.getRichiesta(results.getInt("richiesta_id")));
             return p;
         } catch (SQLException ex) {
             throw new DataException("Impossibile creare l'oggetto proposta d'acquisto dal ResultSet", ex);
@@ -154,7 +154,7 @@ public class PropostaDAO_MySQL extends DAO implements PropostaDAO {
                 uProposta.setString(8, proposta.getStatoProposta().toString());
                 uProposta.setDate(9, Date.valueOf(LocalDate.now()));
                 uProposta.setString(10, proposta.getMotivazione());
-                uProposta.setInt(11, proposta.getRichiestaOrdine().getKey());
+                uProposta.setInt(11, proposta.getRichiesta().getKey());
                 long oldVersion = proposta.getVersion();
                 long versione = oldVersion + 1;
                 uProposta.setLong(12, versione);
@@ -177,7 +177,7 @@ public class PropostaDAO_MySQL extends DAO implements PropostaDAO {
                 iProposta.setString(8, proposta.getStatoProposta().toString());
                 iProposta.setDate(9, Date.valueOf(LocalDate.now()));
                 iProposta.setString(10, proposta.getMotivazione());
-                iProposta.setInt(11, proposta.getRichiestaOrdine().getKey());
+                iProposta.setInt(11, proposta.getRichiesta().getKey());
                 if (iProposta.executeUpdate() == 1) {
                     try (ResultSet keys = iProposta.getGeneratedKeys()) {
                         if (keys.next()) {
