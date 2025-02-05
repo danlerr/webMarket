@@ -1,6 +1,9 @@
 package it.univaq.f4i.iw.ex.webmarket.controller;
 
 import it.univaq.f4i.iw.ex.webmarket.data.dao.impl.ApplicationDataLayer;
+import it.univaq.f4i.iw.ex.webmarket.data.model.Proposta;
+import it.univaq.f4i.iw.ex.webmarket.data.model.TipologiaUtente;
+import it.univaq.f4i.iw.ex.webmarket.data.model.Utente;
 import it.univaq.f4i.iw.framework.data.DataException;
 import it.univaq.f4i.iw.framework.result.TemplateManagerException;
 import it.univaq.f4i.iw.framework.result.TemplateResult;
@@ -16,14 +19,25 @@ import java.util.logging.Logger;
 public class ElencoProposte extends BaseController {
 
     private void action_default(HttpServletRequest request, HttpServletResponse response, int user) throws IOException, ServletException, TemplateManagerException, DataException {
-        TemplateResult res = new TemplateResult(getServletContext());
-        request.setAttribute("page_title", "Proposte Ordinante");
+        TemplateResult result = new TemplateResult(getServletContext());
+        request.setAttribute("page_title", "Elenco Proposte");
 
         
-        //creo un nuovo dao che contenente una lista di proposte ricevute dall'ordinante
-        request.setAttribute("proposte", ((ApplicationDataLayer) request.getAttribute("datalayer")).getPropostaDAO().getProposteByUtente(user));
+        Utente u = ((ApplicationDataLayer) request.getAttribute("datalayer")).getUtenteDAO().getUtente(user);
+        boolean isOrd = u.getTipologiaUtente().equals(TipologiaUtente.ORDINANTE);
+        request.setAttribute("isOrdinante", isOrd);
 
-        res.activate("proposte_ordinante.ftl.html", request, response);
+        if (isOrd){
+            // Per l'ordinante, recupera le proposte ricevute
+            java.util.List<Proposta> proposte = ((ApplicationDataLayer) request.getAttribute("datalayer")).getPropostaDAO().getProposteByOrdinante(user);
+            request.setAttribute("proposte", proposte);
+        }else{
+            // Per il tecnico, recupera le proposte effettuate.
+            request.setAttribute("ordini", ((ApplicationDataLayer) request.getAttribute("datalayer")).getPropostaDAO().getProposteByTecnico(user));
+        }
+
+
+        result.activate("proposte.ftl.html", request, response);
     }
 
     @Override
@@ -47,13 +61,12 @@ public class ElencoProposte extends BaseController {
     }    catch (DataException ex) {
             Logger.getLogger(ElencoRichieste.class.getName()).log(Level.SEVERE, null, ex);
         }
-}
-
+    }
 
     // Descrizione della servlet
     @Override
     public String getServletInfo() {
-        return "Servlet per le proposte ricevute dall'ordinante";
+        return "Servlet per gestire l'elenco delle proposte";
     }
 
 }

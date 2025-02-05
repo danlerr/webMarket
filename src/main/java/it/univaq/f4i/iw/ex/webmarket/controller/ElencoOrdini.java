@@ -4,6 +4,7 @@ import it.univaq.f4i.iw.ex.webmarket.data.dao.impl.ApplicationDataLayer;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Ordine;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Recensione;
 import it.univaq.f4i.iw.ex.webmarket.data.model.StatoRichiesta;
+import it.univaq.f4i.iw.ex.webmarket.data.model.TipologiaUtente;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Utente;
 import it.univaq.f4i.iw.framework.data.DataException;
 import it.univaq.f4i.iw.framework.result.TemplateManagerException;
@@ -31,7 +32,7 @@ public class ElencoOrdini extends BaseController {
     Utente utente = ((ApplicationDataLayer) request.getAttribute("datalayer"))
             .getUtenteDAO().getUtente(user);
     // Imposta un flag per il template (true se l'utente è ordinante)
-    boolean isOrdinante = utente.getTipologiaUtente().equals("ORDINANTE");
+    boolean isOrdinante = utente.getTipologiaUtente().equals(TipologiaUtente.ORDINANTE);
     request.setAttribute("isOrdinante", isOrdinante);
 
     if (isOrdinante) {

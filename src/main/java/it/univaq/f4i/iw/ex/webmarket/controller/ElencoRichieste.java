@@ -3,6 +3,7 @@ package it.univaq.f4i.iw.ex.webmarket.controller;
 import it.univaq.f4i.iw.ex.webmarket.data.dao.impl.ApplicationDataLayer;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Richiesta;
 import it.univaq.f4i.iw.ex.webmarket.data.model.StatoRichiesta;
+import it.univaq.f4i.iw.ex.webmarket.data.model.TipologiaUtente;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Utente;
 import it.univaq.f4i.iw.framework.data.DataException;
 import it.univaq.f4i.iw.framework.result.TemplateManagerException;
@@ -18,60 +19,54 @@ import javax.servlet.http.HttpSession;
 
 public class ElencoRichieste extends BaseController {
 
-    private void action_default(HttpServletRequest request, HttpServletResponse response, int user) 
-    throws IOException, ServletException, TemplateManagerException, DataException {
+    private void action_default(HttpServletRequest request, HttpServletResponse response, int user) throws IOException, ServletException, TemplateManagerException, DataException {
 
-TemplateResult res = new TemplateResult(getServletContext());
+        TemplateResult res = new TemplateResult(getServletContext());
 
-// Recupera l'utente per determinare la sua tipologia
-Utente utente = ((ApplicationDataLayer) request.getAttribute("datalayer"))
-        .getUtenteDAO().getUtente(user);
+        // Recupera l'utente per determinare la sua tipologia
+        Utente utente = ((ApplicationDataLayer) request.getAttribute("datalayer")).getUtenteDAO().getUtente(user);
 
-String template;
-if (utente.getTipologiaUtente().equals("ORDINANTE")) {
-    // Caso ordinante: si recupera l'elenco delle richieste per l'ordinante
-    request.setAttribute("page_title", "Richieste Ordinante");
-    request.setAttribute("richieste", ((ApplicationDataLayer) request.getAttribute("datalayer"))
-            .getRichiestaOrdineDAO().getRichiesteByUtente(user));
-    template = "richieste_ordinante.ftl.html";
-} else if (utente.getTipologiaUtente().equals("TECNICO")) {
-    // Caso tecnico: si recuperano due liste, una per le richieste in attesa e l'altra per quelle prese in carico
-    request.setAttribute("page_title", "Richieste Tecnico");
-    
-    // Richieste in attesa per il tecnico
-    request.setAttribute("richiesteInAttesa", ((ApplicationDataLayer) request.getAttribute("datalayer"))
-            .getRichiestaOrdineDAO().getRichiesteInAttesaByTecnico(user));
-    
-    // Richieste prese in carico dal tecnico
-    request.setAttribute("richiestePreseInCarico", ((ApplicationDataLayer) request.getAttribute("datalayer"))
-            .getRichiestaOrdineDAO().getRichiestePreseInCaricoByTecnico(user));
-    
-    template = "richieste_tecnico.ftl.html";
-} else {
-    // Se l'utente non è né ordinante né tecnico, reindirizza ad una pagina predefinita
-    response.sendRedirect("Home");
-    return;
-}
+        String template;
 
-// Attivazione del template scelto con i dati impostati
-res.activate(template, request, response);
-}
+        if (utente.getTipologiaUtente().equals(TipologiaUtente.ORDINANTE)) {
+            // Caso ordinante: si recupera l'elenco delle richieste per l'ordinante
+            request.setAttribute("page_title", "Richieste Ordinante");
+            request.setAttribute("richieste", ((ApplicationDataLayer) request.getAttribute("datalayer")).getRichiestaOrdineDAO().getRichiesteByUtente(user));
+            template = "richieste_ordinante.ftl.html";
+
+        } else if (utente.getTipologiaUtente().equals(TipologiaUtente.TECNICO)) {
+            // Caso tecnico: si recuperano due liste, una per le richieste in attesa e l'altra per quelle prese in carico
+            request.setAttribute("page_title", "Richieste Tecnico");
+            
+            // Richieste in attesa per il tecnico
+            request.setAttribute("richiesteInAttesa", ((ApplicationDataLayer) request.getAttribute("datalayer")).getRichiestaOrdineDAO().getRichiesteInAttesaByTecnico(user));
+            
+            // Richieste prese in carico dal tecnico
+            request.setAttribute("richiestePreseInCarico", ((ApplicationDataLayer) request.getAttribute("datalayer")).getRichiestaOrdineDAO().getRichiestePreseInCaricoByTecnico(user));
+            
+            template = "richieste_tecnico.ftl.html";
+
+        } else {
+            // Se l'utente non è né ordinante né tecnico, reindirizza ad una pagina predefinita
+            response.sendRedirect("Home");
+            return;
+        }
+        // Attivazione del template scelto con i dati impostati
+        res.activate(template, request, response);
+    }
 
 
 
 
 @Override
-protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException {
+protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException {
     try {
         HttpSession session = SecurityHelpers.checkSession(request);
         if (session == null) {
             response.sendRedirect("login");
             return;
         }
-        
         int userId = (int) session.getAttribute("userid");
-        
         
         // Azione di default: visualizza le richieste
         action_default(request, response, userId);
@@ -82,8 +77,6 @@ protected void processRequest(HttpServletRequest request, HttpServletResponse re
     }
 }
 
-
-   
     @Override
     public String getServletInfo() {
         return "Servlet per mostrare le richieste ";

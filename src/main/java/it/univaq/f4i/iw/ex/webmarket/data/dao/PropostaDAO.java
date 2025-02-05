@@ -1,8 +1,7 @@
 package it.univaq.f4i.iw.ex.webmarket.data.dao;
-
 import it.univaq.f4i.iw.ex.webmarket.data.model.Proposta;
 import it.univaq.f4i.iw.framework.data.DataException;
-//import java.util.List;
+import java.util.List;
 
 public interface PropostaDAO {
 
@@ -12,9 +11,9 @@ public interface PropostaDAO {
 
     void storeProposta(Proposta proposta) throws DataException;
 
-    //List<PropostaAcquisto> getProposteByUtente(int utente_key) throws DataException;
+    List<Proposta> getProposteByOrdinante(int utente_key) throws DataException;
 
-    //List<PropostaAcquisto> getProposteByTecnico(int tecnico_key) throws DataException;
+    List<Proposta> getProposteByTecnico(int tecnico_key) throws DataException;
 
     //List<PropostaAcquisto> getProposteByOrdine(int ordine_key) throws DataException;
 

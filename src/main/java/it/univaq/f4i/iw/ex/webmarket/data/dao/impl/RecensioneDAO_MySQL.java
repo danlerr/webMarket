@@ -114,14 +114,13 @@ public class RecensioneDAO_MySQL extends DAO implements RecensioneDAO {
     private RecensioneProxy createRecensione(ResultSet rs) throws DataException {
         try {
             RecensioneProxy recensione = (RecensioneProxy) createRecensione();
-            recensione.setKey(rs.getInt("ID"));
+            recensione.setKey(rs.getInt("id"));
             recensione.setValore(rs.getInt("valore"));
             recensione.setVersion(rs.getLong("version"));
-
             int autoreId = rs.getInt("autore");
+            
             Utente autore = ((ApplicationDataLayer) getDataLayer()).getUtenteDAO().getUtente(autoreId);
             recensione.setAutore(autore);
-
             int destinatarioId = rs.getInt("destinatario");
             Utente destinatario = ((ApplicationDataLayer) getDataLayer()).getUtenteDAO().getUtente(destinatarioId);
             recensione.setDestinatario(destinatario);

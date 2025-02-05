@@ -92,7 +92,7 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO {
     private UtenteProxy createUtente(ResultSet rs) throws DataException {
         try {
             UtenteProxy a = (UtenteProxy) createUtente();
-            a.setKey(rs.getInt("ID"));
+            a.setKey(rs.getInt("id"));
             a.setUsername(rs.getString("username"));
             a.setEmail(rs.getString("email"));
             a.setPassword(rs.getString("password"));

@@ -20,11 +20,13 @@ import java.sql.SQLException;
 
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class PropostaDAO_MySQL extends DAO implements PropostaDAO {
 
-    private PreparedStatement sProposta, iProposta, uProposta, dProposta;
+    private PreparedStatement sProposta, iProposta, uProposta, dProposta, sProposteByOrdinante, sProposteByTecnico;
 
     public PropostaDAO_MySQL(DataLayer d) {
         super(d);
@@ -55,6 +57,13 @@ public class PropostaDAO_MySQL extends DAO implements PropostaDAO {
             dProposta = connection.prepareStatement(
                 "DELETE FROM proposta WHERE id=?"
                 );
+            sProposteByOrdinante = connection.prepareStatement(
+                "SELECT p.* FROM proposta p JOIN richiesta r ON p.richiesta_id = r.id WHERE r.ordinante = ? ORDER BY CASE WHEN (p.stato = 'IN_ATTESA') THEN 1 ELSE 2 END"
+                );
+            sProposteByTecnico = connection.prepareStatement(
+                "SELECT p.* FROM proposta p JOIN richiesta r ON p.richiesta_id = r.id WHERE r.tecnico = ? ORDER BY CASE WHEN (p.stato = 'ACCETTATO') THEN 1 ELSE 2 END"
+                );
+                
 
         } catch (SQLException ex) {
             throw new DataException("Errore durante l'inizializzazione del data layer per le proposte d'acquisto", ex);
@@ -89,7 +98,7 @@ public class PropostaDAO_MySQL extends DAO implements PropostaDAO {
     private PropostaProxy createProposta(ResultSet results) throws DataException {
         try {
             PropostaProxy p = (PropostaProxy) createProposta();
-            p.setKey(results.getInt("ID"));
+            p.setKey(results.getInt("id"));
             p.setProduttore(results.getString("produttore"));
             p.setProdotto(results.getString("prodotto"));
             p.setCodice(results.getString("codice"));
@@ -198,4 +207,37 @@ public class PropostaDAO_MySQL extends DAO implements PropostaDAO {
             throw new DataException("Impossibile salvare la proposta d'acquisto", ex);
         }
     }
+
+    @Override
+    public List<Proposta> getProposteByOrdinante(int utente_key) throws DataException {
+           List<Proposta> proposte = new ArrayList<>();
+    try {
+        sProposta.setInt(1, utente_key);
+        try (ResultSet result = sProposteByOrdinante.executeQuery()) {
+            while (result.next()) {
+                proposte.add(createProposta(result));
+            }
+        }
+    } catch (SQLException ex) {
+        throw new DataException("Impossibile caricare le proposte d'acquisto per l'utente specificato", ex);
+    }
+    return proposte;
+    }
+
+    @Override
+    public List<Proposta> getProposteByTecnico(int tecnico_key) throws DataException {
+        List<Proposta> proposte = new ArrayList<>();
+        try {
+            sProposteByTecnico.setInt(1, tecnico_key);
+            try (ResultSet result = sProposteByTecnico.executeQuery()) {
+                while (result.next()) {
+                    proposte.add(createProposta(result));
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DataException("Impossibile caricare le proposte d'acquisto per il tecnico specificato", ex);
+        }
+        return proposte;
+        }
+
 }

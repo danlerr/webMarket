@@ -139,7 +139,7 @@ public class RichiestaDAO_MySQL extends DAO implements RichiestaDAO {
     private RichiestaProxy createRichiesta(ResultSet rs) throws DataException {
         try {
             RichiestaProxy richiesta = (RichiestaProxy) createRichiesta();
-            richiesta.setKey(rs.getInt("ID"));
+            richiesta.setKey(rs.getInt("id"));
             richiesta.setNote(rs.getString("note"));
             richiesta.setStato(StatoRichiesta.valueOf(rs.getString("stato")));
             richiesta.setData(rs.getDate("data"));
