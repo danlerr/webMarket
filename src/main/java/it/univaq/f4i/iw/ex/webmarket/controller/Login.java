@@ -23,6 +23,7 @@ public class Login extends BaseController {
         //Il referrer è un parametro passato all'URL che indica da quale pagina l'utente proviene.
         //Viene usato per reindirizzare l'utente alla pagina originale dopo il login, invece di mandarlo sempre a una homepage generica.
         request.setAttribute("referrer", request.getParameter("referrer"));
+        request.setAttribute("pageName", "login"); // Imposta pageName per Freemarker
         result.activate("login.ftl.html", request, response);
        
     }

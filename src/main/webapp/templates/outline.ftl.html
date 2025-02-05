@@ -6,10 +6,10 @@
 	<meta http-equiv="X-UA-Compatible" content="ie=edge"/>
 	<title>Coquette</title>
 	<!-- CSS files -->
-    <link rel="stylesheet" href="../style/demo.css">
-	<link rel="stylesheet" href="../style/demo.min.css">
-	<link rel="stylesheet" href="../style/tabler.css">
-	<link rel="stylesheet" href="../style/tabler.min.css">
+    <link rel="stylesheet" href="style/demo.css">
+	<link rel="stylesheet" href="style/demo.min.css">
+	<link rel="stylesheet" href="style/tabler.css">
+	<link rel="stylesheet" href="style/tabler.min.css">
 	<style>
 		@import url('https://rsms.me/inter/inter.css');
 
@@ -41,13 +41,17 @@ button {
 </head>
 <body>
 
-    <#include "header.ftl.html">
+    <#-- Controllo se la pagina è "login.ftl", se sì, non carico header e footer -->
+    <#if pageName != "login">
+        <#include "header.ftl.html">
+    </#if>
 
     <div>
         <#include content_tpl>
     </div>
 
-    <#include "footer.ftl.html">
+    <#if pageName != "login">
+        <#include "footer.ftl.html">
+    </#if>
 
 </body>
-</html>
