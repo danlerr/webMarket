@@ -3,20 +3,26 @@
     <context-param>
         <param-name>security.protect.patterns</param-name>
         <!-- qui configuriamo i pattern delle URL da proteggere -->
-        <param-value>/,
-                     /,
-                     /,
-                     /,
-                     /,
-                     /,
-                     /,
-                     /,
-                     /,</param-value>
+        <param-value>/login,
+                     /logout,
+                     /CreaProposta,
+                     /CreaRichiesta,
+                     /DettaglioOrdine,
+                     /DettagioProposta,
+                     /DettaglioRichiesta,
+                     /ElencoOrdini,
+                     /ElencoProposte,
+                     /ElencoRichieste,
+                     /GestioneUtenti,
+                     /Home,
+                     /HomeAdmin,
+                     /Impostazioni
+         </param-value>
     </context-param>
     <context-param>
-        <param-name>data.source</param-name>
-        <!-- qui configuriamo in nome della data source da usare nel codice -->
-        <param-value>jdbc/webdb2</param-value>
+        <param-name>images.directory</param-name>
+        <!-- Tomcat must have write permissions on this folder -->
+        <param-value>d:/Java/TomcatWork</param-value>
     </context-param>
     <context-param>
         <param-name>view.outline_template</param-name>
@@ -47,12 +53,14 @@
         <param-value>error.ftl.html</param-value>
     </context-param>
     <context-param>
-        <param-name>view.data.filler.dummy</param-name>
-        <param-value>it.univaq.f4i.iw.examples.application.DummyModelFiller</param-value>
+        <param-name>view.data.filler.timestamp</param-name>
+        <param-value>it.univaq.f4i.iw.ex.webmarket.controller.DummyModelFiller</param-value>
     </context-param>
-    <listener>
-        <listener-class>it.univaq.f4i.iw.framework.application.ApplicationInitializer</listener-class>
-    </listener>
+    <context-param>
+        <param-name>data.source</param-name>
+        <!-- qui configuriamo in nome della data source da usare nel codice -->
+        <param-value>jdbc/webdb2</param-value>
+    </context-param>
 
 
     <servlet>
@@ -78,10 +86,6 @@
     <servlet>
         <servlet-name>GestioneUtenti</servlet-name>
         <servlet-class>it.univaq.f4i.iw.examples.controller.GestioneUtenti</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>EmailSender</servlet-name>
-        <servlet-class>it.univaq.f4i.iw.examples.controller.EmailSender</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ElencoRichieste</servlet-name>
@@ -126,6 +130,61 @@
         <servlet-name>login</servlet-name>
         <url-pattern>/login</url-pattern>
     </servlet-mapping>
+     <servlet-mapping>
+        <servlet-name>logout</servlet-name>
+        <url-pattern>/logout</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CreaProposta</servlet-name>
+        <url-pattern>/CreaProposta</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CreaRichiesta</servlet-name>
+        <url-pattern>/CreaRichiesta</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DettaglioOrdine</servlet-name>
+        <url-pattern>/DettaglioOrdine</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DettaglioProposta</servlet-name>
+        <url-pattern>/DettaglioProposta</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DettaglioRichiesta</servlet-name>
+        <url-pattern>/DettaglioRichiesta</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ElencoOrdini</servlet-name>
+        <url-pattern>/ElencoOrdini</url-pattern>
+    </servlet-mapping>
+      <servlet-mapping>
+        <servlet-name>ElencoProposte</servlet-name>
+        <url-pattern>/ElencoProposte</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ElencoRichieste</servlet-name>
+        <url-pattern>/ElencoRichieste</url-pattern>
+    </servlet-mapping>
+     <servlet-mapping>
+        <servlet-name>GestioneUtenti</servlet-name>
+        <url-pattern>/GestioneUtenti</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Home</servlet-name>
+        <url-pattern>/Home</url-pattern>
+    </servlet-mapping>
+     <servlet-mapping>
+        <servlet-name>HomeAdmin</servlet-name>
+        <url-pattern>/HomeAdmin</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Impostazioni</servlet-name>
+        <url-pattern>/Impostazioni</url-pattern>
+    </servlet-mapping>
+    
+    
+    
     
 
 
