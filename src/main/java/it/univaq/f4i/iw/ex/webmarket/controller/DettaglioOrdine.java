@@ -51,7 +51,7 @@ public class DettaglioOrdine extends BaseController {
     boolean showAccettaRifiutaButtons = false;
     if (utente.getTipologiaUtente().equals("ORDINANTE") &&
         ordine.getStato().equals(StatoOrdine.IN_ATTESA) &&
-        ordine.getProposta().getRichiesta().getAutore().getId() == user) {
+        ordine.getProposta().getRichiesta().getOrdinante().getId() == user) {
         showAccettaRifiutaButtons = true;
     }
     request.setAttribute("showAccettaRifiutaButtons", showAccettaRifiutaButtons);
@@ -75,7 +75,7 @@ Ordine ordine = ((ApplicationDataLayer) request.getAttribute("datalayer"))
 int loggedUserId = (int) request.getSession(false).getAttribute("userid");
 
 // Controlla che l'utente loggato sia l'autore della richiesta associata all'ordine
-if (ordine.getProposta().getRichiesta().getAutore().getId() != loggedUserId) {
+if (ordine.getProposta().getRichiesta().getOrdinante().getId() != loggedUserId) {
     // Se non corrisponde, reindirizza con un messaggio di errore
     response.sendRedirect("ordini?error=Non+sei+l'autore+della+richiesta");
     return;
@@ -108,7 +108,7 @@ Ordine ordine = ((ApplicationDataLayer) request.getAttribute("datalayer"))
 int loggedUserId = (int) request.getSession(false).getAttribute("userid");
 
 // Controlla che l'utente loggato sia l'autore della richiesta associata all'ordine
-if (ordine.getProposta().getRichiesta().getAutore().getId() != loggedUserId) {
+if (ordine.getProposta().getRichiesta().getOrdinante().getId() != loggedUserId) {
 response.sendRedirect("ordini?error=Non+sei+l'autore+della+richiesta");
 return;
 }
