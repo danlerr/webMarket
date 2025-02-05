@@ -142,68 +142,7 @@ response.sendRedirect("ordini?message=Ordine+rifiutato");
 
 
     
-            throws IOException, ServletException, TemplateManagerException, DataException {
-        // Recupera l'ordine vecchio
-        Ordine ordineVecchio = ((ApplicationDataLayer) request.getAttribute("datalayer"))
-                .getOrdineDAO().getOrdine(n);
-
-        PropostaAcquisto proposta = ordineVecchio.getProposta();
-        // Aggiorna lo stato della proposta
-        proposta.setStatoProposta(it.univaq.f4i.iw.ex.webmarket.data.model.impl.StatoProposta.ORDINATO);
-        String email = proposta.getRichiestaOrdine().getUtente().getEmail();
-
-        // Aggiorna lo stato dell'ordine vecchio
-        ordineVecchio.setStato(StatoOrdine.RIFIUTATO);
-        ((ApplicationDataLayer) request.getAttribute("datalayer"))
-                .getOrdineDAO().storeOrdine(ordineVecchio);
-
-        // Creazione di un nuovo ordine
-        Ordine ordineNuovo = new OrdineImpl();
-        ordineNuovo.setProposta(proposta);
-        ordineNuovo.setStato(StatoOrdine.IN_ATTESA);
-        ordineNuovo.setData(new Date(System.currentTimeMillis()));
-        ((ApplicationDataLayer) request.getAttribute("datalayer"))
-                .getOrdineDAO().storeOrdine(ordineNuovo);
-
-        // Aggiorna lo stato della proposta
-        proposta.setStatoProposta(it.univaq.f4i.iw.ex.webmarket.data.model.impl.StatoProposta.ORDINATO);
-        ((ApplicationDataLayer) request.getAttribute("datalayer"))
-                .getPropostaAcquistoDAO().storePropostaAcquisto(proposta);
-
-        // Aggiorna lo stato della richiesta
-        Richiesta richiesta = proposta.getRichiestaOrdine();
-        richiesta.setStato(it.univaq.f4i.iw.ex.webmarket.data.model.impl.StatoRichiesta.ORDINATA);
-        ((ApplicationDataLayer) request.getAttribute("datalayer"))
-                .getRichiestaOrdineDAO().storeRichiestaOrdine(richiesta);
-
-        // Gestione invio email con allegato PDF
-        Properties props = new Properties();
-        props.put("mail.smtp.host", "smtp.outlook.com");
-        props.put("mail.smtp.port", "587");
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-
-        Session emailSession = Session.getInstance(props, new javax.mail.Authenticator() {
-            protected javax.mail.PasswordAuthentication getPasswordAuthentication() {
-                return new javax.mail.PasswordAuthentication("webmarket.univaq@outlook.com", "geagiuliasamanta1");
-            }
-        });
-        String text = "Gentile Utente, la informiamo che è stato effettuato un nuovo ordine per la proposta numero " + 
-                proposta.getCodice() + "\n\n In allegato trova i dettagli del suo ordine.";
-        String tipo = "OrdineProposta_";
-        String messaggio = "\n Dettagli dell'ordine effettuato per la proposta numero: " + proposta.getCodice() + "\n\n";
-        String pdfFilePath = "OrdineProposta_" + proposta.getCodice() + ".pdf";
-        String codice = proposta.getCodice();
-
-        try {
-            it.univaq.f4i.iw.ex.webmarket.util.EmailSender.createPDF(tipo, messaggio, proposta, codice);
-            it.univaq.f4i.iw.ex.webmarket.util.EmailSender.sendEmailWithAttachment(emailSession, email, "Notifica Ordine", text, pdfFilePath);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        response.sendRedirect("storico_tecnico");
-    }
+       
 
 @Override
 protected void processRequest(HttpServletRequest request, HttpServletResponse response)
