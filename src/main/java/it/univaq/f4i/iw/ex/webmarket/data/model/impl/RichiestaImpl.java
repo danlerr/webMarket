@@ -9,7 +9,7 @@ import java.util.Date;
 
 
 public class RichiestaImpl extends DataItemImpl<Integer> implements Richiesta {
-
+    private int id;
     private String note;
     private StatoRichiesta stato;
     private Date data;
@@ -47,13 +47,12 @@ public class RichiestaImpl extends DataItemImpl<Integer> implements Richiesta {
     
     @Override
     public int getId() {
-        return getKey(); // Delegato a getKey() della classe base
+        return id;
     }
 
-    
     @Override
     public void setId(int id) {
-        setKey(id); // Delegato a setKey() della classe base
+        this.id = id;
     }
 
     

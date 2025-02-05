@@ -83,7 +83,7 @@ public class CaratteristicaDAO_MySQL extends DAO implements CaratteristicaDAO {
     private CaratteristicaProxy createCaratteristica(ResultSet results) throws DataException {
         try {
             CaratteristicaProxy cProxy = (CaratteristicaProxy) createCaratteristica();
-            cProxy.setKey(results.getInt("ID"));
+            cProxy.setKey(results.getInt("id"));
             cProxy.setNome(results.getString("nome"));
             cProxy.setVersion(results.getLong("version"));
              int categoriaId = results.getInt("categoria_id");

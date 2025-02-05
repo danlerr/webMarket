@@ -100,16 +100,16 @@ public class ElencoOrdini extends BaseController {
         }
         
         // Controllo che l'utente loggato sia l'autore della richiesta
-        if (ordine.getProposta().getRichiesta().getAutore().getId() != user) {
+        if (ordine.getProposta().getRichiesta().getOrdinante().getId() != user) {
             response.sendRedirect("ordini?error=Non+sei+l'autore+della+richiesta");
             return;
         }
         
         // Verifica se l'utente ha già votato questo tecnico in una richiesta precedente
         Recensione recensionePrecedente = ((ApplicationDataLayer) request.getAttribute("datalayer"))
-                .getRecensioneDAO().getRecensioneByAutoreDestinatario(
-                        ordine.getProposta().getRichiesta().getAutore(),
-                        ordine.getProposta().getRichiesta().getTecnico());
+                .getRecensioneDAO().getRecensioneByOrdinanteTecnico(
+                        ordine.getProposta().getRichiesta().getOrdinante().getId(),
+                        ordine.getProposta().getRichiesta().getTecnico().getId());
         
         if (recensionePrecedente != null) {
             // L'utente ha già votato: verifichiamo se ha confermato l'aggiornamento del voto

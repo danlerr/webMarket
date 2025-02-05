@@ -24,6 +24,8 @@ public class RecensioneDAO_MySQL extends DAO implements RecensioneDAO {
     private PreparedStatement iRecensione;
     private PreparedStatement uRecensione;
     private PreparedStatement dRecensione;
+    private PreparedStatement sRecensioneByOrdinanteTecnico;
+
 
     /**
      * Costruttore della classe.
@@ -60,6 +62,10 @@ public class RecensioneDAO_MySQL extends DAO implements RecensioneDAO {
                 "UPDATE recensione SET valore=?, autore=?, destinatario=?, version=? " +
                 "WHERE id=? AND version=?"
             );
+            // PreparedStatement per recuperare una Recensione dato ordinante e tecnico
+            sRecensioneByOrdinanteTecnico = connection.prepareStatement(
+                "SELECT * FROM recensione WHERE autore = ? AND destinatario = ?"
+            );
 
             // PreparedStatement per eliminare una Recensione
             dRecensione = connection.prepareStatement("DELETE FROM recensione WHERE id=?");
@@ -87,6 +93,9 @@ public class RecensioneDAO_MySQL extends DAO implements RecensioneDAO {
             }
             if (dRecensione != null && !dRecensione.isClosed()) {
                 dRecensione.close();
+            }
+            if (sRecensioneByOrdinanteTecnico != null && !sRecensioneByOrdinanteTecnico.isClosed()) {
+                sRecensioneByOrdinanteTecnico.close();
             }
         } catch (SQLException ex) {
             throw new DataException("Errore durante la chiusura del RecensioneDAO", ex);
@@ -228,5 +237,24 @@ public class RecensioneDAO_MySQL extends DAO implements RecensioneDAO {
         } catch (SQLException ex) {
             throw new DataException("Impossibile eliminare la Recensione", ex);
         }
+    }
+
+    @Override
+    public Recensione getRecensioneByOrdinanteTecnico(int ordinante_id, int tecnico_id) throws DataException {
+        Recensione recensione = null;
+        try {
+            sRecensioneByOrdinanteTecnico.setInt(1, ordinante_id);
+            sRecensioneByOrdinanteTecnico.setInt(2, tecnico_id);
+            try (ResultSet rs = sRecensioneByOrdinanteTecnico.executeQuery()) {
+                if (rs.next()) {
+                    recensione = createRecensione(rs);
+                    //aggiunta recensione alla cache
+                    dataLayer.getCache().add(Recensione.class, recensione);
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DataException("Impossibile caricare la Recensione per ordinante e tecnico", ex);
+        }
+        return recensione;
     }
 }

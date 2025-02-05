@@ -112,11 +112,11 @@ public class CaratteristicaRichiestaDAO_MySQL extends DAO implements Caratterist
     private CaratteristicaRichiestaProxy createCR(ResultSet rs) throws DataException {
         try{
             CaratteristicaRichiestaProxy cr = (CaratteristicaRichiestaProxy) createCR();
-            cr.setKey(rs.getInt("ID"));
+            cr.setKey(rs.getInt("id"));
              RichiestaDAO richiestaDAO = (RichiestaDAO) dataLayer.getDAO(Richiesta.class);
-             cr.setRichiesta(richiestaDAO.getRichiesta(rs.getInt("richiesta_id")));
+             cr.setRichiesta(richiestaDAO.getRichiesta(rs.getInt("richiesta")));
             CaratteristicaDAO caratteristicaDAO = (CaratteristicaDAO) dataLayer.getDAO(Caratteristica.class);
-            cr.setCaratteristica(caratteristicaDAO.getCaratteristica(rs.getInt("caratteristica_id")));
+            cr.setCaratteristica(caratteristicaDAO.getCaratteristica(rs.getInt("caratteristica")));
             cr.setValore(rs.getString("valore"));
             cr.setVersion(rs.getLong("version"));
             return cr;
