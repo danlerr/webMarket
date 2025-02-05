@@ -12,11 +12,13 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class CaratteristicaDAO_MySQL extends DAO implements CaratteristicaDAO {
 
-    private PreparedStatement sCaratteristica, sCaratteristiche, iCaratteristica, uCaratteristica, dCaratteristica;
+    private PreparedStatement sCaratteristica, sCaratteristiche, iCaratteristica, uCaratteristica, dCaratteristica, sCaratteristicaByCategoria;
 
     public CaratteristicaDAO_MySQL(DataLayer d) {
         super(d);
@@ -42,6 +44,10 @@ public class CaratteristicaDAO_MySQL extends DAO implements CaratteristicaDAO {
             dCaratteristica = connection.prepareStatement(
                 "DELETE FROM caratteristica WHERE id=?"
                 );
+            sCaratteristicaByCategoria = connection.prepareStatement(
+                "SELECT * FROM caratteristica WHERE categoria_id=?"
+                );
+
         } catch (SQLException ex) {
             throw new DataException("Error initializing caratteristica data layer", ex);
         }
@@ -55,6 +61,8 @@ public class CaratteristicaDAO_MySQL extends DAO implements CaratteristicaDAO {
             iCaratteristica.close();
             uCaratteristica.close();
             dCaratteristica.close();
+            sCaratteristicaByCategoria.close();
+
         } catch (SQLException ex) {
             //
         }
@@ -183,5 +191,27 @@ public class CaratteristicaDAO_MySQL extends DAO implements CaratteristicaDAO {
         } catch (SQLException ex) {
             throw new DataException("Unable to delete caratteristica", ex);
         }
+    }
+    /**
+     * Recupera le caratteristiche associate a una categoria.
+     * 
+     * @param categoria l'ID della categoria
+     * @return una lista di caratteristiche associate alla categoria
+     * @throws DataException se si verifica un errore durante il recupero
+     */
+    @Override
+    public List<Caratteristica> getCaratteristicheByCategoria(int categoria) throws DataException {
+        List<Caratteristica> result = new ArrayList<>();
+    try {
+        sCaratteristicaByCategoria.setInt(1, categoria);
+        try (ResultSet rs = sCaratteristicaByCategoria.executeQuery()) {
+            while (rs.next()) {
+                result.add(createCaratteristica(rs));
+            }
+        }
+    } catch (SQLException ex) {
+        throw new DataException("Unable to load caratteristiche by categoria ID", ex);
+    }
+    return result;
     }
 }
