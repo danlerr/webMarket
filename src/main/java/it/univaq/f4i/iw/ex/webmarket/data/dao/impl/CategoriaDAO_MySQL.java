@@ -17,7 +17,7 @@ import it.univaq.f4i.iw.framework.data.DataLayer;
 
 public class CategoriaDAO_MySQL extends DAO implements CategoriaDAO {
 
-    private PreparedStatement sCategoria, iCategoria, uCategoria, dCategoria;
+    private PreparedStatement sCategoria, iCategoria, uCategoria, dCategoria, sCategorieByPadre, sMainCategorie;
     
     /**
      * Costruttore della classe.
@@ -50,6 +50,12 @@ public class CategoriaDAO_MySQL extends DAO implements CategoriaDAO {
                 );
             dCategoria = connection.prepareStatement(
                 "DELETE FROM categoria WHERE id=?"
+                );
+            sCategorieByPadre = connection.prepareStatement(
+                "SELECT * FROM categoria WHERE padre = ?"
+                );
+            sMainCategorie = connection.prepareStatement(
+                "SELECT * FROM categoria WHERE padre IS NULL"
                 );
 
         } catch (SQLException e) {
@@ -198,5 +204,36 @@ public class CategoriaDAO_MySQL extends DAO implements CategoriaDAO {
         } catch (SQLException ex) {
             throw new DataException("Error loading all categories", ex);
         }
+    }
+
+    @Override
+    public List<Categoria> getCategorieByPadre(int padre) throws DataException {
+        List<Categoria> result = new ArrayList<>();
+        try {
+            sCategorieByPadre.setInt(1, padre);
+            try (ResultSet rs = sCategorieByPadre.executeQuery()) {
+                while (rs.next()) {
+                    result.add(createCategoria(rs));
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DataException("Impossibile caricare le categorie dato l'id del padre", ex);
+        }
+        return result;
+        }
+
+    @Override
+    public List<Categoria> getMainCategorie() throws DataException {
+        List<Categoria> result = new ArrayList<>();
+        try {
+            try (ResultSet r = sMainCategorie.executeQuery()) {
+                while (r.next()) {
+                    result.add(createCategoria(r));
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DataException("Impossibile caricare le categorie principali", ex);
+        }
+        return result;
     }
 }

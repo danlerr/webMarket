@@ -17,6 +17,11 @@ public interface CategoriaDAO {
     void deleteCategoria(Categoria categoria) throws DataException;
     
     List<Categoria> getAllCategorie() throws DataException;
+
+    List<Categoria> getCategorieByPadre(int padre) throws DataException;
+
+    List<Categoria> getMainCategorie() throws DataException;
+    
 }
 
 
