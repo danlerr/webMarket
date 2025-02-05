@@ -7,14 +7,11 @@ import it.univaq.f4i.iw.framework.result.TemplateResult;
 import it.univaq.f4i.iw.framework.security.SecurityHelpers;
 import it.univaq.f4i.iw.framework.data.DataException;
 import it.univaq.f4i.iw.framework.result.TemplateManagerException;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
@@ -47,7 +44,6 @@ public class CreaRichiesta extends BaseController {
                 response.sendRedirect("login");
                 return;
             }
-            
             
             String nParam = request.getParameter("n");
         if (nParam != null) {
@@ -83,8 +79,6 @@ public class CreaRichiesta extends BaseController {
             Logger.getLogger(CreaRichiesta.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    
 
     @Override
     public String getServletInfo() {

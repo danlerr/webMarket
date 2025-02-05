@@ -1,12 +1,12 @@
 package it.univaq.f4i.iw.ex.webmarket.data.dao.impl;
 
 import it.univaq.f4i.iw.ex.webmarket.data.dao.CaratteristicaDAO;
-import it.univaq.f4i.iw.ex.webmarket.data.dao.CaratteristicheRichiestaDAO;
+import it.univaq.f4i.iw.ex.webmarket.data.dao.CaratteristicaRichiestaDAO;
 import it.univaq.f4i.iw.ex.webmarket.data.dao.RichiestaDAO;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Caratteristica;
-import it.univaq.f4i.iw.ex.webmarket.data.model.CaratteristicheRichiesta;
+import it.univaq.f4i.iw.ex.webmarket.data.model.CaratteristicaRichiesta;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Richiesta;
-import it.univaq.f4i.iw.ex.webmarket.data.model.impl.proxy.CaratteristicheRichiestaProxy;
+import it.univaq.f4i.iw.ex.webmarket.data.model.impl.proxy.CaratteristicaRichiestaProxy;
 import it.univaq.f4i.iw.framework.data.DAO;
 import it.univaq.f4i.iw.framework.data.DataException;
 import it.univaq.f4i.iw.framework.data.DataItemProxy;
@@ -18,7 +18,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CaratteristicheRichiestaDAO_MySQL extends DAO implements CaratteristicheRichiestaDAO {
+public class CaratteristicaRichiestaDAO_MySQL extends DAO implements CaratteristicaRichiestaDAO {
 
     private PreparedStatement sCR, sCByRichiesta, sRByCaratteristica, iCR, uCR;
 
@@ -27,7 +27,7 @@ public class CaratteristicheRichiestaDAO_MySQL extends DAO implements Caratteris
      * 
      * @param d il DataLayer da utilizzare
      */
-    public CaratteristicheRichiestaDAO_MySQL(DataLayer d) {
+    public CaratteristicaRichiestaDAO_MySQL(DataLayer d) {
         super(d);
     }
 
@@ -41,19 +41,19 @@ public class CaratteristicheRichiestaDAO_MySQL extends DAO implements Caratteris
         try {
             super.init();
             sCR = connection.prepareStatement(
-                "SELECT * FROM caratteristica_richiesta WHERE ID = ?"
+                "SELECT * FROM caratteristica_richiesta WHERE id = ?"
                 );
             sCByRichiesta = connection.prepareStatement(
-                "SELECT * FROM caratteristica_richiesta WHERE richiesta_id = ?"
+                "SELECT * FROM caratteristica_richiesta WHERE richiesta = ?"
                 );
             sRByCaratteristica = connection.prepareStatement(
-                "SELECT * FROM caratteristica_richiesta WHERE caratteristica_id = ?"
+                "SELECT * FROM caratteristica_richiesta WHERE caratteristica = ?"
                 );
             iCR = connection.prepareStatement(
-                "INSERT INTO caratteristica_richiesta (richiesta_id, caratteristica_id, valore) VALUES(?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS
+                "INSERT INTO caratteristica_richiesta (richiesta, caratteristica, valore) VALUES(?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS
                 );
             uCR = connection.prepareStatement(
-                "UPDATE caratteristica_richiesta SET richiesta_id=?, caratteristica_id=?, valore=?, version=? WHERE ID=? AND version=?"
+                "UPDATE caratteristica_richiesta SET richiesta=?, caratteristica=?, valore=?, version=? WHERE id=? AND version=?"
                 );
         } catch (SQLException ex) {
             throw new DataException("Error initializing data layer", ex);
@@ -98,8 +98,8 @@ public class CaratteristicheRichiestaDAO_MySQL extends DAO implements Caratteris
      * @return una nuova istanza di CaratteristicaRichiestaProxy
      */
     @Override
-    public CaratteristicheRichiesta createCR() {
-        return new CaratteristicheRichiestaProxy(getDataLayer());
+    public CaratteristicaRichiesta createCR() {
+        return new CaratteristicaRichiestaProxy(getDataLayer());
     }
 
     /**
@@ -109,9 +109,9 @@ public class CaratteristicheRichiestaDAO_MySQL extends DAO implements Caratteris
      * @return una nuova istanza di CaratteristicaRichiestaProxy
      * @throws DataException se si verifica un errore durante la creazione
      */
-    private CaratteristicheRichiestaProxy createCR(ResultSet rs) throws DataException {
+    private CaratteristicaRichiestaProxy createCR(ResultSet rs) throws DataException {
         try{
-            CaratteristicheRichiestaProxy cr = (CaratteristicheRichiestaProxy) createCR();
+            CaratteristicaRichiestaProxy cr = (CaratteristicaRichiestaProxy) createCR();
             cr.setKey(rs.getInt("ID"));
              RichiestaDAO richiestaDAO = (RichiestaDAO) dataLayer.getDAO(Richiesta.class);
              cr.setRichiesta(richiestaDAO.getRichiesta(rs.getInt("richiesta_id")));
@@ -134,17 +134,17 @@ public class CaratteristicheRichiestaDAO_MySQL extends DAO implements Caratteris
      * @throws DataException se si verifica un errore durante il recupero
      */
      @Override
-     public CaratteristicheRichiesta getCR(int cr_key) throws DataException {
-         CaratteristicheRichiesta c = null;
-          if (dataLayer.getCache().has(CaratteristicheRichiesta.class, cr_key)) {
-             c = dataLayer.getCache().get(CaratteristicheRichiesta.class, cr_key);
+     public CaratteristicaRichiesta getCR(int cr_key) throws DataException {
+         CaratteristicaRichiesta c = null;
+          if (dataLayer.getCache().has(CaratteristicaRichiesta.class, cr_key)) {
+             c = dataLayer.getCache().get(CaratteristicaRichiesta.class, cr_key);
           } else {
               try {
                   sCR.setInt(1, cr_key);
                   try (ResultSet rs = sCR.executeQuery()) {
                       if (rs.next()) {
                           c = createCR(rs);
-                          dataLayer.getCache().add(CaratteristicheRichiesta.class, c);
+                          dataLayer.getCache().add(CaratteristicaRichiesta.class, c);
                       }
                   }
               } catch (SQLException ex) {
@@ -162,13 +162,13 @@ public class CaratteristicheRichiestaDAO_MySQL extends DAO implements Caratteris
      * @throws DataException se si verifica un errore durante il recupero
      */
     @Override
-    public List<CaratteristicheRichiesta> getCaratteristicheRichiestaByRichiesta(int richiesta_key) throws DataException {
-        List<CaratteristicheRichiesta> caratteristiche = new ArrayList<>();
+    public List<CaratteristicaRichiesta> getCaratteristicheRichiestaByRichiesta(int richiesta_key) throws DataException {
+        List<CaratteristicaRichiesta> caratteristiche = new ArrayList<>();
         try {
             sCByRichiesta.setInt(1, richiesta_key);
             try (ResultSet rs = sCByRichiesta.executeQuery()) {
                 while (rs.next()) {
-                    CaratteristicheRichiesta caratteristicheRichiesta = createCR(rs);
+                    CaratteristicaRichiesta caratteristicheRichiesta = createCR(rs);
                     caratteristiche.add(caratteristicheRichiesta);
                 }
             }
@@ -177,30 +177,6 @@ public class CaratteristicheRichiestaDAO_MySQL extends DAO implements Caratteris
         }
         return caratteristiche;
     }
-    
-    /**
-     * Recupera le caratteristiche richieste associate a una richiesta.
-     * 
-     * @param richiesta_key l'ID della richiesta
-     * @return una lista di caratteristiche richieste associate alla richiesta
-     * @throws DataException se si verifica un errore durante il recupero
-     */
-    //@Override
-    // public List<CaratteristicheRichiesta> getCRByRichiesta(int richiesta_key) throws DataException {
-    //     List<CaratteristicheRichiesta> caratteristiche = new ArrayList<>();
-    //     try {
-    //         sCByRichiesta.setInt(1, richiesta_key);
-    //         try (ResultSet rs = sCByRichiesta.executeQuery()) {
-    //             while (rs.next()) {
-    //                 CaratteristicheRichiesta caratteristicaRichiesta = createCR(rs);
-    //                 caratteristiche.add(caratteristicaRichiesta);
-    //             }
-    //         }
-    //     } catch (SQLException ex) {
-    //         throw new DataException("Unable to load Caratteristiche by Richiesta", ex);
-    //     }
-    //     return caratteristiche;
-    // }
     
     /**
      * Recupera le richieste associate a una caratteristica.
@@ -235,10 +211,10 @@ public class CaratteristicheRichiestaDAO_MySQL extends DAO implements Caratteris
      * @throws DataException se si verifica un errore durante la memorizzazione
      */
     @Override
-    public void storeCR(CaratteristicheRichiesta cr) throws DataException {
+    public void storeCR(CaratteristicaRichiesta cr) throws DataException {
         try {
             if (cr.getKey() != null && cr.getKey() > 0) {
-                if (cr instanceof CaratteristicheRichiestaProxy && !((CaratteristicheRichiestaProxy) cr).isModified()) {
+                if (cr instanceof CaratteristicaRichiestaProxy && !((CaratteristicaRichiestaProxy) cr).isModified()) {
                     return;
                 }
                 uCR.setInt(1, cr.getRichiesta().getKey());
@@ -263,7 +239,7 @@ public class CaratteristicheRichiestaDAO_MySQL extends DAO implements Caratteris
                         if (keys.next()) {
                             int key = keys.getInt(1);
                             cr.setKey(key);
-                            dataLayer.getCache().add(CaratteristicheRichiesta.class, cr);
+                            dataLayer.getCache().add(CaratteristicaRichiesta.class, cr);
                         }
                     }
                 }

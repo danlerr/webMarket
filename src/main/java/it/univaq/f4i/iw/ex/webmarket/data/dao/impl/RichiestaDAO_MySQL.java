@@ -48,39 +48,35 @@ public class RichiestaDAO_MySQL extends DAO implements RichiestaDAO {
 
             // PreparedStatement per recuperare una Richiesta per ID
             sRichiestaByID = connection.prepareStatement(
-                "SELECT * FROM Richiesta WHERE ID = ?"
+                "SELECT * FROM richiesta WHERE id = ?"
                 );
             // PreparedStatment per recuperare le richieste dato userId
             sRichiesteByUtente = connection.prepareStatement(
-                "SELECT * FROM Richiesta WHERE utente = ?"
+                "SELECT * FROM richiesta WHERE ordinante = ?"
                 );
             // PreparedStatement per inserire una nuova Richiesta
             iRichiesta = connection.prepareStatement(
-                "INSERT INTO Richiesta (note, stato, data, codice_richiesta, utente, tecnico, categoria_id, version) " +
+                "INSERT INTO richiesta (note, stato, data, codice_richiesta, ordinante, tecnico, categoria, version) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS
             );
 
             // PreparedStatement per aggiornare una Richiesta esistente
             uRichiesta = connection.prepareStatement(
-                "UPDATE Richiesta SET note=?, stato=?, data=?, codice_richiesta=?, utente=?, tecnico=?, categoria_id=?, version=? " +
-                "WHERE ID=? AND version=?"
+                "UPDATE richiesta SET note=?, stato=?, data=?, codice_richiesta=?, ordinante=?, tecnico=?, categoria=?, version=? " +
+                "WHERE id=? AND version=?"
             );
 
             // PreparedStatement per eliminare una Richiesta
-            dRichiesta = connection.prepareStatement("DELETE FROM Richiesta WHERE ID=?");
+            dRichiesta = connection.prepareStatement("DELETE FROM richiesta WHERE id=?");
 
             // PreparedStatement per recuperare le richieste prese in carico da un tecnico
             sRichiestePreseInCaricoByTecnico = connection.prepareStatement(
-                "SELECT r.ID FROM Richiesta r " +
-                "JOIN StatoRichiesta sr ON r.stato = sr.ID " +
-                "WHERE sr.nome = 'PRESE_IN_CARICO' AND r.tecnico = ?"
+                "SELECT * FROM richiesta r WHERE stato='PRESA_IN_CARICO' AND tecnico = ?"
             );
 
             // PreparedStatement per recuperare le richieste in attesa da un tecnico
             sRichiesteInAttesaByTecnico = connection.prepareStatement(  // <-- Aggiunto
-                "SELECT r.ID FROM Richiesta r " +
-                "JOIN StatoRichiesta sr ON r.stato = sr.ID " +
-                "WHERE sr.nome = 'IN_ATTESA' AND r.tecnico = ?"
+                "SELECT * FROM richiesta r WHERE stato='IN_ATTESA' AND tecnico = ?"
             );
         } catch (SQLException ex) {
             throw new DataException("Errore durante l'inizializzazione del RichiestaDAO", ex);

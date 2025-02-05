@@ -45,7 +45,9 @@ public class RecensioneDAO_MySQL extends DAO implements RecensioneDAO {
             super.init();
 
             // PreparedStatement per recuperare una Recensione per ID
-            sRecensioneByID = connection.prepareStatement("SELECT * FROM recensione WHERE ID = ?");
+            sRecensioneByID = connection.prepareStatement(
+                "SELECT * FROM recensione WHERE id = ?"
+                );
 
             // PreparedStatement per inserire una nuova Recensione
             iRecensione = connection.prepareStatement(
@@ -56,11 +58,11 @@ public class RecensioneDAO_MySQL extends DAO implements RecensioneDAO {
             // PreparedStatement per aggiornare una Recensione esistente
             uRecensione = connection.prepareStatement(
                 "UPDATE recensione SET valore=?, autore=?, destinatario=?, version=? " +
-                "WHERE ID=? AND version=?"
+                "WHERE id=? AND version=?"
             );
 
             // PreparedStatement per eliminare una Recensione
-            dRecensione = connection.prepareStatement("DELETE FROM recensione WHERE ID=?");
+            dRecensione = connection.prepareStatement("DELETE FROM recensione WHERE id=?");
         } catch (SQLException ex) {
             throw new DataException("Errore durante l'inizializzazione del RecensioneDAO", ex);
         }

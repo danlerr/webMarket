@@ -10,10 +10,10 @@ import it.univaq.f4i.iw.framework.result.TemplateManagerException;
 import it.univaq.f4i.iw.framework.result.TemplateResult;
 import it.univaq.f4i.iw.framework.security.SecurityHelpers;
 import java.io.IOException;
-import java.util.Properties;
+//import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.mail.Session;
+//import javax.mail.Session;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -73,31 +73,31 @@ public class CreaProposta extends BaseController {
         ((ApplicationDataLayer) request.getAttribute("datalayer")).getPropostaDAO().storeProposta(proposta);
 
         // Recupero l'email dell'utente
-        String email = richiesta.getOrdinante().getEmail();
+        // String email = richiesta.getOrdinante().getEmail();
 
-        // Properties per la mail:
-        Properties props = new Properties();
-        props.put("mail.smtp.host", "smtp.outlook.com"); 
-        props.put("mail.smtp.port", "587");
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
+        // // Properties per la mail:
+        // Properties props = new Properties();
+        // props.put("mail.smtp.host", "smtp.outlook.com"); 
+        // props.put("mail.smtp.port", "587");
+        // props.put("mail.smtp.auth", "true");
+        // props.put("mail.smtp.starttls.enable", "true");
 
-        Session session = Session.getInstance(props, new javax.mail.Authenticator() {
-            protected javax.mail.PasswordAuthentication getPasswordAuthentication() {
-                return new javax.mail.PasswordAuthentication("webmarket.univaq@outlook.com", "geagiuliasamanta1");
-            }
-        });
+        // Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+        //     protected javax.mail.PasswordAuthentication getPasswordAuthentication() {
+        //         return new javax.mail.PasswordAuthentication("webmarket.univaq@outlook.com", "geagiuliasamanta1");
+        //     }
+        // });
 
-        String tipo = "PropostaRichiesta_";
-        String text = "Gentile Utente, Le è stata inviata una proposta d'acquisto per la sua richiesta numero " + richiesta.getCodiceRichiesta() + ". In allegato trova i dettagli.\n\nCordiali Saluti,\nIl team di WebMarket"; 
+        // String tipo = "PropostaRichiesta_";
+        // String text = "Gentile Utente, Le è stata inviata una proposta d'acquisto per la sua richiesta numero " + richiesta.getCodiceRichiesta() + ". In allegato trova i dettagli.\n\nCordiali Saluti,\nIl team di WebMarket"; 
 
-        String messaggio = "Dettagli della proposta per la richiesta numero: " + richiesta.getCodiceRichiesta() + "\n\n";
+        // String messaggio = "Dettagli della proposta per la richiesta numero: " + richiesta.getCodiceRichiesta() + "\n\n";
 
-        try {
-            EmailSender.sendEmailWithAttachment(session, email, "Notifica Proposta", text);
-        } catch (DocumentException e) {
-            e.printStackTrace();
-        }
+        // try {
+        //     EmailSender.sendEmailWithAttachment(session, email, "Notifica Proposta", text);
+        // } catch (DocumentException e) {
+        //     e.printStackTrace();
+        // }
 
         // Reindirizzo alla pagina di dettaglio della proposta
         response.sendRedirect("detailproposta_tecnico?n=" + proposta.getKey());

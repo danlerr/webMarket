@@ -41,11 +41,11 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO {
 
             //precompiliamo tutte le query utilizzate nella classe
             //precompile all the queries uses in this class
-            sUserByID = connection.prepareStatement("SELECT * FROM utente WHERE ID = ?");
-            sUserByEmail = connection.prepareStatement("SELECT ID FROM utente WHERE email = ?");
-            sUserByUsername = connection.prepareStatement("SELECT ID FROM utente WHERE username = ?");
+            sUserByID = connection.prepareStatement("SELECT * FROM utente WHERE id = ?");
+            sUserByEmail = connection.prepareStatement("SELECT id FROM utente WHERE email = ?");
+            sUserByUsername = connection.prepareStatement("SELECT id FROM utente WHERE username = ?");
             iUser = connection.prepareStatement("INSERT INTO utente (email,password, tipologia_utente, username) VALUES(?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-            uUser = connection.prepareStatement("UPDATE utente SET email=?,password=?, tipologia_utente=?, username=?, version=? WHERE ID=? AND version=?");
+            uUser = connection.prepareStatement("UPDATE utente SET email=?,password=?, tipologia_utente=?, username=?, version=? WHERE id=? AND version=?");
         } catch (SQLException ex) {
             throw new DataException("Error initializing newspaper data layer", ex);
         }

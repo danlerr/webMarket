@@ -15,8 +15,8 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+//import java.util.ArrayList;
+//import java.util.List;
 
 import java.sql.Statement;
 import java.time.LocalDate;
@@ -40,13 +40,21 @@ public class PropostaDAO_MySQL extends DAO implements PropostaDAO {
         try {
             super.init();
 
-            sProposta = connection.prepareStatement("SELECT * FROM proposta_acquisto WHERE ID = ?");
+            sProposta = connection.prepareStatement(
+                "SELECT * FROM proposta WHERE id = ?"
+                );
 
-            iProposta = connection.prepareStatement("INSERT INTO proposta_acquisto (produttore, prodotto, codice, codice_prodotto, prezzo, URL, note, stato, data, motivazione, richiesta_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+            iProposta = connection.prepareStatement(
+                "INSERT INTO proposta (produttore, prodotto, codice, codice_prodotto, prezzo, URL, note, stato, data, motivazione, richiesta_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS
+                );
             
-            uProposta = connection.prepareStatement("UPDATE proposta_acquisto SET produttore=?, prodotto=?, codice=?, codice_prodotto=?, prezzo=?, URL=?, note=?, stato=?, data=?, motivazione=?, richiesta_id=?, version=? WHERE ID=? AND version=?");
+            uProposta = connection.prepareStatement(
+                "UPDATE proposta SET produttore=?, prodotto=?, codice=?, codice_prodotto=?, prezzo=?, URL=?, note=?, stato=?, data=?, motivazione=?, richiesta_id=?, version=? WHERE id=? AND version=?"
+                );
 
-            dProposta = connection.prepareStatement("DELETE FROM proposta_acquisto WHERE ID=?");
+            dProposta = connection.prepareStatement(
+                "DELETE FROM proposta WHERE id=?"
+                );
 
         } catch (SQLException ex) {
             throw new DataException("Errore durante l'inizializzazione del data layer per le proposte d'acquisto", ex);

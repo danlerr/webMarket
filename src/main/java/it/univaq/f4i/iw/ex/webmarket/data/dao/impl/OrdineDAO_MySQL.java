@@ -41,20 +41,24 @@ public class OrdineDAO_MySQL extends DAO implements OrdineDAO {
         try {
             super.init();
             sOrdine = connection.prepareStatement(
-                "SELECT * FROM ordine WHERE ID = ?"
+                "SELECT * FROM ordine WHERE id = ?"
                 );
             iOrdine = connection.prepareStatement(
                 "INSERT INTO ordine (stato, proposta_id, data) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS
                 );
             uOrdine = connection.prepareStatement(
-                "UPDATE ordine SET stato=?, proposta_id=? , data=?, version=? WHERE ID=? AND version=?"
+                "UPDATE ordine SET stato=?, proposta_id=? , data=?, version=? WHERE id=? AND version=?"
                 );
             dOrdine = connection.prepareStatement(
-                "DELETE FROM ordine WHERE ID=?"
+                "DELETE FROM ordine WHERE id=?"
                 );
-            sOrdiniByOrdinante = connection.prepareStatement("SELECT o.* FROM ordine o JOIN proposta_acquisto pa ON o.proposta_id = pa.ID JOIN richiesta_ordine ro ON pa.richiesta_id = ro.ID WHERE ro.utente = ?  ORDER BY CASE WHEN o.stato = 'IN_ATTESA' THEN 1 ELSE 2 END, o.data DESC");
+            sOrdiniByOrdinante = connection.prepareStatement(
+                "SELECT o.* FROM ordine o JOIN proposta p ON o.proposta_id = p.id JOIN richiesta r ON p.richiesta_id = r.id WHERE r.ordinante = ?  ORDER BY CASE WHEN o.stato = 'IN_ATTESA' THEN 1 ELSE 2 END, o.data DESC"
+                );
 
-            sOrdiniByTecnico = connection.prepareStatement("SELECT o.* FROM ordine o JOIN proposta_acquisto pa ON o.proposta_id = pa.ID JOIN richiesta_ordine ro ON pa.richiesta_id = ro.ID WHERE ro.tecnico = ? ORDER BY CASE WHEN (o.stato = 'RESPINTO_NON_CONFORME' OR o.stato = 'RESPINTO_NON_FUNZIONANTE') THEN 1 ELSE 2 END, o.data DESC");
+            sOrdiniByTecnico = connection.prepareStatement(
+                "SELECT o.* FROM ordine o JOIN proposta p ON o.proposta_id = p.id JOIN richiesta r ON p.richiesta_id = r.id WHERE r.tecnico = ? ORDER BY CASE WHEN (o.stato = 'RESPINTO_NON_CONFORME' OR o.stato = 'RESPINTO_NON_FUNZIONANTE') THEN 1 ELSE 2 END, o.data DESC"
+                );
 
                 
         } catch (SQLException ex) {

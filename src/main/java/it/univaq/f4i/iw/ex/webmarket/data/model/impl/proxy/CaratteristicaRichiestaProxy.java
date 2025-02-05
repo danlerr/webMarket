@@ -2,16 +2,16 @@ package it.univaq.f4i.iw.ex.webmarket.data.model.impl.proxy;
 
 import it.univaq.f4i.iw.ex.webmarket.data.model.Caratteristica;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Richiesta;
-import it.univaq.f4i.iw.ex.webmarket.data.model.impl.CaratteristicheRichiestaImpl;
+import it.univaq.f4i.iw.ex.webmarket.data.model.impl.CaratteristicaRichiestaImpl;
 import it.univaq.f4i.iw.framework.data.DataItemProxy;
 import it.univaq.f4i.iw.framework.data.DataLayer;
 
-public class CaratteristicheRichiestaProxy extends CaratteristicheRichiestaImpl implements DataItemProxy {
+public class CaratteristicaRichiestaProxy extends CaratteristicaRichiestaImpl implements DataItemProxy {
 
     protected boolean modified;
     protected DataLayer dataLayer;
 
-    public CaratteristicheRichiestaProxy(DataLayer d) {
+    public CaratteristicaRichiestaProxy(DataLayer d) {
         super();
         this.dataLayer = d;
         this.modified = false;

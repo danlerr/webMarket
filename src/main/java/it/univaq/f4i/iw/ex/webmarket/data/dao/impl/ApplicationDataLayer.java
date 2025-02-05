@@ -6,9 +6,9 @@ import it.univaq.f4i.iw.ex.webmarket.data.dao.OrdineDAO;
 import it.univaq.f4i.iw.ex.webmarket.data.dao.PropostaDAO;
 import it.univaq.f4i.iw.ex.webmarket.data.dao.RecensioneDAO;
 import it.univaq.f4i.iw.ex.webmarket.data.dao.RichiestaDAO;
-import it.univaq.f4i.iw.ex.webmarket.data.dao.CaratteristicheRichiestaDAO;
+import it.univaq.f4i.iw.ex.webmarket.data.dao.CaratteristicaRichiestaDAO;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Caratteristica;
-import it.univaq.f4i.iw.ex.webmarket.data.model.CaratteristicheRichiesta;
+import it.univaq.f4i.iw.ex.webmarket.data.model.CaratteristicaRichiesta;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Categoria;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Ordine;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Proposta;
@@ -38,7 +38,7 @@ public class ApplicationDataLayer extends DataLayer {
         registerDAO(Ordine.class, new OrdineDAO_MySQL(this));
         registerDAO(Proposta.class, new PropostaDAO_MySQL(this));
         registerDAO(Caratteristica.class, new CaratteristicaDAO_MySQL(this));
-        registerDAO(CaratteristicheRichiesta.class, new CaratteristicheRichiestaDAO_MySQL(this));
+        registerDAO(CaratteristicaRichiesta.class, new CaratteristicaRichiestaDAO_MySQL(this));
         registerDAO(Recensione.class, new RecensioneDAO_MySQL(this));
     
     }
@@ -66,8 +66,8 @@ public class ApplicationDataLayer extends DataLayer {
        return (CaratteristicaDAO) getDAO(Caratteristica.class);
     }
      
-     public CaratteristicheRichiestaDAO getCaratteristicheRichiestaDAO() {
-       return (CaratteristicheRichiestaDAO) getDAO(CaratteristicheRichiesta.class);
+     public CaratteristicaRichiestaDAO getCaratteristicaRichiestaDAO() {
+       return (CaratteristicaRichiestaDAO) getDAO(CaratteristicaRichiesta.class);
     }
     public RecensioneDAO getRecensioneDAO() {
         return (RecensioneDAO) getDAO(Recensione.class);

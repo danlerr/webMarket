@@ -3,7 +3,7 @@ package it.univaq.f4i.iw.ex.webmarket.data.model;
 import it.univaq.f4i.iw.framework.data.DataItem;
 
 
-public interface CaratteristicheRichiesta extends DataItem<Integer> {
+public interface CaratteristicaRichiesta extends DataItem<Integer> {
     
     int getId();
     void setId(int id);

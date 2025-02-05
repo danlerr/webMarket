@@ -28,7 +28,7 @@ public class CaratteristicaDAO_MySQL extends DAO implements CaratteristicaDAO {
             super.init();
 
             sCaratteristica = connection.prepareStatement(
-                "SELECT * FROM caratteristica WHERE ID = ?"
+                "SELECT * FROM caratteristica WHERE id = ?"
                 );
             sCaratteristiche = connection.prepareStatement(
                 "SELECT * FROM caratteristica"
@@ -37,10 +37,10 @@ public class CaratteristicaDAO_MySQL extends DAO implements CaratteristicaDAO {
                 "INSERT INTO caratteristica (nome, categoria_id) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS
                 );
             uCaratteristica = connection.prepareStatement(
-                "UPDATE caratteristica SET nome=?, categoria_id=?, version=? WHERE ID=? AND version=?"
+                "UPDATE caratteristica SET nome=?, categoria_id=?, version=? WHERE id=? AND version=?"
                 );
             dCaratteristica = connection.prepareStatement(
-                "DELETE FROM caratteristica WHERE ID=?"
+                "DELETE FROM caratteristica WHERE id=?"
                 );
         } catch (SQLException ex) {
             throw new DataException("Error initializing caratteristica data layer", ex);

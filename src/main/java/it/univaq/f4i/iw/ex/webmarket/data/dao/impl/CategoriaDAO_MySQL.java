@@ -39,17 +39,17 @@ public class CategoriaDAO_MySQL extends DAO implements CategoriaDAO {
             super.init();
 
             sCategoria = connection.prepareStatement(
-                "SELECT * FROM categoria WHERE ID=?"
+                "SELECT * FROM categoria WHERE id=?"
                 );
             iCategoria = connection.prepareStatement(
                 "INSERT INTO categoria(nome, padre) VALUES (?, ?)", 
                 PreparedStatement.RETURN_GENERATED_KEYS
                 );
             uCategoria = connection.prepareStatement(
-                "UPDATE categoria SET nome=?, version=? WHERE ID=? AND version=?"
+                "UPDATE categoria SET nome=?, version=? WHERE id=? AND version=?"
                 );
             dCategoria = connection.prepareStatement(
-                "DELETE FROM categoria WHERE ID=?"
+                "DELETE FROM categoria WHERE id=?"
                 );
 
         } catch (SQLException e) {

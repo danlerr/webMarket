@@ -1,27 +1,27 @@
 package it.univaq.f4i.iw.ex.webmarket.data.model.impl;
 
 import it.univaq.f4i.iw.ex.webmarket.data.model.Caratteristica;
-import it.univaq.f4i.iw.ex.webmarket.data.model.CaratteristicheRichiesta;
+import it.univaq.f4i.iw.ex.webmarket.data.model.CaratteristicaRichiesta;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Richiesta;
 import it.univaq.f4i.iw.framework.data.DataItemImpl;
 
 
 
-public class CaratteristicheRichiestaImpl extends DataItemImpl<Integer> implements CaratteristicheRichiesta {
+public class CaratteristicaRichiestaImpl extends DataItemImpl<Integer> implements CaratteristicaRichiesta {
     private int id;
     private Richiesta richiesta;
     private Caratteristica caratteristica;
     private String valore;
 
     // Costruttori
-    public CaratteristicheRichiestaImpl() {
+    public CaratteristicaRichiestaImpl() {
         super();
         richiesta=null;
         caratteristica=null;
         valore=null;
     }
 
-    public CaratteristicheRichiestaImpl(int id, Richiesta r, Caratteristica c, String valore) {
+    public CaratteristicaRichiestaImpl(int id, Richiesta r, Caratteristica c, String valore) {
         this.id = id;
         this.richiesta = r;
         this.caratteristica = c;

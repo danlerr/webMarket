@@ -6,7 +6,7 @@ import it.univaq.f4i.iw.ex.webmarket.data.model.Proposta;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Richiesta;
 import it.univaq.f4i.iw.ex.webmarket.data.model.StatoRichiesta;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Utente;
-import it.univaq.f4i.iw.ex.webmarket.data.model.CaratteristicheRichiesta;
+import it.univaq.f4i.iw.ex.webmarket.data.model.CaratteristicaRichiesta;
 import it.univaq.f4i.iw.framework.data.DataException;
 import it.univaq.f4i.iw.framework.result.TemplateManagerException;
 import it.univaq.f4i.iw.framework.result.TemplateResult;
@@ -35,8 +35,8 @@ public class DettaglioRichiesta extends BaseController {
     request.setAttribute("richiesta", richiesta);
 
     // Recupera la lista delle caratteristiche relative alla richiesta
-    List<CaratteristicheRichiesta> CaratteristicheRichiesta = ((ApplicationDataLayer) request.getAttribute("datalayer"))
-            .getCaratteristicheRichiestaDAO().getCaratteristicheRichiestaByRichiesta(richiestaId);
+    List<CaratteristicaRichiesta> CaratteristicheRichiesta = ((ApplicationDataLayer) request.getAttribute("datalayer"))
+            .getCaratteristicaRichiestaDAO().getCaratteristicheRichiestaByRichiesta(richiestaId);
     request.setAttribute("CaratteristicheRichiesta", CaratteristicheRichiesta);
     //recupera tutte le caratteristiche della richiesta
 
