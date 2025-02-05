@@ -104,7 +104,7 @@ public class OrdineDAO_MySQL extends DAO implements OrdineDAO {
     private OrdineProxy createOrdine(ResultSet rs) throws DataException {
         try {
             OrdineProxy o = (OrdineProxy) createOrdine();
-             int id = rs.getInt("ID");
+             int id = rs.getInt("id");
              o.setKey(id);
              o.setStato(StatoOrdine.valueOf(rs.getString("stato")));
               PropostaDAO propostaAcquistoDAO = (PropostaDAO) dataLayer.getDAO(Proposta.class);

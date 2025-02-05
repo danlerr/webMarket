@@ -95,7 +95,7 @@ public class CategoriaDAO_MySQL extends DAO implements CategoriaDAO {
     private Categoria createCategoria(ResultSet results) throws DataException {
         try {
             CategoriaProxy cproxy = (CategoriaProxy) createCategoria();
-            cproxy.setKey(results.getInt("ID"));
+            cproxy.setKey(results.getInt("id"));
             cproxy.setNome(results.getString("nome"));
             cproxy.setPadre(results.getInt("padre"));
             cproxy.setVersion(results.getLong("version"));
