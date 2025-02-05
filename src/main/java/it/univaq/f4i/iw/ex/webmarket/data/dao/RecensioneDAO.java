@@ -1,5 +1,7 @@
 package it.univaq.f4i.iw.ex.webmarket.data.dao;
 
+import java.util.Map;
+
 import it.univaq.f4i.iw.ex.webmarket.data.model.Recensione;
 import it.univaq.f4i.iw.framework.data.DataException;
 
@@ -22,6 +24,7 @@ public interface RecensioneDAO {
     //metodo che serve per prendere una recensione dato un ordinante e un tecnico
     Recensione getRecensioneByOrdinanteTecnico(int ordinante_id ,int tecnico_id) throws DataException;
 
-    //serve una query dal db per prendere la media delle recensioni di ogni tecnico
-    //poi andrebbe messa in ordine descrescente e mostrata in home
+    
+    // Aggiungi questa dichiarazione del metodo:
+    Map<Integer, Double> getMedieRecensioniTecnici() throws DataException;
 }

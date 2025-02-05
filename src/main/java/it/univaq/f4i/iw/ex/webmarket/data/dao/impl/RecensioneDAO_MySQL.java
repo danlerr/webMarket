@@ -14,6 +14,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.LinkedHashMap; 
+
+import java.util.Map;
 
 /**
  * Implementazione della classe RecensioneDAO utilizzando MySQL.
@@ -25,6 +28,8 @@ public class RecensioneDAO_MySQL extends DAO implements RecensioneDAO {
     private PreparedStatement uRecensione;
     private PreparedStatement dRecensione;
     private PreparedStatement sRecensioneByOrdinanteTecnico;
+    private PreparedStatement sMedieRecensioniTecnici; 
+
 
 
     /**
@@ -66,6 +71,12 @@ public class RecensioneDAO_MySQL extends DAO implements RecensioneDAO {
             sRecensioneByOrdinanteTecnico = connection.prepareStatement(
                 "SELECT * FROM recensione WHERE autore = ? AND destinatario = ?"
             );
+            sMedieRecensioniTecnici = connection.prepareStatement(
+                "SELECT r.destinatario AS tecnico_id, AVG(r.valore) AS media_voti " +
+                "FROM recensione r " +
+                "GROUP BY r.destinatario " +
+                "ORDER BY media_voti DESC" // 
+            );
 
             // PreparedStatement per eliminare una Recensione
             dRecensione = connection.prepareStatement("DELETE FROM recensione WHERE id=?");
@@ -96,6 +107,9 @@ public class RecensioneDAO_MySQL extends DAO implements RecensioneDAO {
             }
             if (sRecensioneByOrdinanteTecnico != null && !sRecensioneByOrdinanteTecnico.isClosed()) {
                 sRecensioneByOrdinanteTecnico.close();
+            }
+            if (sMedieRecensioniTecnici != null && !sMedieRecensioniTecnici.isClosed()) {
+                sMedieRecensioniTecnici.close();
             }
         } catch (SQLException ex) {
             throw new DataException("Errore durante la chiusura del RecensioneDAO", ex);
@@ -256,5 +270,26 @@ public class RecensioneDAO_MySQL extends DAO implements RecensioneDAO {
             throw new DataException("Impossibile caricare la Recensione per ordinante e tecnico", ex);
         }
         return recensione;
+    }
+
+    @Override
+    /**
+     * Calcola la media dei voti delle recensioni per ogni tecnico.
+     *
+     * @return Una mappa dove la chiave è l'ID del tecnico e il valore è la media dei voti.
+     * @throws DataException se si verifica un errore durante l'accesso al database.
+     */
+    public Map<Integer, Double> getMedieRecensioniTecnici() throws DataException {
+        Map<Integer, Double> medie = new LinkedHashMap<>(); // <-- Usa LinkedHashMap
+        try (ResultSet rs = sMedieRecensioniTecnici.executeQuery()) {
+            while (rs.next()) {
+                int tecnicoId = rs.getInt("tecnico_id");
+                double mediaVoti = rs.getDouble("media_voti");
+                medie.put(tecnicoId, mediaVoti);
+            }
+        } catch (SQLException ex) {
+            throw new DataException("Impossibile calcolare le medie delle recensioni per i tecnici", ex);
+        }
+        return medie;
     }
 }

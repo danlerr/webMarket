@@ -7,6 +7,8 @@ import it.univaq.f4i.iw.framework.result.TemplateManagerException;
 import it.univaq.f4i.iw.framework.result.TemplateResult;
 import it.univaq.f4i.iw.framework.security.SecurityHelpers;
 import java.io.IOException;
+import java.util.Map;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,6 +20,11 @@ public class Home extends BaseController {
     private void action_default(HttpServletRequest request, HttpServletResponse response, int userId) throws IOException, ServletException, DataException, TemplateManagerException {
         TemplateResult r = new TemplateResult(getServletContext());
         request.setAttribute("page_title", "Dashboard");
+          
+
+        // Recupera le medie dei voti dei tecnici
+        Map<Integer, Double> medieTecnici = ((ApplicationDataLayer) request.getAttribute("datalayer")).getRecensioneDAO().getMedieRecensioniTecnici();
+        request.setAttribute("medieTecnici", medieTecnici);
         
         //notifiche per richieste
 
