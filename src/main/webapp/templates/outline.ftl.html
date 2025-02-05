@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en" data-bs-theme="dark">
+<head>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+	<meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+	<title>Coquette</title>
+	<!-- CSS files -->
+    <link rel="stylesheet" href="../style/demo.css">
+	<link rel="stylesheet" href="../style/demo.min.css">
+	<link rel="stylesheet" href="../style/tabler.css">
+	<link rel="stylesheet" href="../style/tabler.min.css">
+	<style>
+		@import url('https://rsms.me/inter/inter.css');
+
+
+/* Stile per i bottoni grandi (RICHIESTE, PROPOSTE, ORDINI) [da spostare in css folder/file]*/
+.custom-btn-large {
+    width: 100px;
+    height: 100px;
+    border-radius: 25px 25px 25px 25px;
+    font-size: 22px;
+    transition: all 0.3s ease-in-out;
+}
+
+.custom-btn-large:hover {
+    transform: translateY(-8px) rotate(-2deg);
+    box-shadow: 0 8px 16px rgba(255, 255, 255, 0.3);
+}
+
+/* Effetti comuni ai bottoni */
+button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 40px;
+}
+
+	</style>
+</head>
+<body>
+
+    <#include "header.ftl.html">
+
+    <div>
+        <#include content_tpl>
+    </div>
+
+    <#include "footer.ftl.html">
+
+</body>
+</html>
