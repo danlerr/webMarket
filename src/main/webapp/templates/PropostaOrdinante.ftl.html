@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="it">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+    <title>${titolo_pagina}</title>
+
+    <link rel="icon" href="./favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" href="./dist/css/tabler.min.css"/>
+    <link rel="stylesheet" href="./dist/css/tabler-flags.min.css"/>
+    <link rel="stylesheet" href="./dist/css/tabler-socials.min.css"/>
+    <link rel="stylesheet" href="../style/demo.css"/>
+
+    <style>
+        @import url('https://rsms.me/inter/inter.css');
+    </style>
+</head>
+<body>
+
+<div class="page-wrapper">
+    <div class="page-header d-print-none">
+        <div class="container-xl">
+            <div class="row g-2 align-items-center">
+                <div class="col">
+                    <h1>${titolo_richiesta}</h1>
+                </div>
+                <div class="col-auto ms-auto d-print-none">
+                    <button type="button" class="btn btn-success" onclick="javascript:window.print();">Accetta</button>
+                </div>
+                <div class="col-auto d-print-none">
+                    <button type="button" class="btn btn-danger" onclick="javascript:window.print();">Rifiuta</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-body">
+        <div class="container-xl">
+            <div class="card card-lg">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <p class="h3">Richiesta ${richiesta_id}</p>
+                            <p>${descrizione_richiesta}</p>
+                        </div>
+                        <div class="col-6 text-end">
+                            <p class="h3">Presa in carico</p>
+                            <p>${utente_prenotatore}</p>
+                        </div>
+                    </div>
+
+                    <div class="col-12 my-5">
+                        <h1>Proposta ${proposta_id}</h1>
+                    </div>
+
+                    <table class="table table-transparent table-responsive">
+                        <thead>
+                        <tr>
+                            <th class="text-center"></th>
+                            <th>Prodotto</th>
+                            <th class="text-center">Produttore</th>
+                            <th class="text-end">Codice</th>
+                            <th class="text-end">Prezzo</th>
+                        </tr>
+                        </thead>
+                        <tr>
+                            <td class="text-center"></td>
+                            <td>
+                                <p class="strong mb-1">${prodotto_nome}</p>
+                                <div class="text-secondary"><a href="${prodotto_link}">${prodotto_link}</a></div>
+                            </td>
+                            <td class="text-center">${prodotto_marca}</td>
+                            <td class="text-end">${prodotto_codice}</td>
+                            <td class="text-end">€${prodotto_prezzo}</td>
+                        </tr>
+                    </table>
+
+                    <div class="text-end mt-4">
+                        <p>${prodotto_descrizione}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="./dist/js/tabler.min.js" defer></script>
+</body>
+</html>
