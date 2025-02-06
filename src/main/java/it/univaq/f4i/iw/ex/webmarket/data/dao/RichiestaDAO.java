@@ -18,7 +18,7 @@ public interface RichiestaDAO {
     void deleteRichiestaOrdine(int richiesta_key) throws DataException;
 
     
-    //metodi ulteriori
+    //altri metodi 
     List<Richiesta> getRichiesteByUtente(int utente_key) throws DataException;
 
     List<Richiesta> getRichiesteInAttesa() throws DataException;
@@ -26,6 +26,13 @@ public interface RichiestaDAO {
     List<Richiesta> getRichiestePreseInCaricoConProposteByTecnico(int tecnico_key) throws DataException;
 
     List<Richiesta> getRichiestePreseInCaricoSenzaProposteByTecnico(int tecnico_key) throws DataException;
+
+    boolean checkCompile(int richiesta_key) throws DataException;
+
+
+
+
+
 
     
     

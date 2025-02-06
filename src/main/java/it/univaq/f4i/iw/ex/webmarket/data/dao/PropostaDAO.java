@@ -19,7 +19,7 @@ public interface PropostaDAO {
 
     //List<PropostaAcquisto> getAllProposteAcquisto() throws DataException;
 
-    //List<PropostaAcquisto> getProposteAcquistoByRichiesta(int richiesta_id) throws DataException; 
+    List<Proposta> getProposteAcquistoByRichiesta(int richiesta_id) throws DataException; 
 
     //void inviaPropostaAcquisto(PropostaAcquisto proposta) throws DataException;
     

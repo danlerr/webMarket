@@ -1,49 +1,131 @@
 
-	
+    <div class="page-wrapper">
+        <!-- Page header -->
+        <div class="page-header d-print-none">
+            <div class="container-xl">
+                <div class="row g-2 align-items-center">
+                    
+                    <!-- Page title actions -->
+                    <div class="col-auto ms-auto d-print-none">
+                        <#-- Bottone "Prendi in carico" -->
+                        <#if showPrendiInCaricoButton?? && showPrendiInCaricoButton>
+                            <a href="${request.contextPath}/DettaglioRichiesta?action=prendiInCarico&n=${richiesta.id}"
+                               class="btn btn-success">
+                                Prendi in carico richiesta
+                            </a>
+                        </#if>
 
-		<!-- Page body -->
-		<div class="page-body">
-			<div class="container-xl">
-<div class="card card-lg">
-	<div class="card-body">
-		<div class="row">
-			<div class="col-6">
-				<p class="h3">Ordinante
-				</p>
-				
-			</div>
-			<div class="col-6 text-end">
-				<p class="h3">Tecnico</p>
-				
-			</div>
-			<div class="col-12 my-5">
-				<h1>Codice richiesta</h1>
-			</div>
-		</div>
-		<table class="table table-transparent table-responsive">
-			<thead>
-			<tr>
-				<th class="text-center" style="width: 1%"></th>
-				<th>Caratteristica</th>
-				
-			</tr>
-			</thead>
-			<tr>
-				<td class="text-center">1</td>
-				<td>
-					<p class="strong mb-1">Caratteristica 1 </p>
-					<div class="text-secondary">Valore </div>
-				</td>
-				
-				
-			</tr>
-			
-			
-		</table>
-		
+                        <#-- Bottone "Compila proposta" -->
+                        <#if showCompilaPropostaButton?? && showCompilaPropostaButton>
+  						<a href="${request.contextPath}/DettaglioRichiesta?action=compilaProposta&n=${richiesta.id}"
+     					class="btn btn-cyan">
+     					Compila proposta
+  						</a>
+						</#if>
 
-	</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Fine page header -->
+
+        <!-- Page body -->
+        <div class="page-body">
+            <div class="container-xl">
+                <div class="card card-lg">
+                    <div class="card-body">
+                        <div class="row">
+                            <!-- Ordinante -->
+                            <div class="col-6">
+                                <p class="h3">Ordinante</p>
+                                <span class="text-muted">
+                                    
+                                    ${richiesta.ordinante.username}
+                                </span>
+                            </div>
+
+                            <!-- Tecnico -->
+                            <div class="col-6 text-end">
+                                <p class="h3">Tecnico</p>
+                                <span class="text-muted">
+                                    <#if richiesta.tecnico??>
+                                        ${richiesta.tecnico.username} 
+                                    <#else>
+                                        Non assegnato
+                                    </#if>
+                                </span>
+                            </div>
+
+                            <!-- Codice richiesta -->
+                            <div class="col-12 my-5">
+                                <h1>Codice richiesta: ${richiesta.codiceRichiesta}</h1>
+                            </div>
+
+<!-- Proposte per questa richiesta -->
+<div class="col-12 my-5">
+    <h1>Proposte per questa richiesta</h1>
+    <#if proposte?? && (proposte?size > 0)>
+        <ul class="list-inline">
+            <#list proposte as proposta>
+                <li class="list-inline-item">
+                    <!-- Adatta i campi della proposta in base al tuo model -->
+                    <a href="${request.contextPath}/dettaglioProposta?id=${proposta.id}">
+                        Proposta n. ${proposta.id} - ${proposta.descrizione!""}
+                    </a>
+                </li>
+            </#list>
+        </ul>
+    <#else>
+        <p>Nessuna proposta presente per questa richiesta.</p>
+    </#if>
 </div>
-			</div>
-		</div>
-		
+
+                            <!-- Note richiesta -->
+                            <div class="col-12">
+                                <h1>Note richiesta</h1>
+                                <p>${richiesta.note}</p>
+                            </div>
+                        </div> <!-- fine row -->
+
+                        <!-- Lista di tutte le caratteristiche associate alla richiesta -->
+                        <div class="row mt-4">
+                            <table class="table table-transparent table-responsive">
+                                <thead>
+                                <tr>
+                                    <th class="text-center" style="width: 1%">#</th>
+                                    <th>Caratteristiche</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    <#if CaratteristicheRichiesta?? && (CaratteristicheRichiesta?size > 0)>
+                                        <#list CaratteristicheRichiesta as c>
+                                            <tr>
+                                                <td class="text-center">${c?index + 1}</td>
+                                                <td>
+                                                    <p class="strong mb-1">
+                                                        ${c.caratteristica.nome}
+                                                    </p>
+                                                    <div class="text-secondary">
+                                                        ${c.valore}
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </#list>
+                                    <#else>
+                                        <tr>
+                                            <td colspan="2" class="text-center">
+                                                Nessuna caratteristica disponibile per questa richiesta.
+                                            </td>
+                                        </tr>
+                                    </#if>
+                                </tbody>
+                            </table>
+                        </div> <!-- fine row -->
+                    </div> <!-- fine card-body -->
+                </div> <!-- fine card card-lg -->
+            </div> <!-- fine container-xl -->
+        </div> <!-- fine page-body -->
+    </div> <!-- fine page-wrapper -->
+</div> <!-- fine page -->
+</body>
+</html>

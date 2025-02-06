@@ -29,6 +29,8 @@ public class RichiestaDAO_MySQL extends DAO implements RichiestaDAO {
     private PreparedStatement sRichiesteSenzaProposte;
     private PreparedStatement sRichiestePreseInCaricoConProposteByTecnico;
     private PreparedStatement sRichiesteInAttesa; 
+    private PreparedStatement sCheckCompile;
+
 
     
     public RichiestaDAO_MySQL(DataLayer d) {
@@ -81,8 +83,16 @@ public class RichiestaDAO_MySQL extends DAO implements RichiestaDAO {
                 "ORDER BY r.data ASC"
             
                 );          
-            // PreparedStatement per recuperare le richieste in attesa da un tecnico
+            // PreparedStatement per recuperare le richieste in attesa 
             sRichiesteInAttesa = connection.prepareStatement("SELECT * FROM richiesta_ordine WHERE stato = ?");
+            // Prepariamo la query che conta quante proposte non rifiutate esistono per una certa richiesta
+        sCheckCompile = connection.prepareStatement(
+            "SELECT COUNT(*) AS cnt "
+          + "FROM proposta "
+          + "WHERE richiesta_id = ? "
+          + "  AND stato <> 'RIFIUTATO'"
+        );
+
         } catch (SQLException ex) {
             throw new DataException("Errore durante l'inizializzazione del RichiestaDAO", ex);
         }
@@ -117,6 +127,10 @@ public class RichiestaDAO_MySQL extends DAO implements RichiestaDAO {
             if (sRichiesteInAttesa != null && !sRichiesteInAttesa.isClosed()) { // <-- Aggiunto
                 sRichiesteInAttesa.close();
             }
+            if (sCheckCompile != null && !sCheckCompile.isClosed()) {
+                sCheckCompile.close();
+            }
+            
         } catch (SQLException ex) {
             throw new DataException("Errore durante la chiusura del RichiestaDAO", ex);
         }
@@ -360,5 +374,29 @@ public class RichiestaDAO_MySQL extends DAO implements RichiestaDAO {
         throw new DataException("Unable to delete RichiestaOrdine", ex);
     }
 }
+
+@Override
+public boolean checkCompile(int richiesta_key) throws DataException {
+    try {
+        // Prepariamo i parametri per la query
+        sCheckCompile.setInt(1, richiesta_key);
+        
+        // Eseguiamo la query
+        try (ResultSet rs = sCheckCompile.executeQuery()) {
+            if (rs.next()) {
+                int count = rs.getInt("cnt");
+                // Se count == 0, non ci sono proposte "attive" (cioè != RIFIUTATO)
+                return (count == 0);
+            } else {
+                // Caso inatteso: nessun risultato
+                return false;
+            }
+        }
+    } catch (SQLException ex) {
+        throw new DataException("Errore durante l'esecuzione di checkCompile", ex);
+    }
+}
+
+
 }
 

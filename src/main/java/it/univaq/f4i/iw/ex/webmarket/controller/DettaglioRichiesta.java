@@ -39,20 +39,42 @@ public class DettaglioRichiesta extends BaseController {
             .getCaratteristicaRichiestaDAO().getCaratteristicheRichiestaByRichiesta(richiestaId);
     request.setAttribute("CaratteristicheRichiesta", CaratteristicheRichiesta);
     //recupera tutte le caratteristiche della richiesta
-
+      // Recupera la lista delle proposte per la richiesta
+      List<Proposta> proposte = ((ApplicationDataLayer) request.getAttribute("datalayer"))
+      .getPropostaDAO().getProposteAcquistoByRichiesta(richiestaId);
+    request.setAttribute("proposte", proposte);
     // Recupera l'utente loggato
     Utente utente = ((ApplicationDataLayer) request.getAttribute("datalayer"))
             .getUtenteDAO().getUtente(user);
 
-    // Se l'utente è un tecnico e la richiesta è nello stato PRESA_IN_CARICO,
+    // Se l'utente è un tecnico e la richiesta è nello stato IN_ATTESA,
     // imposta un attributo per far visualizzare il bottone "prendi in carico" nel template.
-    if (utente.getTipologiaUtente().equals("TECNICO") && richiesta.getStato() == StatoRichiesta.PRESA_IN_CARICO) {
+    if (utente.getTipologiaUtente().equals("TECNICO") && richiesta.getStato() == StatoRichiesta.IN_ATTESA) {
         request.setAttribute("showPrendiInCaricoButton", true);
     } else {
         request.setAttribute("showPrendiInCaricoButton", false);
     }
 
-    res.activate("dettaglio_richiesta.ftl.html", request, response);
+    
+if (utente.getTipologiaUtente().equals("TECNICO")
+        && richiesta.getTecnico() != null
+        && richiesta.getTecnico().getId() == user) {
+
+            boolean canCompile = ((ApplicationDataLayer) request.getAttribute("datalayer"))
+            .getRichiestaOrdineDAO()
+            .checkCompile(richiestaId);
+    if (canCompile) {
+        // Imposta un flag a true, in modo da mostrarlo in Freemarker
+        request.setAttribute("showCompilaPropostaButton", true);
+    } else {
+        request.setAttribute("showCompilaPropostaButton", false);
+    }
+    
+}
+
+
+
+    res.activate("dettaglioRichiesta.ftl.html", request, response);
 }
 
 

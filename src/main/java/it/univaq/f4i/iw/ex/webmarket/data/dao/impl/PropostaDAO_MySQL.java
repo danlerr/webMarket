@@ -26,7 +26,7 @@ import java.util.List;
 
 public class PropostaDAO_MySQL extends DAO implements PropostaDAO {
 
-    private PreparedStatement sProposta, iProposta, uProposta, dProposta, sProposteByOrdinante, sProposteByTecnico;
+    private PreparedStatement sProposta, iProposta, uProposta, dProposta, sProposteByOrdinante, sProposteByTecnico,sProposteByRichiesta ;
 
     public PropostaDAO_MySQL(DataLayer d) {
         super(d);
@@ -62,6 +62,9 @@ public class PropostaDAO_MySQL extends DAO implements PropostaDAO {
                 );
             sProposteByTecnico = connection.prepareStatement(
                 "SELECT p.* FROM proposta p JOIN richiesta r ON p.richiesta_id = r.id WHERE r.tecnico = ? ORDER BY CASE WHEN (p.stato = 'ACCETTATO') THEN 1 ELSE 2 END"
+                );
+                sProposteByRichiesta = connection.prepareStatement(
+                "SELECT * FROM proposta_acquisto WHERE richiesta_id = ?"
                 );
                 
 
@@ -239,5 +242,27 @@ public class PropostaDAO_MySQL extends DAO implements PropostaDAO {
         }
         return proposte;
         }
+        /**
+     * Recupera le proposte d'acquisto associate a una richiesta.
+     * 
+     * @param richiesta_id l'ID della richiesta
+     * @return una lista di proposte d'acquisto associate alla richiesta
+     * @throws DataException se si verifica un errore durante il recupero
+     */
+    @Override
+    public List<Proposta> getProposteAcquistoByRichiesta(int richiesta_id) throws DataException {
+        List<Proposta> proposte = new ArrayList<>();
+        try {
+            sProposteByRichiesta.setInt(1, richiesta_id);
+            try (ResultSet rs = sProposteByRichiesta.executeQuery()) {
+                while (rs.next()) {
+                    proposte.add(createProposta(rs));
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DataException("Impossibile caricare le proposte d'acquisto per la richiesta specificata", ex);
+        }
+        return proposte;
+    }
 
 }
