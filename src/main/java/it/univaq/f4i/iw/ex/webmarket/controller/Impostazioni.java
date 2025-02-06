@@ -22,7 +22,7 @@ public class Impostazioni extends BaseController {
     private void action_default(HttpServletRequest request, HttpServletResponse response, int userId) throws IOException, ServletException, TemplateManagerException, DataException {
         TemplateResult res = new TemplateResult(getServletContext());
         Utente u = ((ApplicationDataLayer) request.getAttribute("datalayer")).getUtenteDAO().getUtente(userId);
-        request.setAttribute('utente', u);
+        request.setAttribute("utente", u);
         String tipologia = u.getTipologiaUtente().toString();
         request.setAttribute("tipologia", tipologia);
         request.setAttribute("page_title", "impostazioni");
