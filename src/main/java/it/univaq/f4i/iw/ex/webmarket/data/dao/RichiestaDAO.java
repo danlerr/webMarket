@@ -8,21 +8,26 @@ import it.univaq.f4i.iw.framework.data.DataException;
 
 
 public interface RichiestaDAO {
-
+    //crud
     Richiesta createRichiesta();
 
     Richiesta getRichiesta(int RichiestaOrdine_key) throws DataException;
 
     void storeRichiesta(Richiesta RichiestaOrdine) throws DataException;
 
-    void deleteRichiesta(int richiesta_key) throws DataException;
+    void deleteRichiestaOrdine(int richiesta_key) throws DataException;
 
+    
+    //metodi ulteriori
     List<Richiesta> getRichiesteByUtente(int utente_key) throws DataException;
 
-    List<Richiesta> getRichiesteInAttesaByTecnico(int tecnico_key) throws DataException;
+    List<Richiesta> getRichiesteInAttesa() throws DataException;
 
-    List<Richiesta> getRichiestePreseInCaricoByTecnico(int tecnico_key) throws DataException;
+    List<Richiesta> getRichiestePreseInCaricoConProposteByTecnico(int tecnico_key) throws DataException;
 
+    List<Richiesta> getRichiestePreseInCaricoSenzaProposteByTecnico(int tecnico_key) throws DataException;
+
+    
     
     
   

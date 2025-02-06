@@ -32,19 +32,20 @@ public class ElencoRichieste extends BaseController {
             // Caso ordinante: si recupera l'elenco delle richieste per l'ordinante
             request.setAttribute("page_title", "Richieste Ordinante");
             request.setAttribute("richieste", ((ApplicationDataLayer) request.getAttribute("datalayer")).getRichiestaOrdineDAO().getRichiesteByUtente(user));
-            template = "richieste_ordinante.ftl.html";
+            template = "richiesteOrdinante.ftl.html";
 
         } else if (utente.getTipologiaUtente().equals(TipologiaUtente.TECNICO)) {
             // Caso tecnico: si recuperano due liste, una per le richieste in attesa e l'altra per quelle prese in carico
             request.setAttribute("page_title", "Richieste Tecnico");
             
             // Richieste in attesa per il tecnico
-            request.setAttribute("richiesteInAttesa", ((ApplicationDataLayer) request.getAttribute("datalayer")).getRichiestaOrdineDAO().getRichiesteInAttesaByTecnico(user));
+            request.setAttribute("richiesteInAttesa", ((ApplicationDataLayer) request.getAttribute("datalayer")).getRichiestaOrdineDAO().getRichiesteInAttesa());
             
             // Richieste prese in carico dal tecnico
-            request.setAttribute("richiestePreseInCarico", ((ApplicationDataLayer) request.getAttribute("datalayer")).getRichiestaOrdineDAO().getRichiestePreseInCaricoByTecnico(user));
-            
-            template = "richieste_tecnico.ftl.html";
+            request.setAttribute("richiestePreseInCaricoSenzaProposte", ((ApplicationDataLayer) request.getAttribute("datalayer")).getRichiestaOrdineDAO().getRichiestePreseInCaricoSenzaProposteByTecnico(user));
+            request.setAttribute("richiestePreseInCaricoConProposte", ((ApplicationDataLayer) request.getAttribute("datalayer")).getRichiestaOrdineDAO().getRichiestePreseInCaricoConProposteByTecnico(user));
+
+            template = "richiesteTecnico.ftl.html";
 
         } else {
             // Se l'utente non è né ordinante né tecnico, reindirizza ad una pagina predefinita
