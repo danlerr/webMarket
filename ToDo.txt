@@ -1,0 +1,19 @@
+Template:
+    -creaRichiesta!
+    -CreaOrdine
+    -dettaglioOrdine 
+    -dettaglioProposta
+    -[le mie proposte, proposteTec, proposteOrd]
+    -listaOrdini
+
+Controller:
+    -DettaglioProposta!
+    -CreaOrdine!
+
+general:
+    -notifiche
+    -email
+    -css
+    -js
+    
+    

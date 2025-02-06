@@ -1,89 +1,66 @@
+<!-- Page body -->
+<div class="page-body">
+    <div class="container-xl">
+        <div class="card">
+            <div class="row g-0">
+                <div class="col-12 col-md-9 d-flex flex-column">
+                    <div class="card-body">
+                        <h2 class="mb-4">Il mio account</h2>
 
+                        <h3 class="card-title mt-4">{$user_type}</h3>
+                        <div class="row g-3">
+                            <div class="col-md">
+                                <div class="form-label">Username</div>
+                                <input type="text" class="form-control" value={$utente.getUsername()} readonly disabled>
+                            </div>
+                        </div>
 
-		<!-- Page body -->
-		<div class="page-body">
-			<div class="container-xl">
-<div class="card">
-	<div class="row g-0">
-		
-		<div class="col-12 col-md-9 d-flex flex-column">
-<div class="card-body">
-	<h2 class="mb-4">Il mio account</h2>
-	
-	
-	<h3 class="card-title mt-4">Tag ruolo</h3>
-	<div class="row g-3">
-		<div class="col-md">
-			<div class="form-label">Username</div>
-			<input type="text" class="form-control" value="Username" readonly disabled>
+                        <h3 class="card-title mt-4">Email</h3>
+                        <div>
+                            <div class="row g-2">
+                                <div class="col-auto">
+                                    <input type="text" class="form-control w-auto" value={$utente.getEmail()} readonly disabled>
+                                </div>
+                            </div>
+                        </div>
 
-		</div>
-		<div class="col-md">
-			
-		</div>
-		<div class="col-md">
-			
-	</div>
-	<h3 class="card-title mt-4">Email</h3>
-	
-	<div>
-		<div class="row g-2">
-			<div class="col-auto">
-				<input type="text" class="form-control w-auto" value="email@gmail.com" readonly disabled>
+                        <h3 class="card-title mt-4">Password</h3>
+                        <div>
+                            <button class="btn" data-bs-toggle="modal" data-bs-target="#setpasswordModal">Cambia password</button>
+                        </div>
 
-			</div>
-			<div class="col-auto">
-</div>
-		</div>
-	</div>
-	<h3 class="card-title mt-4">Password</h3>
-	<div>
-		<button class="btn" data-bs-toggle="modal" data-bs-target="#setpasswordModal">Cambia password</button>
-
-	  </div>
-
-	 <div class="modal modal-blur fade" id="setpasswordModal" tabindex="-1" role="dialog" aria-hidden="true">
-	<div class="modal-dialog modal-1 modal-dialog-centered" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-	<h5 class="modal-title">Cambia password</h5>
-	<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-</div>
-<div class="modal-body">
-	<div class="mb-3">
-		<label for="vecchiapassword" class="form-label">Vecchia Password</label>
-		<input type="password" class="form-control" id="vecchiapassword" placeholder="Inserisci la vecchia password">
-	</div>
-	<div class="mb-3">
-		<label for="nuovapassword" class="form-label">Nuova Password</label>
-		<input type="password" class="form-control" id="nuovapassword" placeholder="Inserisci la nuova password">
-	</div>
-	<div class="mb-3">
-		<label for="confermanuovapassword" class="form-label">Nuova Password</label>
-		<input type="password" class="form-control" id="confermanuovapassword" placeholder="Conferma la nuova password">
-	</div>
-
-</div>
-<div class="modal-footer">
-	<button type="button" class="btn me-auto" data-bs-dismiss="modal">Chiudi</button>
-	<button type="button" class="btn btn-cyan" data-bs-dismiss="modal">Cambia password</button>
-</div>
-		</div>
-	</div>
-</div>
-		   
-	   
-   </form>
-</div>
-</div>
-</div>
-</div>
-	
-	
-	<div>
-
-	</div>
+                        <div class="modal modal-blur fade" id="setpasswordModal" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog modal-1 modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Cambia password</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="mb-3">
+                                            <label for="vecchiapassword" class="form-label">Vecchia Password</label>
+                                            <input type="password" class="form-control" id="vecchiapassword" placeholder="Inserisci la vecchia password">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="nuovapassword" class="form-label">Nuova Password</label>
+                                            <input type="password" class="form-control" id="nuovapassword" placeholder="Inserisci la nuova password">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="confermanuovapassword" class="form-label">Nuova Password</label>
+                                            <input type="password" class="form-control" id="confermanuovapassword" placeholder="Conferma la nuova password">
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn me-auto" data-bs-dismiss="modal">Chiudi</button>
+                                        <button type="button" class="btn btn-cyan" data-bs-dismiss="modal">Cambia password</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-		</div>
-	</div>

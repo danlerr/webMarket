@@ -48,6 +48,10 @@ public class HomeAdmin extends BaseController {
         }
     }
 
+    public void deleteUser(){
+        
+    }
+
     /**
      * Returns a short description of the servlet.
      *
