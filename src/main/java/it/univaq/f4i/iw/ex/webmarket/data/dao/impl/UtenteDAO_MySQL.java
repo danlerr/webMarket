@@ -15,10 +15,12 @@ import java.sql.SQLException;
 
 
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UtenteDAO_MySQL extends DAO implements UtenteDAO {
 
-    private PreparedStatement sUserByID, sUserByEmail, sUserByUsername, iUser, uUser;
+    private PreparedStatement sUserByID, sUserByEmail, sUserByUsername, iUser, uUser, sUserByRole, sAllUser;
 
     /**
      * Costruttore della classe.
@@ -41,11 +43,27 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO {
 
             //precompiliamo tutte le query utilizzate nella classe
             //precompile all the queries uses in this class
-            sUserByID = connection.prepareStatement("SELECT * FROM utente WHERE id = ?");
-            sUserByEmail = connection.prepareStatement("SELECT id FROM utente WHERE email = ?");
-            sUserByUsername = connection.prepareStatement("SELECT id FROM utente WHERE username = ?");
-            iUser = connection.prepareStatement("INSERT INTO utente (email,password, tipologia_utente, username) VALUES(?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-            uUser = connection.prepareStatement("UPDATE utente SET email=?,password=?, tipologia_utente=?, username=?, version=? WHERE id=? AND version=?");
+            sUserByID = connection.prepareStatement(
+                "SELECT * FROM utente WHERE id = ?"
+                );
+            sUserByEmail = connection.prepareStatement(
+                "SELECT id FROM utente WHERE email = ?"
+                );
+            sUserByUsername = connection.prepareStatement(
+                "SELECT id FROM utente WHERE username = ?"
+                );
+            iUser = connection.prepareStatement(
+                "INSERT INTO utente (email,password, tipologia_utente, username) VALUES(?,?,?,?)", Statement.RETURN_GENERATED_KEYS
+                );
+            uUser = connection.prepareStatement(
+                "UPDATE utente SET email=?,password=?, tipologia_utente=?, username=?, version=? WHERE id=? AND version=?"
+                );
+            sUserByRole = connection.prepareStatement(
+                "SELECT * FROM utente WHERE tipologia_utente=?"
+                );
+            sAllUser = connection.prepareStatement(
+                "SELECT * FROM utente"
+            );
         } catch (SQLException ex) {
             throw new DataException("Error initializing newspaper data layer", ex);
         }
@@ -193,10 +211,7 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO {
     }
 
     /**
-     * Memorizza un utente nel database.
-     * 
-     * @param user l'utente da memorizzare
-     * @throws DataException se si verifica un errore durante la memorizzazione
+     * recupera una lista di utenti dal db in base alla tipologia.
      */
     @Override
     public void storeUtente(Utente user) throws DataException {
@@ -262,6 +277,34 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO {
             }
         } catch (SQLException ex) {
             throw new DataException("Unable to store user", ex);
+        }
+    }
+
+    public List<Utente> getAllByRole(TipologiaUtente t) throws DataException{
+        List<Utente> result = new ArrayList<>();
+        try {
+            try (ResultSet r = sUserByRole.executeQuery()) {
+                while (r.next()) {
+                    result.add(getUtente(r.getInt("id")));
+                }
+            }
+            return result;
+        } catch (SQLException ex) {
+            throw new DataException("Error loading all user by role", ex);
+        }
+    }
+
+    public List<Utente> getAll() throws DataException{
+        List<Utente> result = new ArrayList<>();
+        try {
+            try (ResultSet r = sAllUser.executeQuery()) {
+                while (r.next()) {
+                    result.add(getUtente(r.getInt("id")));
+                }
+            }
+            return result;
+        } catch (SQLException ex) {
+            throw new DataException("Error loading all user", ex);
         }
     }
 }

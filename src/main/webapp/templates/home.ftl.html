@@ -11,6 +11,7 @@
                             <img src="images/richiesta.png" class="img-fluid" style="max-width: 40px;">
                         </button>
                         <div class="mt-1">Richieste</div>
+                        <!--notifiche da aggiugnere ai bottoni-->
                     </div>
                     <div class="text-center mx-3">
                         <button class="btn btn-light custom-btn-large mx-2">
@@ -39,48 +40,32 @@
                                     <thead>
                                         <tr>
                                             <th>Nome</th>
-                                            <th>Voti</th>
+                                            <th>Email</th>
                                             <th>Media Rating</th>
                                             <th>Interventi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td><strong>Mario Rossi</strong></td>
-                                            <td>125</td>
-                                            <td>4.8 ⭐</td>
-                                            <td>230</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Luca Bianchi</strong></td>
-                                            <td>98</td>
-                                            <td>4.7 ⭐</td>
-                                            <td>190</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Giovanni Verdi</strong></td>
-                                            <td>85</td>
-                                            <td>4.6 ⭐</td>
-                                            <td>175</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Andrea Neri</strong></td>
-                                            <td>76</td>
-                                            <td>4.5 ⭐</td>
-                                            <td>160</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Francesco Gialli</strong></td>
-                                            <td>65</td>
-                                            <td>4.4 ⭐</td>
-                                            <td>140</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Francesco Gialli</strong></td>
-                                            <td>65</td>
-                                            <td>4.4 ⭐</td>
-                                            <td>140</td>
-                                        </tr>
+                                        {foreach from=$tecnici item=tecnico}
+                                            <tr>
+                                                <td><strong>{$tecnico.getUsername()}</strong></td>
+                                                <td>{$tecnico.getEmail()}</td>
+                                                <td>
+                                                    {if isset($medieTecnici[$tecnico.getId()])}
+                                                        {$medieTecnici[$tecnico.getId()]|number_format:1} ⭐
+                                                    {else}
+                                                        N/A ⭐
+                                                    {/if}
+                                                </td>
+                                                <td>
+                                                    {if isset($interventiTecnici[$tecnico.getId()])}
+                                                        {$interventiTecnici[$tecnico.getId()]}
+                                                    {else}
+                                                        0
+                                                    {/if}
+                                                </td>
+                                            </tr>
+                                        {/foreach}
                                     </tbody>
                                 </table>
                             </div>

@@ -7,6 +7,8 @@ import it.univaq.f4i.iw.framework.result.TemplateManagerException;
 import it.univaq.f4i.iw.framework.result.TemplateResult;
 import it.univaq.f4i.iw.framework.security.SecurityHelpers;
 import java.io.IOException;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,9 +17,13 @@ import javax.servlet.http.HttpSession;
 
 public class HomeAdmin extends BaseController {
 
-    private void action_default(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException {
+    private void action_default(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException, DataException {
         TemplateResult r = new TemplateResult(getServletContext());
         request.setAttribute("page_title", "Admin Dashboard");
+
+        List<Utente> utenti = ((ApplicationDataLayer) request.getAttribute("datalayer")).getUtenteDAO().getAll();
+        request.setAttribute("utenti", utenti); 
+
         r.activate("homeadmin.ftl.html", request, response);
     }
     

@@ -2,13 +2,15 @@ package it.univaq.f4i.iw.ex.webmarket.controller;
 
 import it.univaq.f4i.iw.framework.data.DataException;
 import it.univaq.f4i.iw.ex.webmarket.data.dao.impl.ApplicationDataLayer;
+import it.univaq.f4i.iw.ex.webmarket.data.model.TipologiaUtente;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Utente;
 import it.univaq.f4i.iw.framework.result.TemplateManagerException;
 import it.univaq.f4i.iw.framework.result.TemplateResult;
 import it.univaq.f4i.iw.framework.security.SecurityHelpers;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,11 +23,23 @@ public class Home extends BaseController {
         TemplateResult r = new TemplateResult(getServletContext());
         request.setAttribute("page_title", "Dashboard");
           
-
-        // Recupera le medie dei voti dei tecnici
         Map<Integer, Double> medieTecnici = ((ApplicationDataLayer) request.getAttribute("datalayer")).getRecensioneDAO().getMedieRecensioniTecnici();
         request.setAttribute("medieTecnici", medieTecnici);
-        
+
+        List<Utente> tecnici = ((ApplicationDataLayer) request.getAttribute("datalayer")).getUtenteDAO().getAllByRole(TipologiaUtente.TECNICO);
+        request.setAttribute("tecnici", tecnici); //da tecnici prendo username e mail 
+
+        Map<Integer, Integer> proposteTecnici = new HashMap<>();
+        ApplicationDataLayer datalayer = (ApplicationDataLayer) request.getAttribute("datalayer");
+
+        for (Utente tecnico : tecnici) {
+            int numeroProposte = datalayer.getPropostaDAO().getProposteByTecnico(tecnico.getId()).size();
+            proposteTecnici.put(tecnico.getKey(), numeroProposte);
+        }
+        // Mappa alla request per usarla nel template Smarty
+        request.setAttribute("interventiTecnico", proposteTecnici);
+
+
         //notifiche per richieste
 
         //notifiche per proposte
@@ -38,9 +52,6 @@ public class Home extends BaseController {
         //request.setAttribute("ordini", ordini);
 
         r.activate("home.ftl.html", request, response);
-    
-        //top tecnici 
-
     }
     
     @Override
