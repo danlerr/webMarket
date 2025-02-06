@@ -1,192 +1,92 @@
+<!-- Page body -->
+<div class="page-body">
+  <div class="container-xl">
+    <div class="row row-cards">
+      <h1>Le tue richieste</h1>
+    
+      <div class="col-12">
+        <div class="card">
+          <div class="table-responsive">
+            <table class="table card-table table-vcenter text-nowrap datatable">
+              <thead>
+                <tr>
+                  <th class="w-1 text-center">Codice</th>
+                  <th class="text-center">Categoria</th>
+                  <th class="text-center">Ordinante</th>
+                  <th class="text-center">Tecnico</th>
+                  <th class="text-center">Data</th>
+                  <th class="text-center">Stato</th>
+                  
+                  <th class="text-end">Azioni</th>
+                </tr>
+              </thead>
+              <tbody>
+                <#-- Ciclo su tutte le richieste passate dalla Servlet -->
+                <#list richieste as r>
+                  <tr>
+                    <!-- Codice richiesta -->
+                    <td class="text-center">
+                      <span class="text-secondary">${r.codiceRichiesta}</span>
+                    </td>
 
-  
-      <!-- Page body -->
-      <div class="page-body">
-        <div class="container-xl">
-          <div class="row row-cards">
-            <h1>Le tue richieste</h1>
-            
-            <div class="col-12">
-              <div class="card">
-                <div class="table-responsive">
-                  <table class="table card-table table-vcenter text-nowrap datatable">
-                    <thead>
-                      <tr>
-                        
-                        <th class="w-1 text-center">
-                          Codice
-                         
-                            
-                        </th>
-                        <th class="text-center">Categoria</th>
-                        <th class="text-center">Ordinante</th>
-                        <th class="text-center">Tecnico</th>
-                        <th class="text-center">Data</th>
-                        <th class="text-center">Stato</th>
-                        <th class="text-center">Price</th>
-                        <th class="text-end">Azioni</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        
-                        <td class="text-center">
-                          <span class="text-secondary">001401</span>
-                        </td>
-                        <td class="text-center">
-                          <a href="invoice.html" class="text-reset" tabindex="-1">Design Works</a>
-                        </td>
-                        <td class="text-center">
-                          <div class="d-flex justify-content-center align-items-center">
-                            <span class="flag flag-xs flag-country-us me-2"></span>
-                            <span>Carlson Limited</span>
-                          </div>
-                        </td>
-                        <td class="text-center">
-                          87956621
-                        </td>
-                        <td class="text-center">
-                          15 Dec 2017
-                        </td>
-                        <td class="text-center">
-                          <span class="badge bg-success me-1"></span> Paid
-                        </td>
-                        <td class="text-center">
-                          $887
-                        </td>
-                        <td class="text-end">
-                          <span class="dropdown">
-                            <button class="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown">Actions</button>
-                            <div class="dropdown-menu dropdown-menu-end">
-                              <a class="dropdown-item" href="#">
-                                Action
-                              </a>
-                              <a class="dropdown-item" href="#">
-                                Another action
-                              </a>
-                            </div>
-                          </span>
-                        </td>
-                      </tr>
-                      <tr>
-                       
-                        <td class="text-center">
-                          <span class="text-secondary">001402</span>
-                        </td>
-                        <td class="text-center">
-                          <a href="invoice.html" class="text-reset" tabindex="-1">UX Wireframes</a>
-                        </td>
-                        <td class="text-center">
-                          <div class="d-flex justify-content-center align-items-center">
-                            <span class="flag flag-xs flag-country-gb me-2"></span>
-                            <span>Adobe</span>
-                          </div>
-                        </td>
-                        <td class="text-center">
-                          87956421
-                        </td>
-                        <td class="text-center">
-                          12 Apr 2017
-                        </td>
-                        <td class="text-center">
-                          <span class="badge bg-warning me-1"></span> Pending
-                        </td>
-                        <td class="text-center">
-                          $1200
-                        </td>
-                        <td class="text-end">
-                          <span class="dropdown">
-                            <a href="pagina1.html" class="btn btn-light active">Visualizza</a> 
-                            
-                          </span>
-                        </td>
-                      </tr>
-                      <tr>
-                        
-                        <td class="text-center">
-                          <span class="text-secondary">001404</span>
-                        </td>
-                        <td class="text-center">
-                          <a href="invoice.html" class="text-reset" tabindex="-1">Landing Page</a>
-                        </td>
-                        <td class="text-center">
-                          <div class="d-flex justify-content-center align-items-center">
-                            <span class="flag flag-xs flag-country-br me-2"></span>
-                            <span>Salesforce</span>
-                          </div>
-                        </td>
-                        <td class="text-center">
-                          87953421
-                        </td>
-                        <td class="text-center">
-                          2 Sep 2017
-                        </td>
-                        <td class="text-center">
-                          <span class="badge bg-secondary me-1"></span> Due in 2 Weeks
-                        </td>
-                        <td class="text-center">
-                          $1500
-                        </td>
-                        <td class="text-end">
-                          <span class="dropdown">
-                            <button class="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown">Actions</button>
-                            <div class="dropdown-menu dropdown-menu-end">
-                              <a class="dropdown-item" href="#">
-                                Action
-                              </a>
-                              <a class="dropdown-item" href="#">
-                                Another action
-                              </a>
-                            </div>
-                          </span>
-                        </td>
-                      </tr>
-                      <tr>
-                        
-                        <td class="text-center">
-                          <span class="text-secondary">001405</span>
-                        </td>
-                        <td class="text-center">
-                          <a href="invoice.html" class="text-reset" tabindex="-1">Marketing Templates</a>
-                        </td>
-                        <td class="text-center">
-                          <div class="d-flex justify-content-center align-items-center">
-                            <span class="flag flag-xs flag-country-pl me-2"></span>
-                            <span>Printic</span>
-                          </div>
-                        </td>
-                        <td class="text-center">
-                          87956621
-                        </td>
-                        <td class="text-center">
-                          29 Jan 2018
-                        </td>
-                        <td class="text-center">
-                          <span class="badge bg-danger me-1"></span> Paid Today
-                        </td>
-                        <td class="text-center">
-                          $648
-                        </td>
-                        <td class="text-end">
-                          <span class="dropdown">
-                            <button class="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown">Actions</button>
-                            <div class="dropdown-menu dropdown-menu-end">
-                              <a class="dropdown-item" href="#">
-                                Action
-                              </a>
-                              <a class="dropdown-item" href="#">
-                                Another action
-                              </a>
-                            </div>
-                          </span>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
+                    <!-- Categoria (eventualmente r.categoria.nome se Categoria è un oggetto) -->
+                    <td class="text-center">
+                      <span>${r.categoria.nome}</span>
+                    </td>
+
+                    <!-- Ordinante  -->
+                    <td class="text-center">
+                      <span>
+                        ${r.ordinante.getUsername()} 
+                      </span>
+                    </td>
+
+                    <!-- Tecnico (se assegnato) -->
+                    <td class="text-center">
+                      <#if r.tecnico??>
+                        <span>
+                          ${r.tecnico.getUsername()} 
+                        </span>
+                      <#else>
+                        <span>Nessun tecnico assegnato</span>
+                      </#if>
+                    </td>
+
+                    <!-- Data -->
+                    <td class="text-center">
+                      <span>${r.data}</span>
+                    </td>
+
+                    <!-- Stato con pallino colorato in base al valore -->
+                    <td class="text-center">
+                      <#if r.stato?string == "RISOLTA">
+                        <span class="badge bg-success me-1"></span>Risolta
+                      <#elseif r.stato?string == "PRESA_IN_CARICO">
+                        <span class="badge bg-warning me-1"></span>Presa in carico
+                      <#elseif r.stato?string == "ORDINATA">
+                        <span class="badge bg-orange me-1"></span>Ordinata
+                      <#elseif r.stato?string == "IN_ATTESA">
+                        <span class="badge bg-danger me-1"></span>In attesa
+                      <#else>
+                        <span class="badge bg-secondary me-1"></span>Sconosciuto
+                      </#if>
+                    </td>
+
+                   
+
+                    <!--  link a pagina di dettaglio -->
+                    <td class="text-end">
+                      <span class="dropdown">
+                        <a href="dettaglioRichiesta?id=${r.id}" class="btn btn-light active">Visualizza</a>
+                      </span>
+                    </td>
+                  </tr>
+                </#list>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
-   
+    </div>
+  </div>
+</div>
