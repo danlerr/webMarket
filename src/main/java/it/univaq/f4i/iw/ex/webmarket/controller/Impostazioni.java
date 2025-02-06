@@ -27,7 +27,7 @@ public class Impostazioni extends BaseController {
         request.setAttribute("tipologia", tipologia);
         request.setAttribute("page_title", "impostazioni");
         request.setAttribute("user_type", u.getTipologiaUtente().toString());
-        res.activate("impostazioni.ftl.html", request, response);
+        res.activate("impostazioniAccount.ftl.html", request, response);
     }
     
     private void action_update(HttpServletRequest request, HttpServletResponse response, int userId) throws IOException, ServletException, TemplateManagerException, DataException, NoSuchAlgorithmException, InvalidKeySpecException {
