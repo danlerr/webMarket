@@ -13,7 +13,7 @@
                      /ElencoOrdini,
                      /ElencoProposte,
                      /ElencoRichieste,
-                     /GestioneUtenti,
+                     /AggiungiUtente,
                      /Home,
                      /HomeAdmin,
                      /Impostazioni
@@ -167,8 +167,8 @@
         <url-pattern>/ElencoRichieste</url-pattern>
     </servlet-mapping>
      <servlet-mapping>
-        <servlet-name>GestioneUtenti</servlet-name>
-        <url-pattern>/GestioneUtenti</url-pattern>
+        <servlet-name>AggiungiUtente</servlet-name>
+        <url-pattern>/AggiungiUtente</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
