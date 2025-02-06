@@ -68,9 +68,9 @@
         <ul class="list-inline">
             <#list proposte as proposta>
                 <li class="list-inline-item">
-                    <!-- Adatta i campi della proposta in base al tuo model -->
+                    
                     <a href="${request.contextPath}/dettaglioProposta?id=${proposta.id}">
-                        Proposta n. ${proposta.id} - ${proposta.descrizione!""}
+                        Proposta n. ${proposta.codice} 
                     </a>
                 </li>
             </#list>
