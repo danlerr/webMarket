@@ -6,6 +6,7 @@ import it.univaq.f4i.iw.ex.webmarket.data.model.Proposta;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Richiesta;
 import it.univaq.f4i.iw.ex.webmarket.data.model.impl.StatoOrdine;
 import it.univaq.f4i.iw.ex.webmarket.data.model.StatoRichiesta;
+import it.univaq.f4i.iw.ex.webmarket.data.model.TipologiaUtente;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Utente;
 import it.univaq.f4i.iw.ex.webmarket.data.model.impl.OrdineImpl;
 import it.univaq.f4i.iw.framework.data.DataException;
@@ -49,7 +50,7 @@ public class DettaglioOrdine extends BaseController {
     // Imposta il flag per il template: mostra i bottoni di accettazione/rifiuto solo per l'ordinante
     // se l'ordine è in stato IN_ATTESA e l'utente è l'autore della richiesta associata all'ordine.
     boolean showAccettaRifiutaButtons = false;
-    if (utente.getTipologiaUtente().equals("ORDINANTE") &&
+    if (utente.getTipologiaUtente().equals(TipologiaUtente.ORDINANTE) &&
         ordine.getStato().equals(StatoOrdine.IN_ATTESA) &&
         ordine.getProposta().getRichiesta().getOrdinante().getId() == user) {
         showAccettaRifiutaButtons = true;

@@ -100,7 +100,7 @@ public class CreaProposta extends BaseController {
         // }
 
         // Reindirizzo alla pagina di dettaglio della proposta
-        response.sendRedirect("detailproposta_tecnico?n=" + proposta.getKey());
+        response.sendRedirect("dettaglioProposta?n=" + proposta.getKey());
     }
 
     @Override

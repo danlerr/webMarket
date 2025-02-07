@@ -46,16 +46,16 @@ public class Login extends BaseController {
                     String redirectPage;
                     switch (u.getTipologiaUtente()) {
                         case ORDINANTE:
-                            redirectPage = "Home";
+                            redirectPage = "home";
                             break;
                         case TECNICO:
-                            redirectPage = "Home";
+                            redirectPage = "home";
                             break;
                         case AMMINISTRATORE:
-                            redirectPage = "HomeAdmin";
+                            redirectPage = "homeAdmin";
                             break;
                         default:
-                            redirectPage = "Login";
+                            redirectPage = "login";
                     }
                     
                     String referrer = request.getParameter("referrer");
