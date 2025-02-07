@@ -26,6 +26,7 @@ public class HomeAdmin extends BaseController {
         request.setAttribute("utenti", utenti); 
 
         r.activate("homeadmin.ftl.html", request, response);
+        
     }
     
     @Override

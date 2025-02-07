@@ -39,19 +39,19 @@ button {
 
 	</style>
 </head>
-<body>
+<body class="full-height">
 
-    <#-- Controllo se la pagina è "login.ftl", se sì, non carico header e footer -->
-    <#if pageName != "login">
-        <#include "header.ftl.html">
-    </#if>
+    <#-- Controlla se pageName NON esiste (o è null), se è così, carica header e footer -->
+<#if pageName?? == false>
+    <#include "header.ftl.html">
+</#if>
 
-    <div>
-        <#include content_tpl>
-    </div>
+<div>
+    <#include content_tpl>
+</div>
 
-    <#if pageName != "login">
-        <#include "footer.ftl.html">
-    </#if>
+<#if pageName?? == false>
+    <#include "footer.ftl.html">
+</#if>
 
 </body>

@@ -1,6 +1,5 @@
-
     <div class="page">
-        <div class="container-xl">
+        <div class="container-xl mt-4">
             <div class="d-flex justify-content-between align-items-center">
                 <h2 class="page-title">Gestione Utenti</h2>
                 <a href="#" class="btn btn-success">Aggiungi Utente</a>
@@ -13,23 +12,21 @@
                                 <tr>
                                     <th>Username</th>
                                     <th>Email</th>
-                                    <th>Password</th>
                                     <th>Tipologia</th>
                                     <th>Azioni</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {foreach from=$users item=user}
+                                <#list utenti as utente>
                                     <tr>
-                                        <td>{$user.username}</td>
-                                        <td>{$user.email}</td>
-                                        <td>{$user.password}</td>
-                                        <td>{$user.role}</td>
+                                        <td>${utente.username}</td>
+                                        <td>${utente.email}</td>
+                                        <td>${utente.tipologiaUtente}</td>
                                         <td>
-                                            <a href="delete_user.php?id={$user.id}" class="btn btn-danger btn-sm">Elimina</a>
+                                            <a href="delete_user.php?id=${utente.id}" class="btn btn-danger btn-sm">Elimina</a>
                                         </td>
                                     </tr>
-                                {/foreach}
+                                </#list>
                             </tbody>
                         </table>
                     </div>
