@@ -199,7 +199,7 @@
         </session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>Login</welcome-file>
+        <welcome-file>login</welcome-file>
     </welcome-file-list>
     <resource-ref>
         <res-ref-name>jdbc/webdb2</res-ref-name>
