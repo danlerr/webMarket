@@ -20,8 +20,6 @@ public class Login extends BaseController {
 
     private void action_default(HttpServletRequest request, HttpServletResponse response) throws IOException, TemplateManagerException {
         TemplateResult result = new TemplateResult(getServletContext());
-        //Il referrer è un parametro passato all'URL che indica da quale pagina l'utente proviene.
-        //Viene usato per reindirizzare l'utente alla pagina originale dopo il login, invece di mandarlo sempre a una homepage generica.
         request.setAttribute("referrer", request.getParameter("referrer"));
         request.setAttribute("pageName", "login"); // Imposta pageName per Freemarker
         result.activate("login.ftl.html", request, response);
@@ -35,7 +33,7 @@ public class Login extends BaseController {
         if (!username.isEmpty() && !password.isEmpty()) {
             try {
                 
-                
+                System.out.println("ciao "+username);
                 
                 Utente u = ((ApplicationDataLayer) request.getAttribute("datalayer")).getUtenteDAO().getUtenteByUsername(username);
                 
@@ -44,28 +42,22 @@ public class Login extends BaseController {
                     SecurityHelpers.createSession(request, username, u.getKey(), u.getTipologiaUtente());
            
                     String redirectPage;
-                    switch (u.getTipologiaUtente()) {
-                        case ORDINANTE:
-                            redirectPage = "home";
-                            break;
-                        case TECNICO:
-                            redirectPage = "home";
-                            break;
-                        case AMMINISTRATORE:
-                            redirectPage = "homeAdmin";
-                            break;
-                        default:
-                            redirectPage = "login";
-                    }
+                    redirectPage = switch (u.getTipologiaUtente()) {
+    
+                        case ORDINANTE -> "home";
+                        case TECNICO -> "home";
+                        case AMMINISTRATORE -> "homeAdmin";
+                        default -> "login";
+                    };
                     
                     String referrer = request.getParameter("referrer");
                  
-                //Se l’utente stava cercando di accedere a una pagina prima del login, tenta di reindirizzarlo lì.
+
                 if (referrer != null && SecurityHelpers.accessControl(referrer, u.getTipologiaUtente().toString())) {
-                        response.sendRedirect(referrer);//Se il referrer è valido, lo porta lì.
+                        response.sendRedirect(referrer);
 
                     } else if (referrer != null) {
-                        //Se il referrer non è valido, lo manda alla homepage in base al tipo di utente.
+                        System.out.println("Referrer non autorizzato, redirigo alla homepage.");
                         response.sendRedirect(redirectPage);
                     }else {
                         response.sendRedirect(redirectPage);
@@ -76,13 +68,15 @@ public class Login extends BaseController {
                     action_default(request, response);
 
                }
-               //Gestione errori DB (scrittura nei log).
             } catch (DataException ex) {
                 Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
             }
             
         }
-        
+        //se la validazione fallisce...
+        //if the validation fails...
+        //request.setAttribute("error", "Email o password non corretti");
+        //handleError("Login failed", request, response);
     }
 
     /**
@@ -107,7 +101,9 @@ public class Login extends BaseController {
             }
         } catch (IOException | TemplateManagerException ex) {
             handleError(ex, request, response);
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InvalidKeySpecException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
