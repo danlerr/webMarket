@@ -40,19 +40,28 @@ public class AggiungiUtente extends BaseController {
             response.sendRedirect("login");
             return;
         }
+        
+        int userId = (int) session.getAttribute("userid");
+        Utente u = ((ApplicationDataLayer) request.getAttribute("datalayer")).getUtenteDAO().getUtente(userId);
+        if (u != null) {
+            request.setAttribute("user", u);
+
         String action = request.getParameter("action");
         if (action != null && action.equals("createUser")) {
             action_creaUtente(request, response);
         } else {
             action_default(request, response);
         }
+    } else {
+        response.sendRedirect("login");
+    }
     } catch (IOException | TemplateManagerException | DataException ex) {
         handleError(ex, request, response);
-    }   catch (NoSuchAlgorithmException ex) {
-            Logger.getLogger(AggiungiUtente.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvalidKeySpecException ex) {
-            Logger.getLogger(AggiungiUtente.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    } catch (NoSuchAlgorithmException ex) {
+        Logger.getLogger(AggiungiUtente.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (InvalidKeySpecException ex) {
+        Logger.getLogger(AggiungiUtente.class.getName()).log(Level.SEVERE, null, ex);
+    }
 }
 
 private void action_creaUtente(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, DataException, TemplateManagerException, NoSuchAlgorithmException, InvalidKeySpecException {

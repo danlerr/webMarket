@@ -20,6 +20,8 @@ public interface UtenteDAO {
 
     Utente getUtenteByUsername(String username) throws DataException;
 
+    void deleteUtente(int utente_key) throws DataException;
+
     List <Utente> getAllByRole(TipologiaUtente t) throws DataException;
 
     List <Utente> getAll() throws DataException;

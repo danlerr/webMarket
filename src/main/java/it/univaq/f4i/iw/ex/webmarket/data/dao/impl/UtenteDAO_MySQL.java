@@ -20,7 +20,7 @@ import java.util.List;
 
 public class UtenteDAO_MySQL extends DAO implements UtenteDAO {
 
-    private PreparedStatement sUserByID, sUserByEmail, sUserByUsername, iUser, uUser, sUserByRole, sAllUser;
+    private PreparedStatement sUserByID, sUserByEmail, sUserByUsername, iUser, uUser, sUserByRole, sAllUser, dUser;
 
     /**
      * Costruttore della classe.
@@ -64,6 +64,9 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO {
             sAllUser = connection.prepareStatement(
                 "SELECT * FROM utente"
             );
+            dUser = connection.prepareStatement(
+                "DELETE FROM utente WHERE id = ?"
+            );
         } catch (SQLException ex) {
             throw new DataException("Error initializing newspaper data layer", ex);
         }
@@ -83,6 +86,10 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO {
             sUserByEmail.close();
             iUser.close();
             uUser.close();
+            sUserByRole.close();
+            sAllUser.close();
+            dUser.close();
+
 
         } catch (SQLException ex) {
             //
@@ -279,7 +286,7 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO {
             throw new DataException("Unable to store user", ex);
         }
     }
-
+    @Override
     public List<Utente> getAllByRole(TipologiaUtente t) throws DataException{
         List<Utente> result = new ArrayList<>();
         try {
@@ -293,7 +300,7 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO {
             throw new DataException("Error loading all user by role", ex);
         }
     }
-
+    @Override
     public List<Utente> getAll() throws DataException{
         List<Utente> result = new ArrayList<>();
         try {
@@ -305,6 +312,16 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO {
             return result;
         } catch (SQLException ex) {
             throw new DataException("Error loading all user", ex);
+        }
+    }
+
+    @Override
+    public void deleteUtente(int utente_key) throws DataException {
+        try {
+            dUser.setInt(1, utente_key);
+            dUser.executeUpdate();
+        } catch (SQLException ex) {
+            throw new DataException("Unable to delete user", ex);
         }
     }
 }
