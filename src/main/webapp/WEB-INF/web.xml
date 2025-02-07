@@ -3,20 +3,20 @@
     <context-param>
         <param-name>security.protect.patterns</param-name>
         <!-- qui configuriamo i pattern delle URL da proteggere -->
-        <param-value>/Login,
-                     /Logout,
-                     /CreaProposta,
-                     /CreaRichiesta,
-                     /DettaglioOrdine,
-                     /DettagioProposta,
-                     /DettaglioRichiesta,
-                     /ElencoOrdini,
-                     /ElencoProposte,
-                     /ElencoRichieste,
-                     /AggiungiUtente,
-                     /Home,
-                     /HomeAdmin,
-                     /Impostazioni
+        <param-value>/login,
+                     /logout,
+                     /creaProposta,
+                     /creaRichiesta,
+                     /dettaglioOrdine,
+                     /dettaglioProposta,
+                     /dettaglioRichiesta,
+                     /elencoOrdini,
+                     /elencoProposte,
+                     /elencoRichieste,
+                     /aggiungiUtente,
+                     /home,
+                     /homeAdmin,
+                     /impostazioni
          </param-value>
     </context-param>
     <context-param>
@@ -84,8 +84,8 @@
         <servlet-class>it.univaq.f4i.iw.ex.webmarket.controller.Impostazioni</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>GestioneUtenti</servlet-name>
-        <servlet-class>it.univaq.f4i.iw.ex.webmarket.controller.GestioneUtenti</servlet-class>
+        <servlet-name>AggiungiUtente</servlet-name>
+        <servlet-class>it.univaq.f4i.iw.ex.webmarket.controller.AggiungiUtente</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ElencoRichieste</servlet-name>
@@ -105,7 +105,7 @@
     </servlet>
     <servlet>
         <servlet-name>DettaglioProposta</servlet-name>
-        <servlet-class>it.univaq.f4i.iw.ex.webmarket.controller.DettagioProposta</servlet-class>
+        <servlet-class>it.univaq.f4i.iw.ex.webmarket.controller.DettaglioProposta</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>DettaglioOrdine</servlet-name>
@@ -128,59 +128,59 @@
     
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
-        <url-pattern>/Login</url-pattern>
+        <url-pattern>/login</url-pattern>
     </servlet-mapping>
      <servlet-mapping>
         <servlet-name>Logout</servlet-name>
-        <url-pattern>/Logout</url-pattern>
+        <url-pattern>/logout</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>CreaProposta</servlet-name>
-        <url-pattern>/CreaProposta</url-pattern>
+        <url-pattern>/creaProposta</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>CreaRichiesta</servlet-name>
-        <url-pattern>/CreaRichiesta</url-pattern>
+        <url-pattern>/creaRichiesta</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>DettaglioOrdine</servlet-name>
-        <url-pattern>/DettaglioOrdine</url-pattern>
+        <url-pattern>/dettaglioOrdine</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>DettaglioProposta</servlet-name>
-        <url-pattern>/DettaglioProposta</url-pattern>
+        <url-pattern>/dettaglioProposta</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>DettaglioRichiesta</servlet-name>
-        <url-pattern>/DettaglioRichiesta</url-pattern>
+        <url-pattern>/dettaglioRichiesta</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ElencoOrdini</servlet-name>
-        <url-pattern>/ElencoOrdini</url-pattern>
+        <url-pattern>/elencoOrdini</url-pattern>
     </servlet-mapping>
       <servlet-mapping>
         <servlet-name>ElencoProposte</servlet-name>
-        <url-pattern>/ElencoProposte</url-pattern>
+        <url-pattern>/elencoProposte</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ElencoRichieste</servlet-name>
-        <url-pattern>/ElencoRichieste</url-pattern>
+        <url-pattern>/elencoRichieste</url-pattern>
     </servlet-mapping>
      <servlet-mapping>
         <servlet-name>AggiungiUtente</servlet-name>
-        <url-pattern>/AggiungiUtente</url-pattern>
+        <url-pattern>/aggiungiUtente</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
-        <url-pattern>/Home</url-pattern>
+        <url-pattern>/home</url-pattern>
     </servlet-mapping>
      <servlet-mapping>
         <servlet-name>HomeAdmin</servlet-name>
-        <url-pattern>/HomeAdmin</url-pattern>
+        <url-pattern>/homeAdmin</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>Impostazioni</servlet-name>
-        <url-pattern>/Impostazioni</url-pattern>
+        <url-pattern>/impostazioni</url-pattern>
     </servlet-mapping>
     
     

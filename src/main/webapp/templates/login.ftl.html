@@ -4,11 +4,10 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
     <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
-    <title>Coquette</title>
+    <title>Coquette - ${pageName?if_exists}</title>
     <!-- CSS files -->
-    
-	<link rel="stylesheet" type="text/css" href="style/demo.min.css">
-	<link rel="stylesheet" type="text/css" href="style/tabler.min.css">
+    <link rel="stylesheet" type="text/css" href="style/demo.min.css">
+    <link rel="stylesheet" type="text/css" href="style/tabler.min.css">
     <style>
         @import url('https://rsms.me/inter/inter.css');
     </style>
@@ -26,38 +25,78 @@
                         <div class="card card-md">
                             <div class="card-body">
                                 <h2 class="h2 text-center mb-4">Login to your account</h2>
-                                <form action="./" method="get" autocomplete="off" novalidate>
+                                
+                                <!-- Mostra l'eventuale messaggio di errore -->
+                                <#if error??>
+                                    <div class="alert alert-danger" role="alert">
+                                        ${error}
+                                    </div>
+                                </#if>
+                                
+                                <!-- Form per il login -->
+                                <form action="Login" method="post" autocomplete="off" novalidate>
+                                    <!-- Campo nascosto per il referrer -->
+                                    <input type="hidden" name="referrer" value="${referrer!}">
+                                    
                                     <div class="mb-3">
                                         <label class="form-label">Username</label>
-                                        <input type="email" class="form-control" placeholder="your username" autocomplete="off">
+                                        <input 
+                                            type="text" 
+                                            class="form-control" 
+                                            name="username"
+                                            placeholder="your username"
+                                            autocomplete="off"
+                                            required
+                                        >
                                     </div>
+                                    
                                     <div class="mb-2">
                                         <label class="form-label">Password</label>
                                         <div class="input-group input-group-flat">
-                                            <input type="password" class="form-control" placeholder="your password" autocomplete="off">
+                                            <input 
+                                                type="password" 
+                                                class="form-control" 
+                                                name="password"
+                                                placeholder="your password"
+                                                autocomplete="off"
+                                                required
+                                            >
                                             <span class="input-group-text">
                                                 <a href="#" class="link-secondary" title="Show password" data-bs-toggle="tooltip">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                         viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                         class="icon icon-1">
                                                         <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
-                                                        <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
+                                                        <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6
+                                                        c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
                                                     </svg>
                                                 </a>
                                             </span>
                                         </div>
                                     </div>
+                                    
                                     <div class="form-footer">
-                                        <button type="submit" class="btn btn-cyan w-100">Sign in</button>
+                                        <button 
+                                            type="submit" 
+                                            class="btn btn-cyan w-100"
+                                            name="login" 
+                                            value="login"
+                                        >
+                                            Sign in
+                                        </button>
                                     </div>
                                 </form>
+                                <!-- Fine form -->
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Libs JS -->
-    <!-- Tabler Core -->
+     </div>
+    
+    <!-- JS Scripts -->
     <script src="scripts/tabler.min.js" defer></script>
     <script src="scripts/demo.min.js" defer></script>
 </body>

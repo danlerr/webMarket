@@ -35,7 +35,7 @@ public class Login extends BaseController {
         if (!username.isEmpty() && !password.isEmpty()) {
             try {
                 
-                //System.out.println("ciao "+username);
+                
                 
                 Utente u = ((ApplicationDataLayer) request.getAttribute("datalayer")).getUtenteDAO().getUtenteByUsername(username);
                 
@@ -52,10 +52,10 @@ public class Login extends BaseController {
                             redirectPage = "Home";
                             break;
                         case AMMINISTRATORE:
-                            redirectPage = "homepageadmin";
+                            redirectPage = "HomeAdmin";
                             break;
                         default:
-                            redirectPage = "login";
+                            redirectPage = "Login";
                     }
                     
                     String referrer = request.getParameter("referrer");

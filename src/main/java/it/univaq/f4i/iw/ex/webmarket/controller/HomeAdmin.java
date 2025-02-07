@@ -2,6 +2,7 @@ package it.univaq.f4i.iw.ex.webmarket.controller;
 
 import it.univaq.f4i.iw.framework.data.DataException;
 import it.univaq.f4i.iw.ex.webmarket.data.dao.impl.ApplicationDataLayer;
+import it.univaq.f4i.iw.ex.webmarket.data.model.TipologiaUtente;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Utente;
 import it.univaq.f4i.iw.framework.result.TemplateManagerException;
 import it.univaq.f4i.iw.framework.result.TemplateResult;
@@ -41,6 +42,17 @@ public class HomeAdmin extends BaseController {
         
         if (u != null) {
             request.setAttribute("user", u);
+            // Se l'utente è un amministratore, reindirizza alla pagina precedente
+            if (!u.getTipologiaUtente().equals(TipologiaUtente.AMMINISTRATORE)) {
+                String previousPage = request.getHeader("Referer");
+                if (previousPage != null && !previousPage.isEmpty()) {
+                    response.sendRedirect(previousPage);
+                } else {
+                    // Se non è disponibile il Referer
+                    response.sendRedirect("Login");
+                }
+                return;
+            }
         }
         action_default(request, response);
     } catch (IOException | TemplateManagerException | DataException ex) {

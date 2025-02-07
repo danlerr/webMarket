@@ -72,7 +72,12 @@ public class Home extends BaseController {
         
          if (u != null) {
             request.setAttribute("user", u);
-         }
+            // Verifico se l'utente è un amministratore
+            if (u.getTipologiaUtente().equals(TipologiaUtente.AMMINISTRATORE)) {  
+                response.sendRedirect("HomeAdmin");
+                return;
+            }
+        }
          action_default(request, response, userId);
          }
         catch (IOException | TemplateManagerException | DataException ex) {
