@@ -74,7 +74,7 @@ public class Home extends BaseController {
             request.setAttribute("user", u);
             // Verifico se l'utente è un amministratore
             if (u.getTipologiaUtente().equals(TipologiaUtente.AMMINISTRATORE)) {  
-                response.sendRedirect("HomeAdmin");
+                response.sendRedirect("homeAdmin");
                 return;
             }
         }

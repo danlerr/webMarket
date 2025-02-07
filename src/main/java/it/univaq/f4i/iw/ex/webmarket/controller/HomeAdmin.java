@@ -44,15 +44,11 @@ public class HomeAdmin extends BaseController {
             request.setAttribute("user", u);
             // Se l'utente è un amministratore, reindirizza alla pagina precedente
             if (!u.getTipologiaUtente().equals(TipologiaUtente.AMMINISTRATORE)) {
-                String previousPage = request.getHeader("Referer");
-                if (previousPage != null && !previousPage.isEmpty()) {
-                    response.sendRedirect(previousPage);
-                } else {
-                    // Se non è disponibile il Referer
-                    response.sendRedirect("Login");
-                }
+                // Mandiamo l'utente che non è admin alla Home "normale"
+                response.sendRedirect("home");
                 return;
             }
+            
         }
         action_default(request, response);
     } catch (IOException | TemplateManagerException | DataException ex) {

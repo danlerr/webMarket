@@ -1,5 +1,6 @@
 package it.univaq.f4i.iw.framework.security;
 
+import it.univaq.f4i.iw.ex.webmarket.data.model.TipologiaUtente;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -7,15 +8,13 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.time.Duration;
 import java.time.LocalDateTime;
-
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
-import it.univaq.f4i.iw.ex.webmarket.data.model.TipologiaUtente;
-
-import java.util.*;
 
 public class SecurityHelpers {
 
@@ -34,7 +33,7 @@ public class SecurityHelpers {
             String requestedPage = r.getRequestURI();
 
             if (!accessControl(requestedPage, tipo)) {
-                session.invalidate();  //Invalidazione sessione se l'utente non può accedere a quella pagina
+                session.invalidate();  // Invalido la sessione se l'utente non ha accesso alla pagina
                 return null;
             }
         }
@@ -42,6 +41,54 @@ public class SecurityHelpers {
         return session;
     }
 
+    
+    public static boolean accessControl(String requestedPage, String tipo) {
+        // Trasformiamo tutto in minuscolo per uniformità
+        requestedPage = requestedPage.toLowerCase();
+        tipo = tipo.toLowerCase();
+        
+        // Pagine accessibili a tutti: login e logout
+        if (requestedPage.contains("/login") || requestedPage.contains("/logout")) {
+            return true;
+        }
+        
+        // Pagine comuni a tutti (ad es. impostazioni)
+        if (requestedPage.contains("/impostazioni")) {
+            return true;
+        }
+        
+        // Pagine accessibili solo all'amministratore
+        if (requestedPage.contains("/homeadmin") || requestedPage.contains("/aggiungiutente")) {
+            return tipo.equals("amministratore");
+        }
+        
+        // Pagine esclusive per il tecnico
+        if (requestedPage.contains("/creaordine") || requestedPage.contains("/creaproposta")) {
+            return tipo.equals("tecnico");
+        }
+        
+        // Pagine esclusive per l'ordinante
+        if (requestedPage.contains("/crearichiesta")) {
+            return tipo.equals("ordinante");
+        }
+        
+        // Pagine comuni a tecnico e ordinante 
+        if (requestedPage.contains("/home") ||
+            requestedPage.contains("/elencorichieste") ||
+            requestedPage.contains("/elencoproposte") ||
+            requestedPage.contains("/elencoordini") ||
+            requestedPage.contains("/dettagliorichesta") ||
+            requestedPage.contains("/dettaglioproposta") ||
+            requestedPage.contains("/dettaglioordine")) {
+            return tipo.equals("tecnico") || tipo.equals("ordinante");
+        }
+        
+        // Se non rientra in nessuna categoria definita, nega l'accesso
+        return false;
+    }
+    
+    
+    
     public static HttpSession checkSession(HttpServletRequest r, boolean loginAgeCheck) {
         boolean check = true;
 
@@ -120,14 +167,14 @@ public class SecurityHelpers {
         }
     }
 
-    public static HttpSession createSession(HttpServletRequest request, String username, int userid, TipologiaUtente tipologia) {
+    public static HttpSession createSession(HttpServletRequest request, String username, int userid, TipologiaUtente tipo) {
         //se una sessione è già attiva, rimuoviamola e creiamone una nuova
         //if a session already exists, remove it and recreate a new one
         disposeSession(request);
         HttpSession s = request.getSession(true);
         s.setAttribute("username", username);
         s.setAttribute("userid", userid);
-        s.setAttribute("tipo", tipologia.toString());
+        s.setAttribute("tipo", tipo.toString());
         
         //
         s.setAttribute("ip", request.getRemoteHost());
@@ -142,7 +189,6 @@ public class SecurityHelpers {
             s.invalidate();
         }
     }
-
 
     //questo metodo rigenera la sessione invalidando quella corrente e
     //creandone una nuova con gli stessi attributi. Può essere utile per 
@@ -168,24 +214,6 @@ public class SecurityHelpers {
             s.setAttribute(key, value);
         }
         return s;
-    }
-
-    /**
-     * Verifica se una determinata pagina è accessibile da un utente in base al suo ruolo.
-     */
-    public static boolean accessControl(String requestedPage, String tipo) {
-    requestedPage = requestedPage.toLowerCase();
-
-    // Mappa che associa ogni ruolo alle pagine consentite
-    Map<String, List<String>> rolePages = new HashMap<>();
-    rolePages.put("AMMINISTRATORE", Arrays.asList("/homepageadmin", "/gestioneutenti", "/gestionecategorie", "/gestisci_caratteristiche", "categoria"));
-    rolePages.put("TECNICO", Arrays.asList("tecnico", "/invioproposta", "/richiesta_inattesa", "/cambio_password"));
-    rolePages.put("ORDINANTE", Arrays.asList("ord", "nuova_richiesta", "/motiva_rifiuto"));
-
-    // Controllo se il ruolo esiste nella mappa e verifico se la pagina richiesta è permessa
-    return rolePages.getOrDefault(tipo, Collections.emptyList())
-                    .stream()
-                    .anyMatch(requestedPage::contains);
     }
 
     //--------- CONNECTION SECURITY ------------
@@ -240,7 +268,6 @@ public class SecurityHelpers {
     }
 
     //--------- PASSWORD SECURITY ------------
-    
     //support functions for the password hashing functions
     private static String bytesToHexString(byte[] byteArray) {
         StringBuilder hexStringBuffer = new StringBuilder();

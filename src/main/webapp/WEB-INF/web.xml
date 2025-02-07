@@ -3,9 +3,7 @@
     <context-param>
         <param-name>security.protect.patterns</param-name>
         <!-- qui configuriamo i pattern delle URL da proteggere -->
-        <param-value>/login,
-                     /logout,
-                     /creaProposta,
+        <param-value>/creaProposta,
                      /creaRichiesta,
                      /dettaglioOrdine,
                      /dettaglioProposta,
