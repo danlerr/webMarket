@@ -287,9 +287,10 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO {
         }
     }
     @Override
-    public List<Utente> getAllByRole(TipologiaUtente t) throws DataException{
+    public List<Utente> getAllByRole(TipologiaUtente t) throws DataException {
         List<Utente> result = new ArrayList<>();
         try {
+            sUserByRole.setString(1, t.name()); 
             try (ResultSet r = sUserByRole.executeQuery()) {
                 while (r.next()) {
                     result.add(getUtente(r.getInt("id")));
