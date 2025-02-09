@@ -46,6 +46,7 @@ public class DettaglioRichiesta extends BaseController {
     // Recupera l'utente loggato
     Utente utente = ((ApplicationDataLayer) request.getAttribute("datalayer"))
             .getUtenteDAO().getUtente(user);
+    request.setAttribute("user", utente);
 
     // Se l'utente è un tecnico e la richiesta è nello stato IN_ATTESA,
     // imposta un attributo per far visualizzare il bottone "prendi in carico" nel template.

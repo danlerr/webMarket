@@ -25,6 +25,7 @@ public class ElencoRichieste extends BaseController {
 
         // Recupera l'utente per determinare la sua tipologia
         Utente utente = ((ApplicationDataLayer) request.getAttribute("datalayer")).getUtenteDAO().getUtente(user);
+        request.setAttribute("user", utente);
 
         String template;
 

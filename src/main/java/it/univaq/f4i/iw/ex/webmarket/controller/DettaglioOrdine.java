@@ -46,6 +46,7 @@ public class DettaglioOrdine extends BaseController {
     // Recupera l'utente loggato per controllare il ruolo
     Utente utente = ((ApplicationDataLayer) request.getAttribute("datalayer"))
             .getUtenteDAO().getUtente(user);
+    request.setAttribute("user", utente);
 
     // Imposta il flag per il template: mostra i bottoni di accettazione/rifiuto solo per l'ordinante
     // se l'ordine è in stato IN_ATTESA e l'utente è l'autore della richiesta associata all'ordine.

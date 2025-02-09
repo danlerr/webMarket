@@ -31,6 +31,7 @@ public class ElencoOrdini extends BaseController {
     // Recupera l'utente per determinare la sua tipologia
     Utente utente = ((ApplicationDataLayer) request.getAttribute("datalayer"))
             .getUtenteDAO().getUtente(user);
+    request.setAttribute("user", utente);
     // Imposta un flag per il template (true se l'utente è ordinante)
     boolean isOrdinante = utente.getTipologiaUtente().equals(TipologiaUtente.ORDINANTE);
     request.setAttribute("isOrdinante", isOrdinante);
@@ -56,7 +57,7 @@ public class ElencoOrdini extends BaseController {
                 .getOrdineDAO().getOrdiniByTecnico(user));
     }
     
-    res.activate("ElencoOrdini.ftl.html", request, response);
+    res.activate("elencoOrdini.ftl.html", request, response);
 }
 
 
