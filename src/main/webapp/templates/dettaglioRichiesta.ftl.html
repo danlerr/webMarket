@@ -9,7 +9,7 @@
                     <div class="col-auto ms-auto d-print-none">
                         <#-- Bottone "Prendi in carico" -->
                         <#if showPrendiInCaricoButton?? && showPrendiInCaricoButton>
-                            <a href="${request.contextPath}/dettaglioRichiesta?action=prendiInCarico&n=${richiesta.id}"
+                            <a href="dettaglioRichiesta?action=prendiInCarico&n=${richiesta.id}"
                                class="btn btn-success">
                                 Prendi in carico richiesta
                             </a>
@@ -17,7 +17,7 @@
 
                         <#-- Bottone "Compila proposta" -->
                         <#if showCompilaPropostaButton?? && showCompilaPropostaButton>
-  						<a href="${request.contextPath}/dettaglioRichiesta?action=compilaProposta&n=${richiesta.id}"
+  						<a href="dettaglioRichiesta?action=compilaProposta&n=${richiesta.id}"
      					class="btn btn-cyan">
      					Compila proposta
   						</a>

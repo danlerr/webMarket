@@ -7,11 +7,11 @@
                     <div class="card-body">
                         <h2 class="mb-4">Il mio account</h2>
 
-                        <h3 class="card-title mt-4">{$user_type}</h3>
+                        <h3 class="card-title mt-4">${user_type}</h3>
                         <div class="row g-3">
                             <div class="col-md">
                                 <div class="form-label">Username</div>
-                                <input type="text" class="form-control" value={$utente.getUsername()} readonly disabled>
+                                <input type="text" class="form-control" value="${utente.getUsername()}" readonly disabled>
                             </div>
                         </div>
 
@@ -19,7 +19,7 @@
                         <div>
                             <div class="row g-2">
                                 <div class="col-auto">
-                                    <input type="text" class="form-control w-auto" value={$utente.getEmail()} readonly disabled>
+                                    <input type="text" class="form-control w-auto" value="${utente.getEmail()}" readonly disabled>
                                 </div>
                             </div>
                         </div>
@@ -63,4 +63,3 @@
         </div>
     </div>
 </div>
-

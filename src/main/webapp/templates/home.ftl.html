@@ -46,26 +46,26 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {foreach from=$tecnici item=tecnico}
+                                        <#list tecnici as tecnico>
                                             <tr>
-                                                <td><strong>{$tecnico.getUsername()}</strong></td>
-                                                <td>{$tecnico.getEmail()}</td>
+                                                <td><strong>${tecnico.getUsername()}</strong></td>
+                                                <td>${tecnico.getEmail()}</td>
                                                 <td>
-                                                    {if isset($medieTecnici[$tecnico.getId()])}
-                                                        {$medieTecnici[$tecnico.getId()]|number_format:1} ⭐
-                                                    {else}
-                                                        N/A ⭐
-                                                    {/if}
+                                                    <#if medieTecnici[tecnico.getId()?string]??>
+                                                    ${medieTecnici[tecnico.getId()?string]?string("0.0")} ⭐
+                                                    <#else>
+                                                    N/A ⭐
+                                                    </#if>
                                                 </td>
                                                 <td>
-                                                    {if isset($interventiTecnici[$tecnico.getId()])}
-                                                        {$interventiTecnici[$tecnico.getId()]}
-                                                    {else}
-                                                        0
-                                                    {/if}
+                                                    <#if interventiTecnici[tecnico.getId()?string]??>
+                                                    ${interventiTecnici[tecnico.getId()?string]}
+                                                    <#else>
+                                                     0
+                                                    </#if>
                                                 </td>
                                             </tr>
-                                        {/foreach}
+                                        </#list>
                                     </tbody>
                                 </table>
                             </div>

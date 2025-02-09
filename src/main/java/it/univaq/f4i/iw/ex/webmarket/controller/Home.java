@@ -21,7 +21,10 @@ public class Home extends BaseController {
 
     private void action_default(HttpServletRequest request, HttpServletResponse response, int userId) throws IOException, ServletException, DataException, TemplateManagerException {
         TemplateResult r = new TemplateResult(getServletContext());
+        Utente u = ((ApplicationDataLayer) request.getAttribute("datalayer")).getUtenteDAO().getUtente(userId);
+        request.setAttribute("user", u);
         request.setAttribute("page_title", "Dashboard");
+        
           
         Map<Integer, Double> medieTecnici = ((ApplicationDataLayer) request.getAttribute("datalayer")).getRecensioneDAO().getMedieRecensioniTecnici();
         request.setAttribute("medieTecnici", medieTecnici);
@@ -36,8 +39,8 @@ public class Home extends BaseController {
             int numeroProposte = datalayer.getPropostaDAO().getProposteByTecnico(tecnico.getId()).size();
             proposteTecnici.put(tecnico.getKey(), numeroProposte);
         }
-        // Mappa alla request per usarla nel template Smarty
-        request.setAttribute("interventiTecnico", proposteTecnici);
+        
+        request.setAttribute("interventiTecnici", proposteTecnici);
 
 
         //notifiche per richieste
