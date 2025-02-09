@@ -78,13 +78,13 @@ public class RichiestaDAO_MySQL extends DAO implements RichiestaDAO {
             sRichiestePreseInCaricoConProposteByTecnico = connection.prepareStatement(
                 "SELECT r.id, r.note, r.stato, r.data, r.codice_richiesta, r.ordinante, r.tecnico, r.categoria " +
                 "FROM richiesta r " +
-                "WHERE r.stato = ? AND r.tecnico = ? " +  // Mantieni i filtri per stato e tecnico
+                "WHERE r.stato = ? AND r.tecnico = ? " +  
                 "AND EXISTS (SELECT 1 FROM proposta p WHERE p.richiesta_id = r.id) " + //Richieste con ALMENO una proposta
                 "ORDER BY r.data ASC"
             
                 );          
             // PreparedStatement per recuperare le richieste in attesa 
-            sRichiesteInAttesa = connection.prepareStatement("SELECT * FROM richiesta_ordine WHERE stato = ?");
+            sRichiesteInAttesa = connection.prepareStatement("SELECT * FROM richiesta WHERE stato = ?");
             // Prepariamo la query che conta quante proposte non rifiutate esistono per una certa richiesta
         sCheckCompile = connection.prepareStatement(
             "SELECT COUNT(*) AS cnt "
@@ -297,7 +297,8 @@ public class RichiestaDAO_MySQL extends DAO implements RichiestaDAO {
         List<Richiesta> result = new ArrayList<>();
     
         try {
-            sRichiestePreseInCaricoConProposteByTecnico.setInt(1, tecnico_key);
+            sRichiestePreseInCaricoConProposteByTecnico.setString(1, StatoRichiesta.PRESA_IN_CARICO.name());
+            sRichiestePreseInCaricoConProposteByTecnico.setInt(2, tecnico_key);
             try (ResultSet rs = sRichiestePreseInCaricoConProposteByTecnico.executeQuery()) {
                 while (rs.next()) {
                     result.add(getRichiesta(rs.getInt("ID")));

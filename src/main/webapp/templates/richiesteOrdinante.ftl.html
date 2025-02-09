@@ -2,7 +2,23 @@
 <div class="page-body">
   <div class="container-xl">
     <div class="row row-cards">
-      <h1>Le tue richieste</h1>
+      <div class="d-flex justify-content-between align-items-center">
+        <h1>Le tue richieste</h1>
+        <a href="creaRichiesta" class="btn btn-cyan">
+          <!-- SVG -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+               class="icon icon-tabler icons-tabler-outline icon-tabler-plus">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <path d="M12 5l0 14" />
+            <path d="M5 12l14 0" />
+          </svg>
+          Effettua richiesta
+        </a>
+      </div>
+      
+      
+      
     
       <div class="col-12">
         <div class="card">
@@ -21,6 +37,7 @@
                 </tr>
               </thead>
               <tbody>
+                
                 <#-- Ciclo su tutte le richieste passate dalla Servlet -->
                 <#list richieste as r>
                   <tr>
@@ -82,6 +99,15 @@
                     </td>
                   </tr>
                 </#list>
+              <#if !richieste?? || richieste?size == 0>
+
+              
+   
+                <!-- Imposta colspan uguale al numero di colonne della tabella -->
+                 <td colspan="7" class="text-center">Nessuna richiesta trovata</td>
+               </tr>
+              </#if>
+
               </tbody>
             </table>
           </div>

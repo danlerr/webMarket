@@ -49,8 +49,8 @@ public class ElencoRichieste extends BaseController {
             template = "richiesteTecnico.ftl.html";
 
         } else {
-            // Se l'utente non è né ordinante né tecnico, reindirizza ad una pagina predefinita
-            response.sendRedirect("Home");
+            
+            response.sendRedirect("homeAdmin");
             return;
         }
         // Attivazione del template scelto con i dati impostati
