@@ -1,10 +1,13 @@
 <!-- Page body -->
 <div class="page-body">
+    
     <div class="container-xl">
         <div class="card">
             <div class="row g-0">
                 <div class="col-12 col-md-9 d-flex flex-column">
                     <div class="card-body">
+                        <div id="successContainer"></div>
+
                         <h2 class="mb-4">Il mio account</h2>
 
                         <h3 class="card-title mt-4">${user_type}</h3>
@@ -28,38 +31,53 @@
                         <div>
                             <button class="btn" data-bs-toggle="modal" data-bs-target="#setpasswordModal">Cambia password</button>
                         </div>
-
+                        
                         <div class="modal modal-blur fade" id="setpasswordModal" tabindex="-1" role="dialog" aria-hidden="true">
                             <div class="modal-dialog modal-1 modal-dialog-centered" role="document">
                                 <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title">Cambia password</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="mb-3">
-                                            <label for="vecchiapassword" class="form-label">Vecchia Password</label>
-                                            <input type="password" class="form-control" id="vecchiapassword" placeholder="Inserisci la vecchia password">
+                                    
+                                    <form action="impostazioni" method="post">
+                                        <!-- Campo nascosto per indicare l'azione -->
+                                        <input type="hidden" name="action" value="updatePassword" />
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Cambia password</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
-                                        <div class="mb-3">
-                                            <label for="nuovapassword" class="form-label">Nuova Password</label>
-                                            <input type="password" class="form-control" id="nuovapassword" placeholder="Inserisci la nuova password">
+                                        <div id="errorContainer"></div>
+                                        <div class="modal-body">
+                                            <div class="mb-3">
+                                                <label for="vecchiapassword" class="form-label">Vecchia Password</label>
+                                                <input type="password" class="form-control" name="current-password" id="vecchiapassword" placeholder="Inserisci la vecchia password">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="nuovapassword" class="form-label">Nuova Password</label>
+                                                <input type="password" class="form-control" name="new-password" id="nuovapassword" placeholder="Inserisci la nuova password">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="confermanuovapassword" class="form-label">Conferma Nuova Password</label>
+                                                <input type="password" class="form-control" name="confirm-password" id="confermanuovapassword" placeholder="Conferma la nuova password">
+                                            </div>
                                         </div>
-                                        <div class="mb-3">
-                                            <label for="confermanuovapassword" class="form-label">Nuova Password</label>
-                                            <input type="password" class="form-control" id="confermanuovapassword" placeholder="Conferma la nuova password">
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn me-auto" data-bs-dismiss="modal">Chiudi</button>
+                                            <!-- Il bottone submit invia il form -->
+                                            <button type="submit" class="btn btn-cyan">Cambia password</button>
                                         </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn me-auto" data-bs-dismiss="modal">Chiudi</button>
-                                        <button type="button" class="btn btn-cyan" data-bs-dismiss="modal">Cambia password</button>
-                                    </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
+                        
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<#if errore?? && errore?has_content>
+    <script>
+        // Assegna il messaggio d'errore a una variabile globale
+        window.errorMessage = "${errore}";
+    </script>
+</#if>
+<script src="scripts/cambiaPassword.js"></script>

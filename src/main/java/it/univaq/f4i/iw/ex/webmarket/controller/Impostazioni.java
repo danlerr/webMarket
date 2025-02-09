@@ -56,7 +56,7 @@ public class Impostazioni extends BaseController {
         
         //controllo su passwrod vecchia
         if (!SecurityHelpers.checkPasswordHashPBKDF2(current, u.getPassword())){
-          request.setAttribute("errore", "La password corrente è errata");
+          request.setAttribute("errore", "La password vecchia è errata");
           action_default(request, response, userId);
           return;  
         }
@@ -66,10 +66,10 @@ public class Impostazioni extends BaseController {
         ((ApplicationDataLayer) request.getAttribute("datalayer")).getUtenteDAO().storeUtente(u);
         
         if (u.getTipologiaUtente().equals(TipologiaUtente.ORDINANTE)) {
-            response.sendRedirect("homepageordinante?success=true");
+            response.sendRedirect("impostazioni?success=true");
             
         } else if (u.getTipologiaUtente().equals(TipologiaUtente.TECNICO)) {
-            response.sendRedirect("homepagetecnico?success=true");
+            response.sendRedirect("impostazioni?success=true");
         }
     }
 
