@@ -14,7 +14,7 @@
                                             type="button" data-bs-toggle="collapse" 
                                             data-bs-target="#collapse-${ordine?index}" 
                                             aria-expanded="true" aria-controls="collapse-${ordine?index}">
-                                        <span>Numero ordine: ${ordine.id}</span>
+                                        <span>Ordine della proposta: ${ordine.proposta.codice}</span>
                                         <span class="d-flex align-items-center ms-3">
                                             <#if ordine.stato?string == "ACCETTATO">
                                                 <span class="badge bg-success me-1"></span>Accettato
@@ -33,10 +33,10 @@
                                 <div id="collapse-${ordine?index}" class="accordion-collapse collapse show" 
                                      data-bs-parent="#accordion-example">
                                     <div class="accordion-body pt-0">
-                                        <a href="dettaglioOrdine?n=${ordine.id}" class="btn btn-ghost-success me-2 active">Dettagli ordine</a>
+                                        <a href="dettaglioOrdine?n=${ordine.key}" class="btn btn-ghost-success me-2 active">Dettagli ordine</a>
                                         <a href="dettaglioProposta?" class="btn btn-ghost-danger me-2 active">Vai alla proposta</a>
                                         <a href="dettaglioRichiesta?n=$" class="btn btn-ghost-primary me-2 active">Vai alla richiesta</a>
-                                        <a href="elencoOrdini?action=recensisciTecnico&n=${ordine.id}" class="btn btn-yellow me-2 active">Recensisci tecnico</a>
+                                        <a href="elencoOrdini?action=recensisciTecnico&n=${ordine.key}" class="btn btn-yellow me-2 active">Recensisci tecnico</a>
                                     </div>
                                 </div>
                             </div>
