@@ -13,8 +13,11 @@ import it.univaq.f4i.iw.framework.result.TemplateResult;
 import it.univaq.f4i.iw.framework.security.SecurityHelpers;
 import java.io.IOException;
 import java.util.List;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.mail.Session;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -113,7 +116,32 @@ if (utente.getTipologiaUtente().equals("TECNICO")
         // Salva l'aggiornamento nel database
         ((ApplicationDataLayer) request.getAttribute("datalayer"))
                 .getRichiestaOrdineDAO().storeRichiesta(richiesta);
+         Utente ordinante = richiesta.getOrdinante();
+    if (ordinante != null && ordinante.getEmail() != null) {
+        // Configurazione delle proprietà per la connessione SMTP
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.outlook.com");
+        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
 
+        // Creazione della sessione di posta
+        Session emailSession = Session.getInstance(props, new javax.mail.Authenticator() {
+            protected javax.mail.PasswordAuthentication getPasswordAuthentication() {
+                return new javax.mail.PasswordAuthentication("webmarket.coquette@outlook.com", "coquette");
+            }
+        });
+
+        // Costruisci l'oggetto e il corpo della mail
+        String subject = "La tua richiesta è stata presa in carico";
+        String body = "<h1>Notifica di presa in carico</h1>"
+                + "<p>La tua richiesta con codice <strong>" + richiesta.getCodiceRichiesta() + "</strong> "
+                + "è stata presa in carico dal tecnico <strong>" + utente.getUsername() + "</strong>.</p>"
+                + "<p>Riceverai ulteriori aggiornamenti a breve.</p>";
+
+        // Invio della email
+        EmailSender.sendEmail(emailSession, ordinante.getEmail(), subject, body);
+    }
         // Reindirizza l'utente alla pagina delle richieste
         response.sendRedirect("ElencoRichieste");
     }

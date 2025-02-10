@@ -22,9 +22,11 @@ public interface RecensioneDAO {
 
     void deleteRecensione(int recensione_key) throws DataException;
     //metodo che serve per prendere una recensione dato un ordinante e un tecnico
+
+
     Recensione getRecensioneByOrdinanteTecnico(int ordinante_id ,int tecnico_id) throws DataException;
 
     
-    // Aggiungi questa dichiarazione del metodo:
+    
     Map<Integer, Double> getMedieRecensioniTecnici() throws DataException;
 }

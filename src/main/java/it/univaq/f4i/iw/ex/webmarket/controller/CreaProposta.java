@@ -3,6 +3,7 @@ package it.univaq.f4i.iw.ex.webmarket.controller;
 import it.univaq.f4i.iw.ex.webmarket.data.dao.impl.ApplicationDataLayer;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Proposta;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Richiesta;
+import it.univaq.f4i.iw.ex.webmarket.data.model.Utente;
 import it.univaq.f4i.iw.ex.webmarket.data.model.impl.PropostaImpl;
 import it.univaq.f4i.iw.ex.webmarket.data.model.impl.StatoProposta;
 import it.univaq.f4i.iw.framework.data.DataException;
@@ -10,9 +11,12 @@ import it.univaq.f4i.iw.framework.result.TemplateManagerException;
 import it.univaq.f4i.iw.framework.result.TemplateResult;
 import it.univaq.f4i.iw.framework.security.SecurityHelpers;
 import java.io.IOException;
+import java.util.Properties;
 //import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.mail.Session;
 //import javax.mail.Session;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -71,33 +75,36 @@ public class CreaProposta extends BaseController {
 
         //update del db
         ((ApplicationDataLayer) request.getAttribute("datalayer")).getPropostaDAO().storeProposta(proposta);
+    // *** Invia una email all'ordinante per notificare la creazione della proposta ***
+    // Recupera l'ordinante dalla richiesta
+    Utente ordinante = richiesta.getOrdinante();
+    if (ordinante != null && ordinante.getEmail() != null && !ordinante.getEmail().isEmpty()) {
+        // Configura le proprietà SMTP
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.outlook.com");
+        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
 
-        // Recupero l'email dell'utente
-        // String email = richiesta.getOrdinante().getEmail();
+        // Crea la sessione di posta con le credenziali
+        Session emailSession = Session.getInstance(props, new javax.mail.Authenticator() {
+            protected javax.mail.PasswordAuthentication getPasswordAuthentication() {
+                return new javax.mail.PasswordAuthentication("webmarket.univaq@outlook.com", "your_password_here");
+            }
+        });
 
-        // // Properties per la mail:
-        // Properties props = new Properties();
-        // props.put("mail.smtp.host", "smtp.outlook.com"); 
-        // props.put("mail.smtp.port", "587");
-        // props.put("mail.smtp.auth", "true");
-        // props.put("mail.smtp.starttls.enable", "true");
+        // Prepara l'oggetto e il corpo della mail
+        String subject = "Nuova Proposta per la tua Richiesta";
+        String body = "<h1>Nuova Proposta</h1>"
+                + "<p>Il tecnico ha creato una nuova proposta per la tua richiesta con codice <strong>"
+                + richiesta.getCodiceRichiesta() + "</strong>.</p>"
+                + "<p>Accedi al tuo account per visualizzare i dettagli della proposta.</p>";
 
-        // Session session = Session.getInstance(props, new javax.mail.Authenticator() {
-        //     protected javax.mail.PasswordAuthentication getPasswordAuthentication() {
-        //         return new javax.mail.PasswordAuthentication("webmarket.univaq@outlook.com", "geagiuliasamanta1");
-        //     }
-        // });
+        // Invia la email all'ordinante
+        EmailSender.sendEmail(emailSession, ordinante.getEmail(), subject, body);
+    }
 
-        // String tipo = "PropostaRichiesta_";
-        // String text = "Gentile Utente, Le è stata inviata una proposta d'acquisto per la sua richiesta numero " + richiesta.getCodiceRichiesta() + ". In allegato trova i dettagli.\n\nCordiali Saluti,\nIl team di WebMarket"; 
-
-        // String messaggio = "Dettagli della proposta per la richiesta numero: " + richiesta.getCodiceRichiesta() + "\n\n";
-
-        // try {
-        //     EmailSender.sendEmailWithAttachment(session, email, "Notifica Proposta", text);
-        // } catch (DocumentException e) {
-        //     e.printStackTrace();
-        // }
+        
 
         // Reindirizzo alla pagina di dettaglio della proposta
         response.sendRedirect("dettaglioProposta?n=" + proposta.getKey());
