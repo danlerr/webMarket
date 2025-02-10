@@ -133,7 +133,7 @@ if (utente.getTipologiaUtente().equals(TipologiaUtente.TECNICO)
         EmailSender.sendEmail(emailSession, ordinante.getEmail(), subject, body);
     }
         // Reindirizza l'utente alla pagina delle richieste
-        response.sendRedirect("ElencoRichieste");
+        response.sendRedirect("elencoRichieste");
     }
 
     @Override

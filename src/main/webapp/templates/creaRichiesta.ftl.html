@@ -1,121 +1,50 @@
-<!doctype html>
-<html lang="en" data-bs-theme="dark">
-<head>
-	<meta charset="utf-8"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-	<meta http-equiv="X-UA-Compatible" content="ie=edge"/>
-	<title>Coquette</title>
-	<!-- CSS files -->
-<link href="./dist/css/tabler.min.css?1738096685" rel="stylesheet"/>
-<link href="./dist/css/demo.min.css?1738096685" rel="stylesheet"/>
-	<style>
-		@import url('https://rsms.me/inter/inter.css');
-	</style>
-    <script defer>
-        document.addEventListener("DOMContentLoaded", function () {
-            const categories = {
-                "Elettronica": ["Smartphone", "Computer", "Accessori"],
-                "Abbigliamento": ["Uomo", "Donna", "Bambino"],
-                "Alimentari": ["Frutta", "Verdura", "Bevande"]
-            };
-            
-            const categoryContainer = document.getElementById("category-container");
-            const subcategoryContainer = document.getElementById("subcategory-container");
-            const subcategoryGroup = document.getElementById("subcategory-group");
+<div class="page container d-flex justify-content-center align-items-center min-vh-100">
+  <div class="col-md-6">
+      <div class="card">
+          <div class="card-body">
+              <h2 class="h2 text-center mb-4">Crea una richiesta</h2>
+              <form id="requestForm" action="creaRichiesta?action=creaRichiesta" method="post">
 
-            categoryContainer.addEventListener("change", function (event) {
-                const selectedCategory = event.target.value;
-                subcategoryContainer.innerHTML = "";
-                
-                if (selectedCategory && categories[selectedCategory]) {
-                    categories[selectedCategory].forEach(subcat => {
-                        const label = document.createElement("label");
-                        label.classList.add("form-selectgroup-item");
-                        label.innerHTML = `
-                            <input type="radio" name="subcategory" value="${subcat}" class="form-selectgroup-input">
-                            <span class="form-selectgroup-label">${subcat}</span>
-                        `;
-                        subcategoryContainer.appendChild(label);
-                    });
-                    subcategoryGroup.style.display = "block";
-                } else {
-                    subcategoryGroup.style.display = "none";
-                }
-            });
-        });
-    </script>
-</head>
-<body class="d-flex flex-column">
-    <header class="navbar navbar-expand-md d-print-none" data-bs-theme="dark">
-		<div class="container-xl">
-			<div class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">
-				<a href=".">
-					<img src="logo.png" alt="Logo" class="img-fluid w-25">
-				</a>
-			</div>
+                <div id="ajax-error-message" class="alert alert-danger" style="display: none;"></div>
 
-			<!-- Profilo e menu -->
-			<div class="navbar-nav flex-row order-md-last">
-				<div class="nav-item dropdown">
-					<a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown" aria-label="Open user menu">
-						<!-- Icona del profilo, sostituisci con la tua icona -->
-						<svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-user"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" /><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /></svg>
-						<div class="d-none d-xl-block ps-2">
-							<div>nome utente</div>
-							<div class="mt-1 small text-secondary">Ordinante</div>
-						</div>
-					</a>
-					<div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow" data-bs-theme="light">
-						<div class="dropdown"></div>
-						<a href="./settings.html" class="dropdown-item">Settings</a>
-						<a href="./sign-in.html" class="dropdown-item">Logout</a>
-					</div>
-				</div>
-			</div>
-		</div>
+                  <div class="mb-3">
+                      <label class="form-label">Categoria principale</label>
+                      <select class="form-select" id="category-select" name="categoryId">
+                          <option value="">Seleziona una categoria</option>
+                          <#list categorie as categoria>
+                              <option value="${categoria.key}">${categoria.nome}</option>
+                          </#list>
+                      </select>
+                      <div id="category-error" class="invalid-feedback" style="display: none;"></div>
+                  </div>
 
-	</header>
-    <div class="page container d-flex justify-content-center align-items-center min-vh-100">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-body">
-                    <h2 class="h2 text-center mb-4">Crea una richiesta</h2>
-                    <form>
-                        <div class="mb-3">
-                            <label class="form-label">Categoria principale</label>
-                            <div class="form-selectgroup" id="category-container">
-                                <label class="form-selectgroup-item">
-                                    <input type="radio" name="category" value="Elettronica" class="form-selectgroup-input">
-                                    <span class="form-selectgroup-label">Elettronica</span>
-                                </label>
-                                <label class="form-selectgroup-item">
-                                    <input type="radio" name="category" value="Abbigliamento" class="form-selectgroup-input">
-                                    <span class="form-selectgroup-label">Abbigliamento</span>
-                                </label>
-                                <label class="form-selectgroup-item">
-                                    <input type="radio" name="category" value="Alimentari" class="form-selectgroup-input">
-                                    <span class="form-selectgroup-label">Alimentari</span>
-                                </label>
-                            </div>
-                        </div>
-                        
-                        <div class="mb-3" id="subcategory-group" style="display: none;">
-                            <label class="form-label">Sotto-categoria</label>
-                            <div class="form-selectgroup" id="subcategory-container"></div>
-                        </div>
+                  <div class="mb-3" id="subcategory-group" style="display: none;">
+                      <label class="form-label">Sotto-categoria</label>
+                      <select class="form-select" id="subcategory-select" name="subcategoryId">
+                          <option value="">Seleziona una sottocategoria</option>
+                      </select>
+                      <div id="subcategory-error" class="invalid-feedback" style="display: none;"></div>
+                  </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">Descrizione</label>
-                            <textarea id="description" class="form-control" data-bs-toggle="autosize" placeholder="Inserisci una descrizione..."maxlength="50" style="overflow: hidden; overflow-wrap: break-word; resize: none; text-align: start; height: 74.73913px;">
-                            </textarea>
-                        </div>
-                        <div class="form-footer">
-                            <button type="submit" class="btn btn-cyan w-100">Invia richiesta</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
+                  <div class="mb-3" id="characteristics-group" style="display: none;">
+                      <label class="form-label">Caratteristiche</label>
+                      <div id="characteristics-container">
+                          </div>
+                  </div>
+
+                  <div class="mb-3">
+                      <label class="form-label">Descrizione</label>
+                      <textarea id="description" name="note" class="form-control" placeholder="Inserisci una descrizione..." maxlength="50"></textarea>
+                      <div id="description-error" class="invalid-feedback" style="display: none;"></div>
+                  </div>
+
+                  <div class="form-footer">
+                      <button type="submit" class="btn btn-cyan w-100" id="submitButton" disabled>Invia richiesta</button>
+                  </div>
+              </form>
+          </div>
+      </div>
+  </div>
+</div>
+
+<script src="scripts/creaRichiesta.js"></script>

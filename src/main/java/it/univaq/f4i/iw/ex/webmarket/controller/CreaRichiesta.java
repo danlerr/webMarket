@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
@@ -29,13 +30,15 @@ import java.util.logging.Logger;
 public class CreaRichiesta extends BaseController {
 
     // Mostra la pagina iniziale con le categorie radice
-    private void action_default(HttpServletRequest request, HttpServletResponse response)
+    private void action_default(HttpServletRequest request, HttpServletResponse response, int userId)
             throws IOException, ServletException, TemplateManagerException, DataException {
         request.setAttribute("categorie",
                 ((ApplicationDataLayer) request.getAttribute("datalayer"))
                         .getCategoriaDAO().getMainCategorie());
 
         TemplateResult r = new TemplateResult(getServletContext());
+        Utente u = ((ApplicationDataLayer) request.getAttribute("datalayer")).getUtenteDAO().getUtente(userId);
+        request.setAttribute("user", u);
         request.setAttribute("page_title", "Nuova Richiesta");
         r.activate("creaRichiesta.ftl.html", request, response);
     }
@@ -68,86 +71,81 @@ public class CreaRichiesta extends BaseController {
 
 
     // Crea la richiesta e le CaratteristicaRichiesta associate (POST)
-private void action_creaRichiesta(HttpServletRequest request, HttpServletResponse response) 
+private void action_creaRichiesta(HttpServletRequest request, HttpServletResponse response, int userId)
         throws DataException, IOException {
-    HttpSession session = request.getSession(false); // Ottieni la sessione senza crearne una nuova
-    if (session == null || session.getAttribute("utente") == null) {
-        response.sendRedirect("login"); // o gestisci come preferisci l'utente non autenticato
-        return;
-    }
-    
-    Utente utente = (Utente) session.getAttribute("utente"); // Recupera l'utente dalla sessione
-    
-    // 1. Crea l'oggetto Richiesta
-    Richiesta richiesta = ((ApplicationDataLayer) request.getAttribute("datalayer"))
-            .getRichiestaOrdineDAO().createRichiesta();
-    
-    richiesta.setNote(request.getParameter("note"));
-    richiesta.setStato(it.univaq.f4i.iw.ex.webmarket.data.model.StatoRichiesta.IN_ATTESA); // Imposta lo stato iniziale
-    richiesta.setData(new Timestamp(new Date().getTime())); // Imposta la data corrente
 
-    // Genera un codice univoco (esempio semplice, da migliorare)
-    String codiceRichiesta = "REQ-" + System.currentTimeMillis();
-    richiesta.setCodiceRichiesta(codiceRichiesta);
-
-    richiesta.setOrdinante(utente); // Imposta l'utente dalla sessione
-    // richiesta.setTecnico(); // Il tecnico verrà assegnato in un secondo momento
-    int subcategoryId = Integer.parseInt(request.getParameter("subcategoryId"));
-
-    Categoria categoria = ((ApplicationDataLayer) request.getAttribute("datalayer"))
-            .getCategoriaDAO().getCategoria(subcategoryId);
-    richiesta.setCategoria(categoria); // Imposta la categoria
-    
-    // Salva la richiesta nel database
-    ((ApplicationDataLayer) request.getAttribute("datalayer"))
-            .getRichiestaOrdineDAO().storeRichiesta(richiesta);
-
-    // 2. Crea gli oggetti CaratteristicaRichiesta
-    List<Caratteristica> caratteristiche = ((ApplicationDataLayer) request.getAttribute("datalayer"))
-            .getCaratteristicaDAO().getCaratteristicheByCategoria(subcategoryId);
-
-    for (Caratteristica caratteristica : caratteristiche) {
-        String valoreCaratteristica = request.getParameter("caratteristica-" + caratteristica.getKey()); // Recupera il valore dal form
-        if (valoreCaratteristica != null && !valoreCaratteristica.isEmpty()) { // Controlla che il valore della caratteristica non sia nullo
-            CaratteristicaRichiesta caratteristicaRichiesta = ((ApplicationDataLayer) request.getAttribute("datalayer"))
-                    .getCaratteristicaRichiestaDAO().createCR();
-            caratteristicaRichiesta.setRichiesta(richiesta); // Collega alla richiesta
-            caratteristicaRichiesta.setCaratteristica(caratteristica); // Collega alla caratteristica
-            caratteristicaRichiesta.setValore(valoreCaratteristica);  // Imposta il valore
-            ((ApplicationDataLayer) request.getAttribute("datalayer"))
-                    .getCaratteristicaRichiestaDAO().storeCR(caratteristicaRichiesta); // Salva
-        }
-    }
-    
-    // *** Invio email a tutti i tecnici ***
     try {
-        // Recupera tutti i tecnici utilizzando il metodo del DAO
-        List<Utente> tecnici = ((ApplicationDataLayer) request.getAttribute("datalayer"))
-                .getUtenteDAO().getAllByRole(TipologiaUtente.TECNICO);
-        
-        if (tecnici != null && !tecnici.isEmpty()) {
-            Session emailSession = EmailSender.getEmailSession();
+        Utente utente = ((ApplicationDataLayer) request.getAttribute("datalayer")).getUtenteDAO().getUtente(userId);
 
-    
-            // Prepara il contenuto della mail
-            String subject = "Nuova Richiesta in Attesa";
-            String body = "<h1>Nuova Richiesta</h1>"
-                        + "<p>È stata creata una nuova richiesta con codice <strong>" + codiceRichiesta + "</strong>.</p>"
-                        + "<p>Controlla la sezione richieste per prenderla in carico!.</p>";
-    
-            // Invia l'email a ciascun tecnico
-            for (Utente tecnico : tecnici) {
-                if (tecnico.getEmail() != null && !tecnico.getEmail().isEmpty()) {
-                    EmailSender.sendEmail(emailSession, tecnico.getEmail(), subject, body);
-                }
+        Richiesta richiesta = ((ApplicationDataLayer) request.getAttribute("datalayer"))
+                .getRichiestaOrdineDAO().createRichiesta();
+
+        richiesta.setNote(request.getParameter("note"));
+        richiesta.setStato(it.univaq.f4i.iw.ex.webmarket.data.model.StatoRichiesta.IN_ATTESA);
+        richiesta.setData(new Timestamp(new Date().getTime()));
+        richiesta.setOrdinante(utente);
+        // richiesta.setTecnico(null); // Il tecnico verrà assegnato in un secondo momento (opzionale, ma consigliato)
+        int subcategoryId = Integer.parseInt(request.getParameter("subcategoryId"));
+        Categoria categoria = ((ApplicationDataLayer) request.getAttribute("datalayer"))
+                .getCategoriaDAO().getCategoria(subcategoryId);
+        richiesta.setCategoria(categoria);
+
+        ((ApplicationDataLayer) request.getAttribute("datalayer"))
+                .getRichiestaOrdineDAO().storeRichiesta(richiesta);
+
+        // Crea gli oggetti CaratteristicaRichiesta
+        List<Caratteristica> caratteristiche = ((ApplicationDataLayer) request.getAttribute("datalayer"))
+                .getCaratteristicaDAO().getCaratteristicheByCategoria(subcategoryId);
+
+        for (Caratteristica caratteristica : caratteristiche) {
+            String valoreCaratteristica = request.getParameter("caratteristica-" + caratteristica.getKey());
+            if (valoreCaratteristica != null && !valoreCaratteristica.isEmpty()) {
+                CaratteristicaRichiesta caratteristicaRichiesta = ((ApplicationDataLayer) request.getAttribute("datalayer"))
+                        .getCaratteristicaRichiestaDAO().createCR();
+                caratteristicaRichiesta.setRichiesta(richiesta);
+                caratteristicaRichiesta.setCaratteristica(caratteristica);
+                caratteristicaRichiesta.setValore(valoreCaratteristica);
+                ((ApplicationDataLayer) request.getAttribute("datalayer"))
+                        .getCaratteristicaRichiestaDAO().storeCR(caratteristicaRichiesta);
             }
         }
-    } catch (Exception e) {
-        // Gestisci eventuali errori nell'invio delle email (log, alert, ecc.)
-        e.printStackTrace();
+
+        // *** Invio email a tutti i tecnici *** (Spostato qui, dopo il salvataggio)
+        try {
+            List<Utente> tecnici = ((ApplicationDataLayer) request.getAttribute("datalayer"))
+                    .getUtenteDAO().getAllByRole(TipologiaUtente.TECNICO);
+
+            if (tecnici != null && !tecnici.isEmpty()) {
+                Session emailSession = EmailSender.getEmailSession();
+                String subject = "Nuova Richiesta in Attesa";
+                String body = "<h1>Nuova Richiesta</h1>"
+                            + "<p>È stata creata una nuova richiesta con codice <strong>" + richiesta.getCodiceRichiesta() + "</strong>.</p>"
+                            + "<p>Controlla la sezione richieste per prenderla in carico!.</p>";
+
+                for (Utente tecnico : tecnici) {
+                    if (tecnico.getEmail() != null && !tecnico.getEmail().isEmpty()) {
+                        EmailSender.sendEmail(emailSession, tecnico.getEmail(), subject, body);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // Gestisci eventuali errori nell'invio delle email.  Log, ma *non* bloccare il flusso principale.
+              Logger.getLogger(CreaRichiesta.class.getName()).log(Level.SEVERE, "Errore durante l'invio dell'email ai tecnici", e);
+        }
+
+        // SUCCESS: Reindirizza con messaggio di successo
+        response.sendRedirect("elencoRichieste?success=" + URLEncoder.encode("Richiesta creata con successo!", "UTF-8"));
+
+    } catch (Exception ex) {
+        // ERROR: Gestione *centralizzata* degli errori
+       
+         Logger.getLogger(CreaRichiesta.class.getName()).log(Level.SEVERE, "Errore durante la creazione della richiesta", ex);
+
+
+        // Reindirizza con messaggio di errore
+        response.sendRedirect("elencoRichieste?error=" + URLEncoder.encode("Si è verificato un errore durante la creazione della richiesta: " + ex.getMessage(), "UTF-8"));
+        
     }
-    
-    response.sendRedirect("successPage"); 
 }
 
 
@@ -162,16 +160,17 @@ private void action_creaRichiesta(HttpServletRequest request, HttpServletRespons
                 response.sendRedirect("login");
                 return;
             }
+            int userId = (int) session.getAttribute("userid");
 
             String action = request.getParameter("action");
             if ("creaRichiesta".equalsIgnoreCase(action) && "POST".equalsIgnoreCase(request.getMethod())) {
-                action_creaRichiesta(request, response);
+                action_creaRichiesta(request, response,userId);
             } else if ("getSubcategories".equalsIgnoreCase(action)) {
                 action_getSubcategories(request, response);
             } else if ("getCaratteristiche".equalsIgnoreCase(action)) {
                 action_getCaratteristiche(request, response);
             } else {
-                action_default(request, response);
+                action_default(request, response,userId);
             }
         } catch (IOException | TemplateManagerException | DataException ex) {
             Logger.getLogger(CreaRichiesta.class.getName()).log(Level.SEVERE, null, ex);
