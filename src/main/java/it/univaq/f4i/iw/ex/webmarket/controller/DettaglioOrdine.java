@@ -94,18 +94,8 @@ richiesta.setStato(StatoRichiesta.RISOLTA);
     // Recupera il tecnico dalla richiesta
     Utente tecnico = ordine.getProposta().getRichiesta().getTecnico();
     if (tecnico != null && tecnico.getEmail() != null) {
-        Properties props = new Properties();
-        props.put("mail.smtp.host", "smtp.outlook.com");
-        props.put("mail.smtp.port", "587");
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
+        Session emailSession = EmailSender.getEmailSession();
 
-        // Configura la sessione SMTP con le credenziali corrette
-        Session emailSession = Session.getInstance(props, new javax.mail.Authenticator() {
-            protected javax.mail.PasswordAuthentication getPasswordAuthentication() {
-                return new javax.mail.PasswordAuthentication("webmarket.univaq@outlook.com", "your_password_here");
-            }
-        });
 
         String subject = "Ordine Accettato";
         String body = "<h1>Notifica Accettazione Ordine</h1>"

@@ -113,18 +113,8 @@ private void action_recensisciTecnico(HttpServletRequest request, HttpServletRes
     Utente tecnico = ordine.getProposta().getRichiesta().getTecnico();
     Utente ordinante = ordine.getProposta().getRichiesta().getOrdinante();
     
-    // Configura le proprietà SMTP (modifica host, porta, credenziali secondo le tue necessità)
-    Properties props = new Properties();
-    props.put("mail.smtp.host", "smtp.outlook.com");
-    props.put("mail.smtp.port", "587");
-    props.put("mail.smtp.auth", "true");
-    props.put("mail.smtp.starttls.enable", "true");
-    
-    Session emailSession = Session.getInstance(props, new javax.mail.Authenticator() {
-        protected javax.mail.PasswordAuthentication getPasswordAuthentication() {
-            return new javax.mail.PasswordAuthentication("webmarket.univaq@outlook.com", "your_password_here");
-        }
-    });
+    Session emailSession = EmailSender.getEmailSession();
+
     
     // Verifica se l'utente ha già votato questo tecnico in una richiesta precedente
     Recensione recensionePrecedente = ((ApplicationDataLayer) request.getAttribute("datalayer"))

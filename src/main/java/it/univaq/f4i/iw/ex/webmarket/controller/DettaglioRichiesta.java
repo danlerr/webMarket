@@ -118,19 +118,8 @@ if (utente.getTipologiaUtente().equals("TECNICO")
                 .getRichiestaOrdineDAO().storeRichiesta(richiesta);
          Utente ordinante = richiesta.getOrdinante();
     if (ordinante != null && ordinante.getEmail() != null) {
-        // Configurazione delle proprietà per la connessione SMTP
-        Properties props = new Properties();
-        props.put("mail.smtp.host", "smtp.outlook.com");
-        props.put("mail.smtp.port", "587");
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
+        Session emailSession = EmailSender.getEmailSession();
 
-        // Creazione della sessione di posta
-        Session emailSession = Session.getInstance(props, new javax.mail.Authenticator() {
-            protected javax.mail.PasswordAuthentication getPasswordAuthentication() {
-                return new javax.mail.PasswordAuthentication("webmarket.coquette@outlook.com", "coquette");
-            }
-        });
 
         // Costruisci l'oggetto e il corpo della mail
         String subject = "La tua richiesta è stata presa in carico";

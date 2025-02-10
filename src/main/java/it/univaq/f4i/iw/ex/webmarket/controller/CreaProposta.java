@@ -79,19 +79,8 @@ public class CreaProposta extends BaseController {
     // Recupera l'ordinante dalla richiesta
     Utente ordinante = richiesta.getOrdinante();
     if (ordinante != null && ordinante.getEmail() != null && !ordinante.getEmail().isEmpty()) {
-        // Configura le proprietà SMTP
-        Properties props = new Properties();
-        props.put("mail.smtp.host", "smtp.outlook.com");
-        props.put("mail.smtp.port", "587");
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
+        Session emailSession = EmailSender.getEmailSession();
 
-        // Crea la sessione di posta con le credenziali
-        Session emailSession = Session.getInstance(props, new javax.mail.Authenticator() {
-            protected javax.mail.PasswordAuthentication getPasswordAuthentication() {
-                return new javax.mail.PasswordAuthentication("webmarket.univaq@outlook.com", "your_password_here");
-            }
-        });
 
         // Prepara l'oggetto e il corpo della mail
         String subject = "Nuova Proposta per la tua Richiesta";

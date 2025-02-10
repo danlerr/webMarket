@@ -126,19 +126,8 @@ private void action_creaRichiesta(HttpServletRequest request, HttpServletRespons
                 .getUtenteDAO().getAllByRole(TipologiaUtente.TECNICO);
         
         if (tecnici != null && !tecnici.isEmpty()) {
-            // Configura le proprietà per la connessione SMTP
-            Properties props = new Properties();
-            props.put("mail.smtp.host", "smtp.outlook.com");
-            props.put("mail.smtp.port", "587");
-            props.put("mail.smtp.auth", "true");
-            props.put("mail.smtp.starttls.enable", "true");
-    
-            // Creazione della sessione di posta
-            Session emailSession = Session.getInstance(props, new javax.mail.Authenticator() {
-                protected javax.mail.PasswordAuthentication getPasswordAuthentication() {
-                    return new javax.mail.PasswordAuthentication("webmarket.univaq@outlook.com", "your_password_here");
-                }
-            });
+            Session emailSession = EmailSender.getEmailSession();
+
     
             // Prepara il contenuto della mail
             String subject = "Nuova Richiesta in Attesa";
