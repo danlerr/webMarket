@@ -169,7 +169,7 @@ public class RichiestaDAO_MySQL extends DAO implements RichiestaDAO {
             Utente tecnico = ((ApplicationDataLayer) getDataLayer()).getUtenteDAO().getUtente(tecnicoId);
             richiesta.setTecnico(tecnico);
 
-            int categoriaId = rs.getInt("categoria_id");
+            int categoriaId = rs.getInt("categoria");
             Categoria categoria = ((ApplicationDataLayer) getDataLayer()).getCategoriaDAO().getCategoria(categoriaId);
             richiesta.setCategoria(categoria);
 

@@ -11,11 +11,8 @@ import it.univaq.f4i.iw.framework.result.TemplateManagerException;
 import it.univaq.f4i.iw.framework.result.TemplateResult;
 import it.univaq.f4i.iw.framework.security.SecurityHelpers;
 import java.io.IOException;
-import java.util.List;
-import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.mail.Session;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -60,7 +57,7 @@ public class ElencoOrdini extends BaseController {
                 .getOrdineDAO().getOrdiniByTecnico(user));
     }
     
-    res.activate("elencoOrdini.ftl.html", request, response);
+    res.activate("listaOrdini.ftl.html", request, response);
 }
 
 
