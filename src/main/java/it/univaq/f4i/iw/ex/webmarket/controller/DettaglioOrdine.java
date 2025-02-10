@@ -53,7 +53,7 @@ public class DettaglioOrdine extends BaseController {
     boolean showAccettaRifiutaButtons = false;
     if (utente.getTipologiaUtente().equals(TipologiaUtente.ORDINANTE) &&
         ordine.getStato().equals(StatoOrdine.IN_ATTESA) &&
-        ordine.getProposta().getRichiesta().getOrdinante().getId() == user) {
+        ordine.getProposta().getRichiesta().getOrdinante().getId() == utente.getId()) {    //////////------<<<<<<<<<---------////////////
         showAccettaRifiutaButtons = true;
     }
     request.setAttribute("showAccettaRifiutaButtons", showAccettaRifiutaButtons);
@@ -67,47 +67,47 @@ public class DettaglioOrdine extends BaseController {
      * Aggiorna lo stato dell'ordine a ACCETTATO e imposta la richiesta a RISOLTA.
      */
     private void action_accettaOrdine(HttpServletRequest request, HttpServletResponse response)
-    throws IOException, ServletException, TemplateManagerException, DataException {
-// Recupera l'ID dell'ordine dalla request
-int ordineId = SecurityHelpers.checkNumeric(request.getParameter("n"));
-Ordine ordine = ((ApplicationDataLayer) request.getAttribute("datalayer"))
-        .getOrdineDAO().getOrdine(ordineId);
+        throws IOException, ServletException, TemplateManagerException, DataException {
+        // Recupera l'ID dell'ordine dalla request
+        int ordineId = SecurityHelpers.checkNumeric(request.getParameter("n"));
+        Ordine ordine = ((ApplicationDataLayer) request.getAttribute("datalayer"))
+                .getOrdineDAO().getOrdine(ordineId);
 
-// Recupera l'utente loggato dalla sessione per fare il controllo
-int loggedUserId = (int) request.getSession(false).getAttribute("userid");
+        // Recupera l'utente loggato dalla sessione per fare il controllo
+        int loggedUserId = (int) request.getSession(false).getAttribute("userid");
 
-// Controlla che l'utente loggato sia l'autore della richiesta associata all'ordine
-if (ordine.getProposta().getRichiesta().getOrdinante().getId() != loggedUserId) {
-    // Se non corrisponde, reindirizza con un messaggio di errore
-    response.sendRedirect("ordini?error=Non+sei+l'autore+della+richiesta");
-    return;
-}
+        // Controlla che l'utente loggato sia l'autore della richiesta associata all'ordine
+        if (ordine.getProposta().getRichiesta().getOrdinante().getId() != loggedUserId) {
+            // Se non corrisponde, reindirizza con un messaggio di errore
+            response.sendRedirect("ordini?error=Non+sei+l'autore+della+richiesta");
+            return;
+        }
 
-// Se il controllo va a buon fine, aggiorna lo stato dell'ordine e della richiesta
-ordine.setStato(StatoOrdine.ACCETTATO);
-Richiesta richiesta = ordine.getProposta().getRichiesta();
-richiesta.setStato(StatoRichiesta.RISOLTA);
-((ApplicationDataLayer) request.getAttribute("datalayer")).getRichiestaOrdineDAO().storeRichiesta(richiesta);
-((ApplicationDataLayer) request.getAttribute("datalayer")).getOrdineDAO().storeOrdine(ordine);
+        // Se il controllo va a buon fine, aggiorna lo stato dell'ordine e della richiesta
+        ordine.setStato(StatoOrdine.ACCETTATO);
+        Richiesta richiesta = ordine.getProposta().getRichiesta();
+        richiesta.setStato(StatoRichiesta.RISOLTA);
+        ((ApplicationDataLayer) request.getAttribute("datalayer")).getRichiestaOrdineDAO().storeRichiesta(richiesta);
+        ((ApplicationDataLayer) request.getAttribute("datalayer")).getOrdineDAO().storeOrdine(ordine);
 
- // Invio della notifica via email al tecnico per segnalare l'accettazione dell'ordine.
-    // Recupera il tecnico dalla richiesta
-    Utente tecnico = ordine.getProposta().getRichiesta().getTecnico();
-    if (tecnico != null && tecnico.getEmail() != null) {
-        Session emailSession = EmailSender.getEmailSession();
+        // Invio della notifica via email al tecnico per segnalare l'accettazione dell'ordine.
+        // Recupera il tecnico dalla richiesta
+        Utente tecnico = ordine.getProposta().getRichiesta().getTecnico();
+        if (tecnico != null && tecnico.getEmail() != null) {
+            Session emailSession = EmailSender.getEmailSession();
 
 
-        String subject = "Ordine Accettato";
-        String body = "<h1>Notifica Accettazione Ordine</h1>"
-                + "<p>L'ordine associato alla tua proposta per la richiesta con codice <strong>"
-                + richiesta.getCodiceRichiesta() + "</strong> è stato accettato dall'ordinante.</p>"
-                ;
+            String subject = "Ordine Accettato";
+            String body = "<h1>Notifica Accettazione Ordine</h1>"
+                    + "<p>L'ordine associato alla tua proposta per la richiesta con codice <strong>"
+                    + richiesta.getCodiceRichiesta() + "</strong> è stato accettato dall'ordinante.</p>"
+                    ;
 
-        EmailSender.sendEmail(emailSession, tecnico.getEmail(), subject, body);
+            EmailSender.sendEmail(emailSession, tecnico.getEmail(), subject, body);
+        }
+
+        response.sendRedirect("ordini?message=Ordine+accettato+con+successo");
     }
-
-response.sendRedirect("ordini?message=Ordine+accettato+con+successo");
-}
 
 
  /**
@@ -116,69 +116,69 @@ response.sendRedirect("ordini?message=Ordine+accettato+con+successo");
  * lo stato a RESPINTO_NON_CONFORME oppure a RESPINTO_NON_FUNZIONANTE.
  * Inoltre, la richiesta associata viene impostata a RISOLTA.
  */
-private void action_rifiutaOrdine(HttpServletRequest request, HttpServletResponse response)
-throws IOException, ServletException, TemplateManagerException, DataException {
-int ordineId = SecurityHelpers.checkNumeric(request.getParameter("n"));
-Ordine ordine = ((ApplicationDataLayer) request.getAttribute("datalayer"))
-    .getOrdineDAO().getOrdine(ordineId);
+    private void action_rifiutaOrdine(HttpServletRequest request, HttpServletResponse response)
+        throws IOException, ServletException, TemplateManagerException, DataException {
+        int ordineId = SecurityHelpers.checkNumeric(request.getParameter("n"));
+        Ordine ordine = ((ApplicationDataLayer) request.getAttribute("datalayer"))
+            .getOrdineDAO().getOrdine(ordineId);
 
-// Recupera l'utente loggato dalla sessione per fare il controllo
-int loggedUserId = (int) request.getSession(false).getAttribute("userid");
+        // Recupero l'utente loggato dalla sessione per fare il controllo
+        int loggedUserId = (int) request.getSession(false).getAttribute("userid");
 
-// Controlla che l'utente loggato sia l'autore della richiesta associata all'ordine
-if (ordine.getProposta().getRichiesta().getOrdinante().getId() != loggedUserId) {
-response.sendRedirect("ordini?error=Non+sei+l'autore+della+richiesta");
-return;
-}
+        // Controlla che l'utente loggato sia l'autore della richiesta associata all'ordine
+        if (ordine.getProposta().getRichiesta().getOrdinante().getId() != loggedUserId) {
+        response.sendRedirect("ordini?error=Non+sei+l'autore+della+richiesta");
+        return;
+        }
 
-// Recupera il tipo di rifiuto dalla request.
-// Il parametro "tipoRifiuto" dovrebbe contenere, ad esempio, "nonConforme" oppure "nonFunzionante".
-String tipoRifiuto = request.getParameter("tipoRifiuto");
-if (tipoRifiuto != null) {
-if (tipoRifiuto.equals("nonConforme")) {
-    ordine.setStato(StatoOrdine.RESPINTO_NON_CONFORME);
-} else if (tipoRifiuto.equals("nonFunzionante")) {
-    ordine.setStato(StatoOrdine.RESPINTO_NON_FUNZIONANTE);
-} else {
-    // Se il parametro non corrisponde ad alcun valore atteso, puoi impostare uno stato di default
-    ordine.setStato(StatoOrdine.RIFIUTATO);
-}
-} else {
-// Se il parametro non è presente, imposta uno stato di default oppure gestisci l'errore
-ordine.setStato(StatoOrdine.RIFIUTATO);
-}
+        // Recupera il tipo di rifiuto dalla request.
+        // Il parametro "tipoRifiuto" dovrebbe contenere, ad esempio, "nonConforme" oppure "nonFunzionante".
+        String tipoRifiuto = request.getParameter("tipoRifiuto");
+        if (tipoRifiuto != null) {
+        if (tipoRifiuto.equals("nonConforme")) {
+            ordine.setStato(StatoOrdine.RESPINTO_NON_CONFORME);
+        } else if (tipoRifiuto.equals("nonFunzionante")) {
+            ordine.setStato(StatoOrdine.RESPINTO_NON_FUNZIONANTE);
+        } else {
+            // Se il parametro non corrisponde ad alcun valore atteso, puoi impostare uno stato di default
+            ordine.setStato(StatoOrdine.RIFIUTATO);
+        }
+        } else {
+        // Se il parametro non è presente, imposta uno stato di default oppure gestisci l'errore
+        ordine.setStato(StatoOrdine.RIFIUTATO);
+        }
 
-// Aggiorna lo stato della richiesta associata
-Richiesta richiesta = ordine.getProposta().getRichiesta();
-richiesta.setStato(StatoRichiesta.RISOLTA);
-((ApplicationDataLayer) request.getAttribute("datalayer")).getRichiestaOrdineDAO().storeRichiesta(richiesta);
-((ApplicationDataLayer) request.getAttribute("datalayer")).getOrdineDAO().storeOrdine(ordine);
- // Invia la email al tecnico per notificare il rifiuto dell'ordine.
-    // Recupera il tecnico dalla richiesta
-    Utente tecnico = ordine.getProposta().getRichiesta().getTecnico();
-    if (tecnico != null && tecnico.getEmail() != null) {
-        Properties props = new Properties();
-        props.put("mail.smtp.host", "smtp.outlook.com");
-        props.put("mail.smtp.port", "587");
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
+        // Aggiorna lo stato della richiesta associata
+        Richiesta richiesta = ordine.getProposta().getRichiesta();
+        richiesta.setStato(StatoRichiesta.RISOLTA);
+        ((ApplicationDataLayer) request.getAttribute("datalayer")).getRichiestaOrdineDAO().storeRichiesta(richiesta);
+        ((ApplicationDataLayer) request.getAttribute("datalayer")).getOrdineDAO().storeOrdine(ordine);
+        // Invia la email al tecnico per notificare il rifiuto dell'ordine.
+            // Recupera il tecnico dalla richiesta
+            Utente tecnico = ordine.getProposta().getRichiesta().getTecnico();
+            if (tecnico != null && tecnico.getEmail() != null) {
+                Properties props = new Properties();
+                props.put("mail.smtp.host", "smtp.outlook.com");
+                props.put("mail.smtp.port", "587");
+                props.put("mail.smtp.auth", "true");
+                props.put("mail.smtp.starttls.enable", "true");
 
-        Session emailSession = Session.getInstance(props, new javax.mail.Authenticator() {
-            protected javax.mail.PasswordAuthentication getPasswordAuthentication() {
-                return new javax.mail.PasswordAuthentication("webmarket.univaq@outlook.com", "your_password_here");
+                Session emailSession = Session.getInstance(props, new javax.mail.Authenticator() {
+                    protected javax.mail.PasswordAuthentication getPasswordAuthentication() {
+                        return new javax.mail.PasswordAuthentication("webmarket.univaq@outlook.com", "your_password_here");
+                    }
+                });
+
+                String subject = "Ordine Rifiutato";
+                String body = "<h1>Notifica Rifiuto Ordine</h1>"
+                        + "<p>L'ordine associato alla tua proposta per la richiesta con codice <strong>"
+                        + richiesta.getCodiceRichiesta() + "</strong> è stato rifiutato dall'ordinante.</p>"
+                        ;
+
+                EmailSender.sendEmail(emailSession, tecnico.getEmail(), subject, body);
             }
-        });
-
-        String subject = "Ordine Rifiutato";
-        String body = "<h1>Notifica Rifiuto Ordine</h1>"
-                + "<p>L'ordine associato alla tua proposta per la richiesta con codice <strong>"
-                + richiesta.getCodiceRichiesta() + "</strong> è stato rifiutato dall'ordinante.</p>"
-                ;
-
-        EmailSender.sendEmail(emailSession, tecnico.getEmail(), subject, body);
-    }
-response.sendRedirect("ordini?message=Ordine+rifiutato");
-}
+        response.sendRedirect("ordini?message=Ordine+rifiutato");
+        }
 
 
 
@@ -186,34 +186,34 @@ response.sendRedirect("ordini?message=Ordine+rifiutato");
        
 
 @Override
-protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException {
-    try {
-        HttpSession session = SecurityHelpers.checkSession(request);
-        if (session == null) {
-            response.sendRedirect("login");
-            return;
-        }
-        // Recupera l'ID dell'utente dalla sessione
-        int userId = (int) session.getAttribute("userid");
-        String action = request.getParameter("action");
-        if (action != null) {
-            if ("accettaOrdine".equals(action)) {
-                action_accettaOrdine(request, response);
-                return;
-            } else if ("rifiutaOrdine".equals(action)) {
-                action_rifiutaOrdine(request, response);
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException {
+        try {
+            HttpSession session = SecurityHelpers.checkSession(request);
+            if (session == null) {
+                response.sendRedirect("login");
                 return;
             }
+            // Recupera l'ID dell'utente dalla sessione
+            int userId = (int) session.getAttribute("userid");
+            String action = request.getParameter("action");
+            if (action != null) {
+                if ("accettaOrdine".equals(action)) {
+                    action_accettaOrdine(request, response);
+                    return;
+                } else if ("rifiutaOrdine".equals(action)) {
+                    action_rifiutaOrdine(request, response);
+                    return;
+                }
+            }
+            // Azione di default: mostra il dettaglio dell'ordine
+            action_default(request, response, userId);
+        } catch (IOException | TemplateManagerException ex) {
+            handleError(ex, request, response);
+        } catch (DataException ex) {
+            Logger.getLogger(DettaglioOrdine.class.getName()).log(Level.SEVERE, null, ex);
         }
-        // Azione di default: mostra il dettaglio dell'ordine
-        action_default(request, response, userId);
-    } catch (IOException | TemplateManagerException ex) {
-        handleError(ex, request, response);
-    } catch (DataException ex) {
-        Logger.getLogger(DettaglioOrdine.class.getName()).log(Level.SEVERE, null, ex);
     }
-}
 
 
     @Override

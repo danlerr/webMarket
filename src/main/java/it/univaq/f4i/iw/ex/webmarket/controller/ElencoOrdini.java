@@ -22,26 +22,22 @@ import javax.servlet.http.HttpSession;
 public class ElencoOrdini extends BaseController {
     
 
-    private void action_default(HttpServletRequest request, HttpServletResponse response, int user)
-        throws IOException, ServletException, TemplateManagerException, DataException {
+    private void action_default(HttpServletRequest request, HttpServletResponse response, int user) throws IOException, ServletException, TemplateManagerException, DataException {
     
     TemplateResult res = new TemplateResult(getServletContext());
     request.setAttribute("page_title", "Elenco Ordini");
 
-    // Recupera l'utente per determinare la sua tipologia
-    Utente utente = ((ApplicationDataLayer) request.getAttribute("datalayer"))
-            .getUtenteDAO().getUtente(user);
+    // Recupero l'utente per determinare la sua tipologia
+    Utente utente = ((ApplicationDataLayer) request.getAttribute("datalayer")).getUtenteDAO().getUtente(user);
     request.setAttribute("user", utente);
-    // Imposta un flag per il template (true se l'utente è ordinante)
+    // Imposto un flag per il template (true se l'utente è ordinante)
     boolean isOrdinante = utente.getTipologiaUtente().equals(TipologiaUtente.ORDINANTE);
     request.setAttribute("isOrdinante", isOrdinante);
 
     if (isOrdinante) {
-        // Per l'ordinante, recupera gli ordini ricevuti
-        java.util.List<Ordine> ordini = ((ApplicationDataLayer) request.getAttribute("datalayer"))
-                .getOrdineDAO().getOrdiniByOrdinante(user);
-        
-        // Per ogni ordine, creiamo un flag che indica se mostrare il bottone "recensisci tecnico".
+        // Per l'ordinante, recupero gli ordini ricevuti
+        java.util.List<Ordine> ordini = ((ApplicationDataLayer) request.getAttribute("datalayer")).getOrdineDAO().getOrdiniByOrdinante(user);
+        // Per ogni ordine, creo un flag che indica se mostrare il bottone "recensisci tecnico".
         // Il bottone sarà visibile solo se lo stato della richiesta associata all'ordine è RISOLTA.
         java.util.Map<Integer, Boolean> recensisciFlags = new java.util.HashMap<>();
         for (Ordine o : ordini) {
@@ -53,16 +49,11 @@ public class ElencoOrdini extends BaseController {
         request.setAttribute("recensisciFlags", recensisciFlags);
     } else {
         // Per il tecnico, recupera gli ordini gestiti dal tecnico.
-        request.setAttribute("ordini", ((ApplicationDataLayer) request.getAttribute("datalayer"))
-                .getOrdineDAO().getOrdiniByTecnico(user));
+        request.setAttribute("ordini", ((ApplicationDataLayer) request.getAttribute("datalayer")).getOrdineDAO().getOrdiniByTecnico(user));
     }
     
     res.activate("listaOrdini.ftl.html", request, response);
 }
-
-
-   
-
 
    /**
  * Azione per recensire il tecnico relativo ad un ordine.
@@ -74,101 +65,88 @@ public class ElencoOrdini extends BaseController {
  *
  * Il parametro "n" contiene l'id dell'ordine e il form invia il parametro "value" con il voto.
  */
-private void action_recensisciTecnico(HttpServletRequest request, HttpServletResponse response, int user) 
-        throws IOException, ServletException, TemplateManagerException, DataException {
-    
-    // Recupera l'utente loggato per verificare il ruolo
-    Utente utente = ((ApplicationDataLayer) request.getAttribute("datalayer"))
-            .getUtenteDAO().getUtente(user);
-    if (!utente.getTipologiaUtente().equals("ORDINANTE")) {
-        response.sendRedirect("ordini?error=Solo+l'ordinante+puo+recensire+il+tecnico");
-        return;
-    }
-    
-    // Recupera l'id dell'ordine
-    int ordineId = Integer.parseInt(request.getParameter("n"));
-    // Recupera il valore della recensione dal parametro "value"
-    int value = Integer.parseInt(request.getParameter("value"));
+    private void action_recensisciTecnico(HttpServletRequest request, HttpServletResponse response, int user) throws IOException, ServletException, TemplateManagerException, DataException {
 
-    // Recupera l'ordine dal DAO
-    Ordine ordine = ((ApplicationDataLayer) request.getAttribute("datalayer"))
-            .getOrdineDAO().getOrdine(ordineId);
-    
-    // Verifica che la richiesta collegata all'ordine sia in stato RISOLTA
-    if (ordine.getProposta().getRichiesta().getStato() != StatoRichiesta.RISOLTA) {
-        response.sendRedirect("ordini?error=Non+puoi+recensire+il+tecnico+per+questo+ordine");
-        return;
-    }
-    
-    // Controllo che l'utente loggato sia l'autore della richiesta
-    if (ordine.getProposta().getRichiesta().getOrdinante().getId() != user) {
-        response.sendRedirect("ordini?error=Non+sei+l'autore+della+richiesta");
-        return;
-    }
-    
-    // Recupera il tecnico e l'ordinante per la notifica email
-    Utente tecnico = ordine.getProposta().getRichiesta().getTecnico();
-    Utente ordinante = ordine.getProposta().getRichiesta().getOrdinante();
-    
-    Session emailSession = EmailSender.getEmailSession();
-
-    
-    // Verifica se l'utente ha già votato questo tecnico in una richiesta precedente
-    Recensione recensionePrecedente = ((ApplicationDataLayer) request.getAttribute("datalayer"))
-            .getRecensioneDAO().getRecensioneByOrdinanteTecnico(
-                    ordine.getProposta().getRichiesta().getOrdinante().getId(),
-                    tecnico.getId());
-    
-    String subject;
-    String body;
-    
-    if (recensionePrecedente != null) {
-        // L'utente ha già votato: verifichiamo se ha confermato l'aggiornamento del voto
-        String confirmUpdate = request.getParameter("confirmUpdate");
-        if ("true".equals(confirmUpdate)) {
-            // Aggiorno il voto con il nuovo valore
-            recensionePrecedente.setValore(value);
-            ((ApplicationDataLayer) request.getAttribute("datalayer"))
-                    .getRecensioneDAO().storeRecensione(recensionePrecedente);
+        // Recupera l'utente loggato per verificare il ruolo
+        Utente utente = ((ApplicationDataLayer) request.getAttribute("datalayer")).getUtenteDAO().getUtente(user);
+        if (!utente.getTipologiaUtente().equals(TipologiaUtente.ORDINANTE)) {
+            response.sendRedirect("ordini?error=Solo+l'ordinante+puo+recensire+il+tecnico");
+            return;
+        }
+        
+        // Recupero l'id dell'ordine
+        int ordineId = Integer.parseInt(request.getParameter("n"));
+        // Recupera il valore della recensione dal parametro "value"
+        int value = Integer.parseInt(request.getParameter("value"));
+        // Recupero l'ordine dal DAO
+        Ordine ordine = ((ApplicationDataLayer) request.getAttribute("datalayer")).getOrdineDAO().getOrdine(ordineId);
+        
+        // Verifico che la richiesta collegata all'ordine sia in stato RISOLTA
+        if (ordine.getProposta().getRichiesta().getStato() != StatoRichiesta.RISOLTA) {
+            response.sendRedirect("ordini?error=Non+puoi+recensire+il+tecnico+per+questo+ordine");
+            return;
+        }
+        // Controllo che l'utente loggato sia l'autore della richiesta
+        if (ordine.getProposta().getRichiesta().getOrdinante().getId() != user) {
+            response.sendRedirect("ordini?error=Non+sei+l'autore+della+richiesta");
+            return;
+        }
+        // Recupera il tecnico e l'ordinante per la notifica email
+        Utente tecnico = ordine.getProposta().getRichiesta().getTecnico();
+        Utente ordinante = ordine.getProposta().getRichiesta().getOrdinante();
+        
+        Session emailSession = EmailSender.getEmailSession();
+        
+        // Verifica se l'utente ha già votato questo tecnico in una richiesta precedente
+        Recensione recensionePrecedente = ((ApplicationDataLayer) request.getAttribute("datalayer")).getRecensioneDAO().getRecensioneByOrdinanteTecnico(ordine.getProposta().getRichiesta().getOrdinante().getId(),tecnico.getId());
+        
+        String subject;
+        String body;
+        
+        if (recensionePrecedente != null) {
+            // L'utente ha già votato: verifichiamo se ha confermato l'aggiornamento del voto
+            String confirmUpdate = request.getParameter("confirmUpdate");
+            if ("true".equals(confirmUpdate)) {
+                // Aggiorno il voto con il nuovo valore
+                recensionePrecedente.setValore(value);
+                ((ApplicationDataLayer) request.getAttribute("datalayer")).getRecensioneDAO().storeRecensione(recensionePrecedente);
+                
+                // Prepara il messaggio per l'aggiornamento della recensione
+                subject = "Aggiornamento Recensione Ricevuta";
+                body = "<h1>Nuovo Voto Aggiornato</h1>"
+                    + "<p>Hai ricevuto un aggiornamento della recensione.</p>"
+                    + "<p>Nuovo voto: <strong>" + value + "</strong></p>"
+                    + "<p>Recensito da: " + ordinante.getUsername() + " (" + ordinante.getEmail() + ")</p>";
+                
+                // Invia l'email al tecnico
+                EmailSender.sendEmail(emailSession, tecnico.getEmail(), subject, body);
+                
+                response.sendRedirect("ordini?message=Recensione+aggiornata+con+successo");
+                return;
+            } 
+            // Se l'utente non conferma l'aggiornamento, non si esegue alcuna modifica
+        } else {
+            // Nessuna recensione esistente: creo una nuova recensione
+            Recensione recensione = ((ApplicationDataLayer) request.getAttribute("datalayer")).getRecensioneDAO().createRecensione();
+            recensione.setValore(value);
+            recensione.setAutore(ordinante);
+            recensione.setDestinatario(tecnico);
             
-            // Prepara il messaggio per l'aggiornamento della recensione
-            subject = "Aggiornamento Recensione Ricevuta";
-            body = "<h1>Nuovo Voto Aggiornato</h1>"
-                 + "<p>Hai ricevuto un aggiornamento della recensione.</p>"
-                 + "<p>Nuovo voto: <strong>" + value + "</strong></p>"
-                 + "<p>Recensito da: " + ordinante.getUsername() + " (" + ordinante.getEmail() + ")</p>";
+            ((ApplicationDataLayer) request.getAttribute("datalayer")).getRecensioneDAO().storeRecensione(recensione);
+            
+            // Prepara il messaggio per la nuova recensione
+            subject = "Nuova Recensione Ricevuta";
+            body = "<h1>Nuovo Voto Ricevuto</h1>"
+                + "<p>Hai ricevuto una nuova recensione.</p>"
+                + "<p>Voto: <strong>" + value + "</strong></p>"
+                + "<p>Recensito da: " + ordinante.getUsername() + " (" + ordinante.getEmail() + ")</p>";
             
             // Invia l'email al tecnico
             EmailSender.sendEmail(emailSession, tecnico.getEmail(), subject, body);
             
-            response.sendRedirect("ordini?message=Recensione+aggiornata+con+successo");
-            return;
-        } 
-        // Se l'utente non conferma l'aggiornamento, non si esegue alcuna modifica
-    } else {
-        // Nessuna recensione esistente: creo una nuova recensione
-        Recensione recensione = ((ApplicationDataLayer) request.getAttribute("datalayer"))
-                .getRecensioneDAO().createRecensione();
-        recensione.setValore(value);
-        recensione.setAutore(ordinante);
-        recensione.setDestinatario(tecnico);
-        
-        ((ApplicationDataLayer) request.getAttribute("datalayer"))
-                .getRecensioneDAO().storeRecensione(recensione);
-        
-        // Prepara il messaggio per la nuova recensione
-        subject = "Nuova Recensione Ricevuta";
-        body = "<h1>Nuovo Voto Ricevuto</h1>"
-             + "<p>Hai ricevuto una nuova recensione.</p>"
-             + "<p>Voto: <strong>" + value + "</strong></p>"
-             + "<p>Recensito da: " + ordinante.getUsername() + " (" + ordinante.getEmail() + ")</p>";
-        
-        // Invia l'email al tecnico
-        EmailSender.sendEmail(emailSession, tecnico.getEmail(), subject, body);
-        
-        response.sendRedirect("ordini?message=Recensione+inserita+con+successo");
+            response.sendRedirect("ordini?message=Recensione+inserita+con+successo");
+        }
     }
-}
 
 
     @Override
@@ -202,4 +180,3 @@ private void action_recensisciTecnico(HttpServletRequest request, HttpServletRes
         return "Storico Ordini servlet";
     }
 }
-//controllare

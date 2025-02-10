@@ -78,6 +78,8 @@ public class OrdineDAO_MySQL extends DAO implements OrdineDAO {
             iOrdine.close();
             uOrdine.close();
             dOrdine.close();
+            sOrdiniByOrdinante.close();
+            sOrdiniByTecnico.close();
         } catch (SQLException ex) {
             
         }
