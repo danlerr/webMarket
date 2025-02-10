@@ -5,6 +5,7 @@ import it.univaq.f4i.iw.ex.webmarket.data.model.Ordine;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Proposta;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Richiesta;
 import it.univaq.f4i.iw.ex.webmarket.data.model.StatoRichiesta;
+import it.univaq.f4i.iw.ex.webmarket.data.model.TipologiaUtente;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Utente;
 import it.univaq.f4i.iw.ex.webmarket.data.model.CaratteristicaRichiesta;
 import it.univaq.f4i.iw.framework.data.DataException;
@@ -30,7 +31,7 @@ public class DettaglioRichiesta extends BaseController {
     TemplateResult res = new TemplateResult(getServletContext());
     request.setAttribute("page_title", "Dettaglio richiesta ");
 
-    int richiestaId = Integer.parseInt(request.getParameter("n"));
+    int richiestaId = Integer.parseInt(request.getParameter("id"));
 
     // Recupera la richiesta dal database utilizzando il DAO
     Richiesta richiesta = ((ApplicationDataLayer) request.getAttribute("datalayer"))
@@ -53,14 +54,14 @@ public class DettaglioRichiesta extends BaseController {
 
     // Se l'utente è un tecnico e la richiesta è nello stato IN_ATTESA,
     // imposta un attributo per far visualizzare il bottone "prendi in carico" nel template.
-    if (utente.getTipologiaUtente().equals("TECNICO") && richiesta.getStato() == StatoRichiesta.IN_ATTESA) {
+    if (utente.getTipologiaUtente().equals(TipologiaUtente.TECNICO) && richiesta.getStato() == StatoRichiesta.IN_ATTESA) {
         request.setAttribute("showPrendiInCaricoButton", true);
     } else {
         request.setAttribute("showPrendiInCaricoButton", false);
     }
 
     
-if (utente.getTipologiaUtente().equals("TECNICO")
+if (utente.getTipologiaUtente().equals(TipologiaUtente.TECNICO)
         && richiesta.getTecnico() != null
         && richiesta.getTecnico().getId() == user) {
 
@@ -95,7 +96,7 @@ if (utente.getTipologiaUtente().equals("TECNICO")
                 .getUtenteDAO().getUtente(user);
 
         // Controlla che l'utente sia un tecnico
-        if (!utente.getTipologiaUtente().equals("TECNICO")) {
+        if (!utente.getTipologiaUtente().equals(TipologiaUtente.TECNICO)) {
             // Se non è un tecnico, reindirizza con un messaggio di errore
             response.sendRedirect("ElencoRichieste?error=Solo+il+tecnico+puo+prendere+in+carico+le+richieste");
             return;
