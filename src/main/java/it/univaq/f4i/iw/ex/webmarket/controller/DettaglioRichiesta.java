@@ -98,7 +98,7 @@ public class DettaglioRichiesta extends BaseController {
         }
 
         // Recupera l'ID della richiesta dal parametro "n"
-        int richiestaId = Integer.parseInt(request.getParameter("id"));
+        int richiestaId = Integer.parseInt(request.getParameter("n"));
 
         // Recupera la richiesta tramite il DAO
         Richiesta richiesta = ((ApplicationDataLayer) request.getAttribute("datalayer"))
@@ -107,12 +107,12 @@ public class DettaglioRichiesta extends BaseController {
         // Aggiorna lo stato della richiesta: in questo caso lo impostiamo a IN_ATTESA,
         // il che farà apparire la richiesta nella lista
         // delle "richieste prese in carico".
-        richiesta.setStato(StatoRichiesta.IN_ATTESA);
+        richiesta.setStato(StatoRichiesta.PRESA_IN_CARICO);
 
         // Salva l'aggiornamento nel database
         ((ApplicationDataLayer) request.getAttribute("datalayer"))
                 .getRichiestaOrdineDAO().storeRichiesta(richiesta);
-         Utente ordinante = richiesta.getOrdinante();
+        Utente ordinante = richiesta.getOrdinante();
     if (ordinante != null && ordinante.getEmail() != null) {
         Session emailSession = EmailSender.getEmailSession();
 
