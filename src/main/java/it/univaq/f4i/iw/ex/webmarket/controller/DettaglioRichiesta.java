@@ -14,10 +14,8 @@ import it.univaq.f4i.iw.framework.result.TemplateResult;
 import it.univaq.f4i.iw.framework.security.SecurityHelpers;
 import java.io.IOException;
 import java.util.List;
-import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.mail.Session;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -31,7 +29,7 @@ public class DettaglioRichiesta extends BaseController {
     TemplateResult res = new TemplateResult(getServletContext());
     request.setAttribute("page_title", "Dettaglio richiesta ");
 
-    int richiestaId = Integer.parseInt(request.getParameter("id"));
+    int richiestaId = Integer.parseInt(request.getParameter("n"));
 
     // Recupera la richiesta dal database utilizzando il DAO
     Richiesta richiesta = ((ApplicationDataLayer) request.getAttribute("datalayer"))
@@ -44,8 +42,8 @@ public class DettaglioRichiesta extends BaseController {
     request.setAttribute("CaratteristicheRichiesta", CaratteristicheRichiesta);
     
       // Recupera la lista delle proposte per la richiesta
-      List<Proposta> proposte = ((ApplicationDataLayer) request.getAttribute("datalayer"))
-      .getPropostaDAO().getProposteAcquistoByRichiesta(richiestaId);
+    List<Proposta> proposte = ((ApplicationDataLayer) request.getAttribute("datalayer"))
+      .getPropostaDAO().getProposteByRichiesta(richiestaId);
     request.setAttribute("proposte", proposte);
     // Recupera l'utente loggato
     Utente utente = ((ApplicationDataLayer) request.getAttribute("datalayer"))
@@ -61,24 +59,21 @@ public class DettaglioRichiesta extends BaseController {
     }
 
     
-if (utente.getTipologiaUtente().equals(TipologiaUtente.TECNICO)
-        && richiesta.getTecnico() != null
-        && richiesta.getTecnico().getId() == user) {
+    if (utente.getTipologiaUtente().equals(TipologiaUtente.TECNICO)
+            && richiesta.getTecnico() != null
+            && richiesta.getTecnico().getId() == user) {
 
-            boolean canCompile = ((ApplicationDataLayer) request.getAttribute("datalayer"))
-            .getRichiestaOrdineDAO()
-            .checkCompile(richiestaId);
-    if (canCompile) {
-        // Imposta un flag a true, in modo da mostrarlo in Freemarker
-        request.setAttribute("showCompilaPropostaButton", true);
-    } else {
-        request.setAttribute("showCompilaPropostaButton", false);
+                boolean canCompile = ((ApplicationDataLayer) request.getAttribute("datalayer"))
+                .getRichiestaOrdineDAO()
+                .checkCompile(richiestaId);
+        if (canCompile) {
+            // Imposta un flag a true, in modo da mostrarlo in Freemarker
+            request.setAttribute("showCompilaPropostaButton", true);
+        } else {
+            request.setAttribute("showCompilaPropostaButton", false);
+        }
+        
     }
-    
-}
-
-
-
     res.activate("dettaglioRichiesta.ftl.html", request, response);
 }
 

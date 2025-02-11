@@ -15,15 +15,6 @@ public interface PropostaDAO {
 
     List<Proposta> getProposteByTecnico(int tecnico_key) throws DataException;
 
-    //List<PropostaAcquisto> getProposteByOrdine(int ordine_key) throws DataException;
+    List<Proposta> getProposteByRichiesta(int richiesta_id) throws DataException; 
 
-    //List<PropostaAcquisto> getAllProposteAcquisto() throws DataException;
-
-    List<Proposta> getProposteAcquistoByRichiesta(int richiesta_id) throws DataException; 
-
-    //void inviaPropostaAcquisto(PropostaAcquisto proposta) throws DataException;
-    
-    //boolean notificaProposte(int tecnicoId) throws DataException;
-    
-    //boolean notificaProposteOrd(int ordinanteId) throws DataException;
 }

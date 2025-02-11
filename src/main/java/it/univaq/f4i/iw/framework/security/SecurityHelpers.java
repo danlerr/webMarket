@@ -77,7 +77,7 @@ public class SecurityHelpers {
             requestedPage.contains("/elencorichieste") ||
             requestedPage.contains("/elencoproposte") ||
             requestedPage.contains("/elencoordini") ||
-            requestedPage.contains("/dettagliorichesta") ||
+            requestedPage.contains("/dettagliorichiesta") ||
             requestedPage.contains("/dettaglioproposta") ||
             requestedPage.contains("/dettaglioordine")) {
             return tipo.equals("tecnico") || tipo.equals("ordinante");
