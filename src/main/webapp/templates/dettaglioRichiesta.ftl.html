@@ -9,7 +9,7 @@
                     <div class="col-auto ms-auto d-print-none">
                         <#-- Bottone "Prendi in carico" -->
                         <#if showPrendiInCaricoButton?? && showPrendiInCaricoButton>
-                            <a href="dettaglioRichiesta?action=prendiInCarico&n=${richiesta.id}"
+                            <a href="dettaglioRichiesta?action=prendiInCarico&id=${richiesta.id}"
                                class="btn btn-success">
                                 Prendi in carico richiesta
                             </a>
@@ -17,7 +17,7 @@
 
                         <#-- Bottone "Compila proposta" -->
                         <#if showCompilaPropostaButton?? && showCompilaPropostaButton>
-  						<a href="dettaglioRichiesta?action=compilaProposta&n=${richiesta.id}"
+  						<a href="dettaglioRichiesta?action=compilaProposta&id=${richiesta.id}"
      					class="btn btn-cyan">
      					Compila proposta
   						</a>
@@ -69,7 +69,7 @@
             <#list proposte as proposta>
                 <li class="list-inline-item">
                     
-                    <a href="${request.contextPath}/dettaglioProposta?id=${proposta.id}">
+                    <a href="dettaglioProposta?id=${proposta.id}">
                         Proposta n. ${proposta.codice} 
                     </a>
                 </li>

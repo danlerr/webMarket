@@ -1,7 +1,7 @@
 package it.univaq.f4i.iw.ex.webmarket.controller;
 
 import it.univaq.f4i.iw.ex.webmarket.data.dao.impl.ApplicationDataLayer;
-import it.univaq.f4i.iw.ex.webmarket.data.model.Ordine;
+
 import it.univaq.f4i.iw.ex.webmarket.data.model.Proposta;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Richiesta;
 import it.univaq.f4i.iw.ex.webmarket.data.model.StatoRichiesta;
@@ -42,7 +42,7 @@ public class DettaglioRichiesta extends BaseController {
     List<CaratteristicaRichiesta> CaratteristicheRichiesta = ((ApplicationDataLayer) request.getAttribute("datalayer"))
             .getCaratteristicaRichiestaDAO().getCaratteristicheRichiestaByRichiesta(richiestaId);
     request.setAttribute("CaratteristicheRichiesta", CaratteristicheRichiesta);
-    //recupera tutte le caratteristiche della richiesta
+    
       // Recupera la lista delle proposte per la richiesta
       List<Proposta> proposte = ((ApplicationDataLayer) request.getAttribute("datalayer"))
       .getPropostaDAO().getProposteAcquistoByRichiesta(richiestaId);
@@ -98,12 +98,12 @@ if (utente.getTipologiaUtente().equals(TipologiaUtente.TECNICO)
         // Controlla che l'utente sia un tecnico
         if (!utente.getTipologiaUtente().equals(TipologiaUtente.TECNICO)) {
             // Se non è un tecnico, reindirizza con un messaggio di errore
-            response.sendRedirect("ElencoRichieste?error=Solo+il+tecnico+puo+prendere+in+carico+le+richieste");
+            response.sendRedirect("elencoRichieste?error=Solo+il+tecnico+puo+prendere+in+carico+le+richieste");
             return;
         }
 
         // Recupera l'ID della richiesta dal parametro "n"
-        int richiestaId = Integer.parseInt(request.getParameter("n"));
+        int richiestaId = Integer.parseInt(request.getParameter("id"));
 
         // Recupera la richiesta tramite il DAO
         Richiesta richiesta = ((ApplicationDataLayer) request.getAttribute("datalayer"))
