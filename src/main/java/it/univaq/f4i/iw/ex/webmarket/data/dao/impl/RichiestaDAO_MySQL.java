@@ -67,7 +67,7 @@ public class RichiestaDAO_MySQL extends DAO implements RichiestaDAO {
                 "WHERE id=? AND version=?"
             );
             sRichiesteSenzaProposte = connection.prepareStatement(
-                "SELECT r.id, r.note, r.stato, r.data, r.codice_richiesta, r.ordinante, r.tecnico, r.categoria " +
+                "SELECT r.id, r.note, r.stato, r.data, r.codice_richiesta, r.ordinante, r.tecnico, r.categoria" +
                 "FROM richiesta r " +
                 "WHERE r.stato = ? AND r.tecnico = ? " +
                 "AND NOT EXISTS (SELECT 1 FROM proposta p WHERE p.richiesta_id = r.id) ORDER BY data ASC" 
@@ -86,12 +86,12 @@ public class RichiestaDAO_MySQL extends DAO implements RichiestaDAO {
             // PreparedStatement per recuperare le richieste in attesa 
             sRichiesteInAttesa = connection.prepareStatement("SELECT * FROM richiesta WHERE stato = ?");
             // Prepariamo la query che conta quante proposte non rifiutate esistono per una certa richiesta
-        sCheckCompile = connection.prepareStatement(
-            "SELECT COUNT(*) AS cnt "
-          + "FROM proposta "
-          + "WHERE richiesta_id = ? "
-          + "  AND stato <> 'RIFIUTATO'"
-        );
+            sCheckCompile = connection.prepareStatement(
+                "SELECT COUNT(*) AS cnt "
+            + "FROM proposta "
+            + "WHERE richiesta_id = ? "
+            + "  AND stato <> 'RIFIUTATO'"
+            );
 
         } catch (SQLException ex) {
             throw new DataException("Errore durante l'inizializzazione del RichiestaDAO", ex);
