@@ -298,7 +298,7 @@ public class RichiestaDAO_MySQL extends DAO implements RichiestaDAO {
             sRichiesteByUtente.setInt(1, utente_key);
             try (ResultSet rs = sRichiesteByUtente.executeQuery()) {
                 while (rs.next()) {
-                    result.add(getRichiesta(rs.getInt("ID")));
+                    result.add(getRichiesta(rs.getInt("id")));
                 }
             }
         } catch (SQLException ex) {
@@ -315,7 +315,7 @@ public class RichiestaDAO_MySQL extends DAO implements RichiestaDAO {
             sRichiestePreseInCaricoConProposteByTecnico.setInt(2, tecnico_key);
             try (ResultSet rs = sRichiestePreseInCaricoConProposteByTecnico.executeQuery()) {
                 while (rs.next()) {
-                    result.add(getRichiesta(rs.getInt("ID")));
+                    result.add(getRichiesta(rs.getInt("id")));
                 }
             }
         } catch (SQLException ex) {
@@ -337,7 +337,7 @@ public class RichiestaDAO_MySQL extends DAO implements RichiestaDAO {
             sRichiesteInAttesa.setString(1, StatoRichiesta.IN_ATTESA.name());
             try (ResultSet rs = sRichiesteInAttesa.executeQuery()) {
                 while (rs.next()) {
-                    result.add(getRichiesta(rs.getInt("ID")));
+                    result.add(getRichiesta(rs.getInt("id")));
                 }
             }
         } catch (SQLException ex) {
@@ -361,7 +361,7 @@ public class RichiestaDAO_MySQL extends DAO implements RichiestaDAO {
             sRichiesteSenzaProposte.setInt(2, tecnico_key);
             try (ResultSet rs = sRichiesteSenzaProposte.executeQuery()) {
                 while (rs.next()) {
-                    result.add(getRichiesta(rs.getInt("ID")));
+                    result.add(getRichiesta(rs.getInt("id")));
                 }
             }
         } catch (SQLException ex) {
@@ -380,7 +380,7 @@ public class RichiestaDAO_MySQL extends DAO implements RichiestaDAO {
     @Override
     public void deleteRichiestaOrdine(int richiesta_key) throws DataException {
       try {
-        PreparedStatement dRichiestaOrdine = connection.prepareStatement("DELETE FROM richiesta_ordine WHERE ID=?");
+        PreparedStatement dRichiestaOrdine = connection.prepareStatement("DELETE FROM richiesta_ordine WHERE id=?");
         dRichiestaOrdine.setInt(1, richiesta_key);
         dRichiestaOrdine.executeUpdate();
         dataLayer.getCache().delete(Richiesta.class, richiesta_key); 
