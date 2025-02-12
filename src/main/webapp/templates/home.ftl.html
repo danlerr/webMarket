@@ -51,17 +51,17 @@
                                                 <td><strong>${tecnico.getUsername()}</strong></td>
                                                 <td>${tecnico.getEmail()}</td>
                                                 <td>
-                                                    <#if medieTecnici[tecnico.getId()?string]??>
-                                                    ${medieTecnici[tecnico.getId()?string]?string("0.0")} ⭐
+                                                    <#if medieTecnici[tecnico.id?string]??>
+                                                    ${medieTecnici[tecnico.id?string]?string} ⭐
                                                     <#else>
                                                     N/A ⭐
                                                     </#if>
                                                 </td>
                                                 <td>
-                                                    <#if interventiTecnici[tecnico.getId()?string]??>
-                                                    ${interventiTecnici[tecnico.getId()?string]}
+                                                    <#if interventiTecnici[tecnico.id?string]??>
+                                                        ${interventiTecnici[tecnico.id?string]}
                                                     <#else>
-                                                     0
+                                                        0
                                                     </#if>
                                                 </td>
                                             </tr>

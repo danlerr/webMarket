@@ -25,23 +25,32 @@ public class Home extends BaseController {
         request.setAttribute("user", u);
         request.setAttribute("page_title", "Dashboard");
         
-          
-        Map<Integer, Double> medieTecnici = ((ApplicationDataLayer) request.getAttribute("datalayer")).getRecensioneDAO().getMedieRecensioniTecnici();
+        Map<String, String> medieTecnici = new HashMap<>();
+        Map<Integer, Double> medieTecniciOriginali = ((ApplicationDataLayer) request.getAttribute("datalayer")).getRecensioneDAO().getMedieRecensioniTecnici();
         request.setAttribute("medieTecnici", medieTecnici);
+        // Converto la mappa da Integer -> Double a String -> String
+        for (Map.Entry<Integer, Double> entry : medieTecniciOriginali.entrySet()) {
+            String key = String.valueOf(entry.getKey());  // chiave Integer -> String
+            String value = String.format("%.1f", entry.getValue());  //  Double -> String con una sola cifra decimale
+            medieTecnici.put(key, value);
+        }
+
+request.setAttribute("medieTecnici", medieTecnici);  // Passiamo la nuova mappa
 
         List<Utente> tecnici = ((ApplicationDataLayer) request.getAttribute("datalayer")).getUtenteDAO().getAllByRole(TipologiaUtente.TECNICO);
         request.setAttribute("tecnici", tecnici); //da tecnici prendo username e mail 
 
-        Map<Integer, Integer> proposteTecnici = new HashMap<>();
+        //Map<Integer, Integer> proposteTecnici = new HashMap<>();
+        Map<String, String> interventiTecnici = new HashMap<>();
         ApplicationDataLayer datalayer = (ApplicationDataLayer) request.getAttribute("datalayer");
 
         for (Utente tecnico : tecnici) {
-            int numeroProposte = datalayer.getPropostaDAO().getProposteByTecnico(tecnico.getId()).size();
-            proposteTecnici.put(tecnico.getKey(), numeroProposte);
+            String numeroProposte = String.valueOf(datalayer.getPropostaDAO().getProposteByTecnico(tecnico.getId()).size());
+            interventiTecnici.put(String.valueOf(tecnico.getId()), numeroProposte); 
         }
-        
-        request.setAttribute("interventiTecnici", proposteTecnici);
 
+        System.out.println(interventiTecnici); // Debug per controllare i dati
+        request.setAttribute("interventiTecnici", interventiTecnici);
 
         //notifiche per richieste
 
