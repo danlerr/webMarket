@@ -1,59 +1,68 @@
-<!-- Page title actions -->
-<#if showAccettaRifiutaButtons>
-<div class="col-auto ms-auto d-print-none">
-    <a href="dettaglioOrdine?action=accettaOrdine&n=${ordine.key}" class="btn btn-success">Accetta ordine</a>
-
-    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-danger">
-        Rifiuta Ordine
-    </button>
-
-    <div class="modal modal-blur fade" id="modal-danger" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <button type="button" class="btn-danger" data-bs-dismiss="modal" aria-label="Close"></button>
-                <div class="modal-status bg-danger"></div>
-                <div class="modal-body text-center py-4">
-                    <h3>Vuoi davvero rifiutare l'ordine?</h3>
-                    <form action="dettaglioOrdine" method="get">
-                        <input type="hidden" name="action" value="rifiutaOrdine">
-                        <input type="hidden" name="n" value="${ordine.key}">
-                        <div class="form-selectgroup">
-                            <label class="form-selectgroup-item">
-                                <input type="radio" name="tipoRifiuto" value="nonConforme" class="form-selectgroup-input" checked>
-                                <span class="form-selectgroup-label">Respinto non conforme</span>
-                            </label>
-                            <label class="form-selectgroup-item">
-                                <input type="radio" name="tipoRifiuto" value="nonFunzionante" class="form-selectgroup-input">
-                                <span class="form-selectgroup-label">Respinto non funzionante</span>
-                            </label>
-                        </div>
-                        <div class="modal-footer">
-                            <div class="w-100">
-                                <div class="row">
-                                    <div class="col">
-                                        <button type="button" class="btn btn-3 w-100" data-bs-dismiss="modal">Cancella</button>
-                                    </div>
-                                    <div class="col">
-                                        <button type="submit" class="btn btn-danger btn-4 w-100">Rifiuta</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</#if>
-<#if accettato>
-    <button type="button" class="btn btn-primary" onclick="javascript:window.print();">
-        Stampa ordine
-    </button>
-</div>
-</#if>
 <!-- Page body -->
 <div class="page-body">
     <div class="container-xl">
+        <!-- Page header with buttons aligned to the right -->
+        <div class="row align-items-center mb-3">
+            <div class="col">
+                <h1>Dettaglio Ordine</h1>
+            </div>
+            <div class="col-auto d-print-none">
+                <#if showAccettaRifiutaButtons>
+                    <a href="dettaglioOrdine?action=accettaOrdine&n=${ordine.key}" class="btn btn-success">Accetta ordine</a>
+                    
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-danger">
+                        Rifiuta Ordine
+                    </button>
+                </#if>
+                
+                <#if accettato>
+                    <button type="button" class="btn btn-primary" onclick="javascript:window.print();">
+                        Stampa ordine
+                    </button>
+                </#if>
+            </div>
+        </div>
+
+        <!-- Modal Rifiuto Ordine -->
+        <div class="modal modal-blur fade" id="modal-danger" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <button type="button" class="btn-danger" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="modal-status bg-danger"></div>
+                    <div class="modal-body text-center py-4">
+                        <h3>Vuoi davvero rifiutare l'ordine?</h3>
+                        <form action="dettaglioOrdine" method="get">
+                            <input type="hidden" name="action" value="rifiutaOrdine">
+                            <input type="hidden" name="n" value="${ordine.key}">
+                            <div class="form-selectgroup">
+                                <label class="form-selectgroup-item">
+                                    <input type="radio" name="tipoRifiuto" value="nonConforme" class="form-selectgroup-input" checked>
+                                    <span class="form-selectgroup-label">Respinto non conforme</span>
+                                </label>
+                                <label class="form-selectgroup-item">
+                                    <input type="radio" name="tipoRifiuto" value="nonFunzionante" class="form-selectgroup-input">
+                                    <span class="form-selectgroup-label">Respinto non funzionante</span>
+                                </label>
+                            </div>
+                            <div class="modal-footer">
+                                <div class="w-100">
+                                    <div class="row">
+                                        <div class="col">
+                                            <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">Cancella</button>
+                                        </div>
+                                        <div class="col">
+                                            <button type="submit" class="btn btn-danger w-100">Rifiuta</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Ordine -->
         <div class="card card-lg">
             <div class="card-body">
                 <div class="row">
@@ -80,20 +89,20 @@
                         </tr>
                     </thead>
                     <tbody>
-                            <tr>
-                                <td class="text-center">Dettaglio ordine</td>
-                                <td>
-                                    <p class="strong mb-1">${ordine.proposta.prodotto}</p>
-                                    <div class="text-secondary">${ordine.proposta.produttore}</div>
-                                </td>
-                                <td class="text-center">${ordine.proposta.richiesta.categoria.nome}</td>
-                                <td class="text-end">${ordine.proposta.data?string("dd/MM/yyyy")}</td>
-                                <td class="text-end">${ordine.proposta.codiceProdotto}</td>
-                                <td class="text-end">
-                                    <a href="${ordine.proposta.url}" target="_blank">Visualizza</a>
-                                </td>
-                                <td class="text-end">${ordine.proposta.prezzo}</td>
-                            </tr>
+                        <tr>
+                            <td class="text-center">Dettaglio ordine</td>
+                            <td>
+                                <p class="strong mb-1">${ordine.proposta.prodotto}</p>
+                                <div class="text-secondary">${ordine.proposta.produttore}</div>
+                            </td>
+                            <td class="text-center">${ordine.proposta.richiesta.categoria.nome}</td>
+                            <td class="text-end">${ordine.proposta.data?string("dd/MM/yyyy")}</td>
+                            <td class="text-end">${ordine.proposta.codiceProdotto}</td>
+                            <td class="text-end">
+                                <a href="${ordine.proposta.url}" target="_blank">Visualizza</a>
+                            </td>
+                            <td class="text-end">${ordine.proposta.prezzo}</td>
+                        </tr>
                     </tbody>
                 </table>
                 <p class="text-secondary text-center mt-5">

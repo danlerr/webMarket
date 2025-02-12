@@ -58,14 +58,14 @@ public class DettaglioRichiesta extends BaseController {
         request.setAttribute("showPrendiInCaricoButton", false);
     }
 
-    
+    //BISOGNA VEDERE QUESTA PARTE PERCHE NON SEMPRE COMPARE IL BOTTONE COMPILA PROPOSTA
     if (utente.getTipologiaUtente().equals(TipologiaUtente.TECNICO)
-            && richiesta.getTecnico() != null
-            && richiesta.getTecnico().getId() == user) {
+        && richiesta.getTecnico() != null
+        && richiesta.getTecnico().getId() == user) {
 
-                boolean canCompile = ((ApplicationDataLayer) request.getAttribute("datalayer"))
-                .getRichiestaOrdineDAO()
-                .checkCompile(richiestaId);
+        boolean canCompile = ((ApplicationDataLayer) request.getAttribute("datalayer"))
+        .getRichiestaOrdineDAO().checkCompile(richiestaId);
+        
         if (canCompile) {
             // Imposta un flag a true, in modo da mostrarlo in Freemarker
             request.setAttribute("showCompilaPropostaButton", true);
