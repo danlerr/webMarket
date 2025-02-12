@@ -89,8 +89,8 @@ public class RichiestaDAO_MySQL extends DAO implements RichiestaDAO {
             // Prepariamo la query che conta quante proposte non rifiutate esistono per una certa richiesta
             sCheckCompile = connection.prepareStatement(
                 "SELECT COUNT(*) AS cnt "+
-                "FROM proposta"+ 
-                "WHERE richiesta_id = ?"+
+                "FROM proposta "+ 
+                "WHERE richiesta_id = ? "+
                 "AND stato <> 'RIFIUTATO'"
             );
 

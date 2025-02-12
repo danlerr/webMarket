@@ -1,4 +1,4 @@
--rating tecnico, e numero interventi
+
 -proposte(tutto)
 -bottone compila proposta(non compare sempre, quando deve comparire)
 -recensione tecnico
@@ -8,7 +8,7 @@
 -gestione errori nel login (quando non metto pass mi da pagina bianca)[basta fare un controllo nella servlet]
 -footer fisso in basso 
 -mail
-
+-campi nulli in creaRichiesta
 
 -pulizia progetto (file inutili css e js in caso ci siano)
 -pulizia codice 
