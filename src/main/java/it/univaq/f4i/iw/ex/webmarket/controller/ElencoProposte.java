@@ -33,11 +33,11 @@ public class ElencoProposte extends BaseController {
             request.setAttribute("proposte", proposte);
         }else{
             // Per il tecnico, recupera le proposte effettuate.
-            request.setAttribute("ordini", ((ApplicationDataLayer) request.getAttribute("datalayer")).getPropostaDAO().getProposteByTecnico(user));
+            request.setAttribute("proposte", ((ApplicationDataLayer) request.getAttribute("datalayer")).getPropostaDAO().getProposteByTecnico(user));
         }
 
 
-        result.activate("proposte.ftl.html", request, response);
+        result.activate("leMieproposte.ftl.html", request, response);
     }
 
     @Override
@@ -50,16 +50,17 @@ public class ElencoProposte extends BaseController {
             return;
         }
 
-        // Recupero l'ID del tecnico dalla sessione
+        // Recupero l'ID dalla sessione
         int userId = (int) session.getAttribute("userid");
         
-        //ho aggiunto id perchè dobbiamo filtrare le richieste che ha fatto l'utente interessato
+        //ho aggiunto id perchè dobbiamo filtrare le proposte che ha fatto/ ricevuto l'utente interessato
         action_default(request, response, userId);
 
     } catch (IOException | TemplateManagerException ex) {
         handleError(ex, request, response);
     }    catch (DataException ex) {
-            Logger.getLogger(ElencoRichieste.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ElencoProposte.class.getName()).log(Level.SEVERE, null, ex);
+
         }
     }
 

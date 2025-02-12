@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-    <title>${titolo_pagina}</title>
+    <title>Le mie Proposte</title>
 
     <link rel="icon" href="./favicon.ico" type="image/x-icon"/>
     <link rel="stylesheet" href="./dist/css/tabler.min.css"/>
@@ -22,7 +22,7 @@
         <div class="container-xl">
             <div class="row g-2 align-items-center">
                 <div class="col">
-                    <h1>${titolo_richiesta}</h1>
+                    <h1>Proposta ${proposta.codice}</h1>
                 </div>
                 <div class="col-auto ms-auto d-print-none">
                     <button type="button" class="btn btn-success" onclick="javascript:window.print();">Accetta</button>
@@ -40,17 +40,17 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-6">
-                            <p class="h3">Richiesta ${richiesta_id}</p>
-                            <p>${descrizione_richiesta}</p>
+                            <p class="h3">Richiesta ${proposta.getRichiesta.codice}</p>
+                            <p>${proposta.getRichiesta.note}</p>
                         </div>
                         <div class="col-6 text-end">
                             <p class="h3">Presa in carico</p>
-                            <p>${utente_prenotatore}</p>
+                            <p>${proposta.getTecnico.getUsername}</p> !!!!!!!!!!!!!!!
                         </div>
                     </div>
 
                     <div class="col-12 my-5">
-                        <h1>Proposta ${proposta_id}</h1>
+                        <h1>Proposta ${proposta.codice}</h1>
                     </div>
 
                     <table class="table table-transparent table-responsive">
@@ -66,17 +66,17 @@
                         <tr>
                             <td class="text-center"></td>
                             <td>
-                                <p class="strong mb-1">${prodotto_nome}</p>
-                                <div class="text-secondary"><a href="${prodotto_link}">${prodotto_link}</a></div>
+                                <p class="strong mb-1">${proposta.prodotto}</p>
+                                <div class="text-secondary"><a href="${prodotto_link}">${proposta.url}</a></div>
                             </td>
-                            <td class="text-center">${prodotto_marca}</td>
-                            <td class="text-end">${prodotto_codice}</td>
-                            <td class="text-end">€${prodotto_prezzo}</td>
+                            <td class="text-center">${proposta.produttore}</td>
+                            <td class="text-end">${proposta.codiceProdotto}</td>
+                            <td class="text-end">€${proposta.prezzo}</td>
                         </tr>
                     </table>
 
                     <div class="text-end mt-4">
-                        <p>${prodotto_descrizione}</p>
+                        <p>${proposta.note!'Nessuna nota inserita'}</p>
                     </div>
                 </div>
             </div>
