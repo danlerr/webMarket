@@ -108,6 +108,7 @@ public class DettaglioRichiesta extends BaseController {
         // il che farà apparire la richiesta nella lista
         // delle "richieste prese in carico".
         richiesta.setStato(StatoRichiesta.PRESA_IN_CARICO);
+        richiesta.setTecnico(utente);
 
         // Salva l'aggiornamento nel database
         ((ApplicationDataLayer) request.getAttribute("datalayer"))
