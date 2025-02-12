@@ -139,9 +139,7 @@ public class RichiestaImpl extends DataItemImpl<Integer> implements Richiesta {
     
     @Override
     public void setTecnico(Utente tecnico) {
-        if (tecnico == null) {
-            throw new IllegalArgumentException("L'utente tecnico non può essere nullo.");
-        }
+        
         this.tecnico = tecnico;
     }
 

@@ -1,0 +1,114 @@
+<!-- Page body -->
+<div class="page-body">
+    <div class="container-xl">
+        <!-- Page header with buttons aligned to the right -->
+        <div class="row align-items-center mb-3">
+            <div class="col">
+                <h1>Dettaglio Ordine</h1>
+            </div>
+            <div class="col-auto d-print-none">
+                <#if showAccettaRifiutaButtons>
+                    <a href="dettaglioOrdine?action=accettaOrdine&n=${ordine.key}" class="btn btn-success">Accetta ordine</a>
+                    
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-danger">
+                        Rifiuta Ordine
+                    </button>
+                </#if>
+                
+                <#if accettato>
+                    <button type="button" class="btn btn-primary" onclick="javascript:window.print();">
+                        Stampa ordine
+                    </button>
+                </#if>
+            </div>
+        </div>
+
+        <!-- Modal Rifiuto Ordine -->
+        <div class="modal modal-blur fade" id="modal-danger" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <button type="button" class="btn-danger" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="modal-status bg-danger"></div>
+                    <div class="modal-body text-center py-4">
+                        <h3>Vuoi davvero rifiutare l'ordine?</h3>
+                        <form action="dettaglioOrdine" method="get">
+                            <input type="hidden" name="action" value="rifiutaOrdine">
+                            <input type="hidden" name="n" value="${ordine.key}">
+                            <div class="form-selectgroup">
+                                <label class="form-selectgroup-item">
+                                    <input type="radio" name="tipoRifiuto" value="nonConforme" class="form-selectgroup-input" checked>
+                                    <span class="form-selectgroup-label">Respinto non conforme</span>
+                                </label>
+                                <label class="form-selectgroup-item">
+                                    <input type="radio" name="tipoRifiuto" value="nonFunzionante" class="form-selectgroup-input">
+                                    <span class="form-selectgroup-label">Respinto non funzionante</span>
+                                </label>
+                            </div>
+                            <div class="modal-footer">
+                                <div class="w-100">
+                                    <div class="row">
+                                        <div class="col">
+                                            <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">Cancella</button>
+                                        </div>
+                                        <div class="col">
+                                            <button type="submit" class="btn btn-danger w-100">Rifiuta</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Ordine -->
+        <div class="card card-lg">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6">
+                        <p class="h3">Ordinante: ${ordinante.username}</p>
+                    </div>
+                    <div class="col-6 text-end">
+                        <p class="h3">Tecnico: ${tecnico.username}</p>
+                    </div>
+                    <div class="col-12 my-5">
+                        <h1>Numero proposta: ${ordine.proposta.codice}</h1>
+                    </div>
+                </div>
+                <table class="table table-transparent table-responsive">
+                    <thead>
+                        <tr>
+                            <th class="text-center" style="width: 1%"></th>
+                            <th>Prodotto</th>
+                            <th class="text-center" style="width: 1%">Categoria</th>
+                            <th class="text-end" style="width: 1%">Data</th>
+                            <th class="text-end" style="width: 1%">Codice prodotto</th>
+                            <th class="text-end" style="width: 1%">URL</th>
+                            <th class="text-end" style="width: 1%">Prezzo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-center">Dettaglio ordine</td>
+                            <td>
+                                <p class="strong mb-1">${ordine.proposta.prodotto}</p>
+                                <div class="text-secondary">${ordine.proposta.produttore}</div>
+                            </td>
+                            <td class="text-center">${ordine.proposta.richiesta.categoria.nome}</td>
+                            <td class="text-end">${ordine.proposta.data?string("dd/MM/yyyy")}</td>
+                            <td class="text-end">${ordine.proposta.codiceProdotto}</td>
+                            <td class="text-end">
+                                <a href="${ordine.proposta.url}" target="_blank">Visualizza</a>
+                            </td>
+                            <td class="text-end">${ordine.proposta.prezzo}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="text-secondary text-center mt-5">
+                    Grazie per aver creduto nella mia proposta! Spero che l'ordine venga concluso con successo.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

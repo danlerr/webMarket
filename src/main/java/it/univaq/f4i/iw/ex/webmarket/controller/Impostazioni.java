@@ -84,7 +84,7 @@ public class Impostazioni extends BaseController {
         }
         
         int userId = (int) session.getAttribute("userid");
-         Utente u = ((ApplicationDataLayer) request.getAttribute("datalayer")).getUtenteDAO().getUtente(userId);
+        Utente u = ((ApplicationDataLayer) request.getAttribute("datalayer")).getUtenteDAO().getUtente(userId);
 
         String action = request.getParameter("action");
         if (action != null && action.equals("updatePassword")){

@@ -10,14 +10,10 @@ import it.univaq.f4i.iw.framework.data.DAO;
 import it.univaq.f4i.iw.framework.data.DataException;
 import it.univaq.f4i.iw.framework.data.DataLayer;
 import it.univaq.f4i.iw.framework.data.OptimisticLockException;
-
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-//import java.util.ArrayList;
-//import java.util.List;
-
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -64,7 +60,7 @@ public class PropostaDAO_MySQL extends DAO implements PropostaDAO {
                 "SELECT p.* FROM proposta p JOIN richiesta r ON p.richiesta_id = r.id WHERE r.tecnico = ? ORDER BY CASE WHEN (p.stato = 'ACCETTATO') THEN 1 ELSE 2 END"
                 );
                 sProposteByRichiesta = connection.prepareStatement(
-                "SELECT * FROM proposta_acquisto WHERE richiesta_id = ?"
+                "SELECT * FROM proposta WHERE richiesta_id = ?"
                 );
                 
 
@@ -250,7 +246,7 @@ public class PropostaDAO_MySQL extends DAO implements PropostaDAO {
      * @throws DataException se si verifica un errore durante il recupero
      */
     @Override
-    public List<Proposta> getProposteAcquistoByRichiesta(int richiesta_id) throws DataException {
+    public List<Proposta> getProposteByRichiesta(int richiesta_id) throws DataException {
         List<Proposta> proposte = new ArrayList<>();
         try {
             sProposteByRichiesta.setInt(1, richiesta_id);

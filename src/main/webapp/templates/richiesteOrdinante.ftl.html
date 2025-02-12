@@ -19,7 +19,8 @@
       
       
       
-    
+      <div id="notification-container"></div>
+
       <div class="col-12">
         <div class="card">
           <div class="table-responsive">
@@ -94,7 +95,7 @@
                     <!--  link a pagina di dettaglio -->
                     <td class="text-end">
                       <span class="dropdown">
-                        <a href="dettaglioRichiesta?id=${r.id}" class="btn btn-light active">Visualizza</a>
+                        <a href="dettaglioRichiesta?n=${r.key}" class="btn btn-light active">Visualizza</a>
                       </span>
                     </td>
                   </tr>
@@ -116,3 +117,4 @@
     </div>
   </div>
 </div>
+<script src="scripts/notifications.js"></script>

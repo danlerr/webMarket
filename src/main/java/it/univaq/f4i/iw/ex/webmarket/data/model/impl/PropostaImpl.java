@@ -173,7 +173,7 @@ public class PropostaImpl extends DataItemImpl<Integer> implements Proposta {
     }
     @Override
     public String toString() {
-        return "PropostaAcquistoImpl{" +
+        return "PropostaImpl{" +
                 "id=" + this.getKey() +
                 ", produttore='" + produttore + '\'' +
                 ", prodotto='" + prodotto + '\'' +

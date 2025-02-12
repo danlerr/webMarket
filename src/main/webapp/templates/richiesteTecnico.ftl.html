@@ -33,11 +33,11 @@
                         ${r.categoria.nome}
                       </td>
                       <td class="text-center">
-                        ${r.ordinante.getUsername()} 
+                        ${r.ordinante.username} 
                       </td>
                       <td class="text-center">
                         <#if r.tecnico??>
-                          ${r.tecnico.getUsername()} 
+                          ${r.tecnico.username} 
                         <#else>
                           Nessun tecnico assegnato
                         </#if>
@@ -62,7 +62,7 @@
                       </td>
                       
                       <td class="text-end">
-                        <a href="dettaglioRichiesta?id=${r.id}" class="btn btn-light active">Visualizza</a>
+                        <a href="dettaglioRichiesta?n=${r.key}" class="btn btn-light active">Visualizza</a>
                       </td>
                     </tr>
                   </#list>
@@ -94,11 +94,11 @@
                         ${r.categoria.nome}
                       </td>
                       <td class="text-center">
-                        ${r.ordinante.getUsername()} 
+                        ${r.ordinante.username} 
                       </td>
                       <td class="text-center">
                         <#if r.tecnico??>
-                          ${r.tecnico.getUsername()} 
+                          ${r.tecnico.username}
                         <#else>
                           Nessun tecnico assegnato
                         </#if>
@@ -121,7 +121,7 @@
                       </td>
                       
                       <td class="text-end">
-                        <a href="dettaglioRichiesta?id=${r.id}" class="btn btn-light active">Visualizza</a>
+                        <a href="dettaglioRichiesta?n=${r.key}" class="btn btn-light active">Visualizza</a>
                       </td>
                     </tr>
                   </#list>
@@ -204,7 +204,7 @@
                       </td>
                       
                       <td class="text-end">
-                        <a href="dettaglioRichiesta?id=${r.id}" class="btn btn-light active">Visualizza</a>
+                        <a href="dettaglioRichiesta?n=${r.key}" class="btn btn-light active">Visualizza</a>
                       </td>
                     </tr>
                   </#list>

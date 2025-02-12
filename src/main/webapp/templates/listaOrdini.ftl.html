@@ -1,0 +1,50 @@
+<!-- Page body -->
+<div class="page-body">
+    <div class="container-xl">
+        <div class="card">
+            <div class="card-body">
+                <#if ordini?size == 0>
+                    <p class="text-center text-muted">Nessun ordine disponibile</p>
+                <#else>
+                    <div class="accordion" id="accordion-example">
+                        <#list ordini as ordine>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="heading-${ordine?index}">
+                                    <button class="accordion-button d-flex align-items-center" 
+                                            type="button" data-bs-toggle="collapse" 
+                                            data-bs-target="#collapse-${ordine?index}" 
+                                            aria-expanded="true" aria-controls="collapse-${ordine?index}">
+                                        <span>Ordine della proposta: ${ordine.proposta.codice}</span>
+                                        <span class="d-flex align-items-center ms-3">
+                                            <#if ordine.stato?string == "ACCETTATO">
+                                                <span class="badge bg-success me-1"></span>Accettato
+                                            <#elseif ordine.stato?string == "IN_ATTESA">
+                                                <span class="badge bg-warning me-1"></span>In attesa
+                                            <#elseif ordine.stato?string == "RESPINTO_NON_CONFORME">
+                                                <span class="badge bg-orange me-1"></span>Respinto non conforme
+                                            <#elseif ordine.stato?string == "RESPINTO_NON_FUNZIONANTE">
+                                                <span class="badge bg-danger me-1"></span>Respinto non funzionante
+                                            <#elseif ordine.stato?string == "RIFIUTATO">
+                                                <span class="badge bg-secondary me-1"></span>Rifiutato
+                                            </#if>
+                                        </span>
+                                    </button>
+                                </h2>
+                                <div id="collapse-${ordine?index}" class="accordion-collapse collapse show" 
+                                     data-bs-parent="#accordion-example">
+                                    <div class="accordion-body pt-0">
+                                        <a href="dettaglioOrdine?n=${ordine.key}" class="btn btn-ghost-cyan me-2">Dettagli ordine</a>
+                                        <a href="dettaglioProposta?n=${ordine.proposta}" class="btn btn-ghost-cyan me-2">Vai alla proposta</a>
+                                        <a href="dettaglioRichiesta?n=${ordine.proposta.richiesta.key}" class="btn btn-ghost-cyan me-2">Vai alla richiesta</a>
+                                        <a href="elencoOrdini?action=recensisciTecnico&n=${ordine.key}" class="btn btn-ghost-yellow me-2">Recensisci tecnico</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </#list>
+                    </div>
+                </#if>
+            </div>
+        </div>
+    </div>
+</div>
+	

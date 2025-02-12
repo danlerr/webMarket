@@ -67,7 +67,7 @@ public class RichiestaDAO_MySQL extends DAO implements RichiestaDAO {
                 "WHERE id=? AND version=?"
             );
             sRichiesteSenzaProposte = connection.prepareStatement(
-                "SELECT r.id, r.note, r.stato, r.data, r.codice_richiesta, r.ordinante, r.tecnico, r.categoria " +
+                "SELECT r.id, r.note, r.stato, r.data, r.codice_richiesta, r.ordinante, r.tecnico, r.categoria" +
                 "FROM richiesta r " +
                 "WHERE r.stato = ? AND r.tecnico = ? " +
                 "AND NOT EXISTS (SELECT 1 FROM proposta p WHERE p.richiesta_id = r.id) ORDER BY data ASC" 
@@ -86,12 +86,12 @@ public class RichiestaDAO_MySQL extends DAO implements RichiestaDAO {
             // PreparedStatement per recuperare le richieste in attesa 
             sRichiesteInAttesa = connection.prepareStatement("SELECT * FROM richiesta WHERE stato = ?");
             // Prepariamo la query che conta quante proposte non rifiutate esistono per una certa richiesta
-        sCheckCompile = connection.prepareStatement(
-            "SELECT COUNT(*) AS cnt "
-          + "FROM proposta "
-          + "WHERE richiesta_id = ? "
-          + "  AND stato <> 'RIFIUTATO'"
-        );
+            sCheckCompile = connection.prepareStatement(
+                "SELECT COUNT(*) AS cnt "+
+                "FROM proposta"+ 
+                "WHERE richiesta_id = ?"+
+                "AND stato <> 'RIFIUTATO'"
+            );
 
         } catch (SQLException ex) {
             throw new DataException("Errore durante l'inizializzazione del RichiestaDAO", ex);
@@ -169,11 +169,11 @@ public class RichiestaDAO_MySQL extends DAO implements RichiestaDAO {
             Utente tecnico = ((ApplicationDataLayer) getDataLayer()).getUtenteDAO().getUtente(tecnicoId);
             richiesta.setTecnico(tecnico);
 
-            int categoriaId = rs.getInt("categoria_id");
+            int categoriaId = rs.getInt("categoria");
             Categoria categoria = ((ApplicationDataLayer) getDataLayer()).getCategoriaDAO().getCategoria(categoriaId);
             richiesta.setCategoria(categoria);
 
-            int utenteId = rs.getInt("utente");
+            int utenteId = rs.getInt("ordinante");
             Utente utente = ((ApplicationDataLayer) getDataLayer()).getUtenteDAO().getUtente(utenteId);
             richiesta.setOrdinante(utente);
 
@@ -221,41 +221,55 @@ public class RichiestaDAO_MySQL extends DAO implements RichiestaDAO {
     public void storeRichiesta(Richiesta richiesta) throws DataException {
         try {
             if (richiesta.getKey() != null && richiesta.getKey() > 0) {
+                // UPDATE - Richiesta esistente
                 if (richiesta instanceof RichiestaProxy && !((RichiestaProxy) richiesta).isModified()) {
-                    return; // Nessuna modifica da salvare
+                    return; // Nessuna modifica
                 }
-
-                // Aggiornamento della Richiesta esistente
+    
                 uRichiesta.setString(1, richiesta.getNote());
                 uRichiesta.setString(2, richiesta.getStato().name());
                 uRichiesta.setDate(3, new java.sql.Date(richiesta.getData().getTime()));
                 uRichiesta.setString(4, richiesta.getCodiceRichiesta());
                 uRichiesta.setInt(5, richiesta.getOrdinante().getKey());
-                uRichiesta.setInt(6, richiesta.getTecnico().getKey());
+    
+                // Gestione del tecnico NULL (UPDATE)
+                if (richiesta.getTecnico() != null) {
+                    uRichiesta.setInt(6, richiesta.getTecnico().getKey());
+                } else {
+                    uRichiesta.setNull(6, java.sql.Types.INTEGER);
+                }
+    
                 uRichiesta.setInt(7, richiesta.getCategoria().getKey());
                 long oldVersion = richiesta.getVersion();
                 long newVersion = oldVersion + 1;
                 uRichiesta.setLong(8, newVersion);
                 uRichiesta.setInt(9, richiesta.getKey());
                 uRichiesta.setLong(10, oldVersion);
-
+    
                 int affectedRows = uRichiesta.executeUpdate();
                 if (affectedRows == 0) {
                     throw new OptimisticLockException(richiesta);
-                } else {
-                    richiesta.setVersion(newVersion);
                 }
+                richiesta.setVersion(newVersion);
+    
             } else {
-                // Inserimento di una nuova Richiesta
+                // INSERT - Nuova richiesta
                 iRichiesta.setString(1, richiesta.getNote());
                 iRichiesta.setString(2, richiesta.getStato().name());
                 iRichiesta.setDate(3, new java.sql.Date(richiesta.getData().getTime()));
                 iRichiesta.setString(4, richiesta.getCodiceRichiesta());
                 iRichiesta.setInt(5, richiesta.getOrdinante().getKey());
-                iRichiesta.setInt(6, richiesta.getTecnico().getKey());
+    
+                // Gestione del tecnico NULL (INSERT)
+                if (richiesta.getTecnico() != null) {
+                    iRichiesta.setInt(6, richiesta.getTecnico().getKey());
+                } else {
+                    iRichiesta.setNull(6, java.sql.Types.INTEGER);
+                }
+    
                 iRichiesta.setInt(7, richiesta.getCategoria().getKey());
-                iRichiesta.setLong(8, 1L); // Version iniziale
-
+                iRichiesta.setLong(8, 1L); // Versione iniziale
+    
                 if (iRichiesta.executeUpdate() == 1) {
                     try (ResultSet keys = iRichiesta.getGeneratedKeys()) {
                         if (keys.next()) {
@@ -266,7 +280,7 @@ public class RichiestaDAO_MySQL extends DAO implements RichiestaDAO {
                     }
                 }
             }
-
+    
             if (richiesta instanceof DataItemProxy) {
                 ((DataItemProxy) richiesta).setModified(false);
             }
@@ -284,7 +298,7 @@ public class RichiestaDAO_MySQL extends DAO implements RichiestaDAO {
             sRichiesteByUtente.setInt(1, utente_key);
             try (ResultSet rs = sRichiesteByUtente.executeQuery()) {
                 while (rs.next()) {
-                    result.add(getRichiesta(rs.getInt("ID")));
+                    result.add(getRichiesta(rs.getInt("id")));
                 }
             }
         } catch (SQLException ex) {
@@ -301,7 +315,7 @@ public class RichiestaDAO_MySQL extends DAO implements RichiestaDAO {
             sRichiestePreseInCaricoConProposteByTecnico.setInt(2, tecnico_key);
             try (ResultSet rs = sRichiestePreseInCaricoConProposteByTecnico.executeQuery()) {
                 while (rs.next()) {
-                    result.add(getRichiesta(rs.getInt("ID")));
+                    result.add(getRichiesta(rs.getInt("id")));
                 }
             }
         } catch (SQLException ex) {
@@ -323,7 +337,7 @@ public class RichiestaDAO_MySQL extends DAO implements RichiestaDAO {
             sRichiesteInAttesa.setString(1, StatoRichiesta.IN_ATTESA.name());
             try (ResultSet rs = sRichiesteInAttesa.executeQuery()) {
                 while (rs.next()) {
-                    result.add(getRichiesta(rs.getInt("ID")));
+                    result.add(getRichiesta(rs.getInt("id")));
                 }
             }
         } catch (SQLException ex) {
@@ -347,7 +361,7 @@ public class RichiestaDAO_MySQL extends DAO implements RichiestaDAO {
             sRichiesteSenzaProposte.setInt(2, tecnico_key);
             try (ResultSet rs = sRichiesteSenzaProposte.executeQuery()) {
                 while (rs.next()) {
-                    result.add(getRichiesta(rs.getInt("ID")));
+                    result.add(getRichiesta(rs.getInt("id")));
                 }
             }
         } catch (SQLException ex) {
@@ -366,7 +380,7 @@ public class RichiestaDAO_MySQL extends DAO implements RichiestaDAO {
     @Override
     public void deleteRichiestaOrdine(int richiesta_key) throws DataException {
       try {
-        PreparedStatement dRichiestaOrdine = connection.prepareStatement("DELETE FROM richiesta_ordine WHERE ID=?");
+        PreparedStatement dRichiestaOrdine = connection.prepareStatement("DELETE FROM richiesta_ordine WHERE id=?");
         dRichiestaOrdine.setInt(1, richiesta_key);
         dRichiestaOrdine.executeUpdate();
         dataLayer.getCache().delete(Richiesta.class, richiesta_key); 

@@ -1,10 +1,11 @@
 package it.univaq.f4i.iw.ex.webmarket.controller;
 
 import it.univaq.f4i.iw.ex.webmarket.data.dao.impl.ApplicationDataLayer;
-import it.univaq.f4i.iw.ex.webmarket.data.model.Ordine;
+
 import it.univaq.f4i.iw.ex.webmarket.data.model.Proposta;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Richiesta;
 import it.univaq.f4i.iw.ex.webmarket.data.model.StatoRichiesta;
+import it.univaq.f4i.iw.ex.webmarket.data.model.TipologiaUtente;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Utente;
 import it.univaq.f4i.iw.ex.webmarket.data.model.CaratteristicaRichiesta;
 import it.univaq.f4i.iw.framework.data.DataException;
@@ -13,10 +14,8 @@ import it.univaq.f4i.iw.framework.result.TemplateResult;
 import it.univaq.f4i.iw.framework.security.SecurityHelpers;
 import java.io.IOException;
 import java.util.List;
-import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.mail.Session;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -41,10 +40,10 @@ public class DettaglioRichiesta extends BaseController {
     List<CaratteristicaRichiesta> CaratteristicheRichiesta = ((ApplicationDataLayer) request.getAttribute("datalayer"))
             .getCaratteristicaRichiestaDAO().getCaratteristicheRichiestaByRichiesta(richiestaId);
     request.setAttribute("CaratteristicheRichiesta", CaratteristicheRichiesta);
-    //recupera tutte le caratteristiche della richiesta
+    
       // Recupera la lista delle proposte per la richiesta
-      List<Proposta> proposte = ((ApplicationDataLayer) request.getAttribute("datalayer"))
-      .getPropostaDAO().getProposteAcquistoByRichiesta(richiestaId);
+    List<Proposta> proposte = ((ApplicationDataLayer) request.getAttribute("datalayer"))
+      .getPropostaDAO().getProposteByRichiesta(richiestaId);
     request.setAttribute("proposte", proposte);
     // Recupera l'utente loggato
     Utente utente = ((ApplicationDataLayer) request.getAttribute("datalayer"))
@@ -53,31 +52,28 @@ public class DettaglioRichiesta extends BaseController {
 
     // Se l'utente è un tecnico e la richiesta è nello stato IN_ATTESA,
     // imposta un attributo per far visualizzare il bottone "prendi in carico" nel template.
-    if (utente.getTipologiaUtente().equals("TECNICO") && richiesta.getStato() == StatoRichiesta.IN_ATTESA) {
+    if (utente.getTipologiaUtente().equals(TipologiaUtente.TECNICO) && richiesta.getStato() == StatoRichiesta.IN_ATTESA) {
         request.setAttribute("showPrendiInCaricoButton", true);
     } else {
         request.setAttribute("showPrendiInCaricoButton", false);
     }
 
-    
-if (utente.getTipologiaUtente().equals("TECNICO")
+    //BISOGNA VEDERE QUESTA PARTE PERCHE NON SEMPRE COMPARE IL BOTTONE COMPILA PROPOSTA
+    if (utente.getTipologiaUtente().equals(TipologiaUtente.TECNICO)
         && richiesta.getTecnico() != null
         && richiesta.getTecnico().getId() == user) {
 
-            boolean canCompile = ((ApplicationDataLayer) request.getAttribute("datalayer"))
-            .getRichiestaOrdineDAO()
-            .checkCompile(richiestaId);
-    if (canCompile) {
-        // Imposta un flag a true, in modo da mostrarlo in Freemarker
-        request.setAttribute("showCompilaPropostaButton", true);
-    } else {
-        request.setAttribute("showCompilaPropostaButton", false);
+        boolean canCompile = ((ApplicationDataLayer) request.getAttribute("datalayer"))
+        .getRichiestaOrdineDAO().checkCompile(richiestaId);
+        
+        if (canCompile) {
+            // Imposta un flag a true, in modo da mostrarlo in Freemarker
+            request.setAttribute("showCompilaPropostaButton", true);
+        } else {
+            request.setAttribute("showCompilaPropostaButton", false);
+        }
+        
     }
-    
-}
-
-
-
     res.activate("dettaglioRichiesta.ftl.html", request, response);
 }
 
@@ -95,9 +91,9 @@ if (utente.getTipologiaUtente().equals("TECNICO")
                 .getUtenteDAO().getUtente(user);
 
         // Controlla che l'utente sia un tecnico
-        if (!utente.getTipologiaUtente().equals("TECNICO")) {
+        if (!utente.getTipologiaUtente().equals(TipologiaUtente.TECNICO)) {
             // Se non è un tecnico, reindirizza con un messaggio di errore
-            response.sendRedirect("ElencoRichieste?error=Solo+il+tecnico+puo+prendere+in+carico+le+richieste");
+            response.sendRedirect("elencoRichieste?error=Solo+il+tecnico+puo+prendere+in+carico+le+richieste");
             return;
         }
 
@@ -111,12 +107,12 @@ if (utente.getTipologiaUtente().equals("TECNICO")
         // Aggiorna lo stato della richiesta: in questo caso lo impostiamo a IN_ATTESA,
         // il che farà apparire la richiesta nella lista
         // delle "richieste prese in carico".
-        richiesta.setStato(StatoRichiesta.IN_ATTESA);
+        richiesta.setStato(StatoRichiesta.PRESA_IN_CARICO);
 
         // Salva l'aggiornamento nel database
         ((ApplicationDataLayer) request.getAttribute("datalayer"))
                 .getRichiestaOrdineDAO().storeRichiesta(richiesta);
-         Utente ordinante = richiesta.getOrdinante();
+        Utente ordinante = richiesta.getOrdinante();
     if (ordinante != null && ordinante.getEmail() != null) {
         Session emailSession = EmailSender.getEmailSession();
 
@@ -132,7 +128,7 @@ if (utente.getTipologiaUtente().equals("TECNICO")
         EmailSender.sendEmail(emailSession, ordinante.getEmail(), subject, body);
     }
         // Reindirizza l'utente alla pagina delle richieste
-        response.sendRedirect("ElencoRichieste");
+        response.sendRedirect("elencoRichieste");
     }
 
     @Override
