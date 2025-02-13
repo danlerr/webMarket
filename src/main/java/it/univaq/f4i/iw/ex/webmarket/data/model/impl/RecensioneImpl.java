@@ -6,6 +6,7 @@ import it.univaq.f4i.iw.framework.data.DataItemImpl;
 
 
 public class RecensioneImpl extends DataItemImpl<Integer> implements Recensione {
+    private int id;
 
     private int valore;
     private Utente autore;
@@ -31,13 +32,12 @@ public class RecensioneImpl extends DataItemImpl<Integer> implements Recensione 
     
     @Override
     public int getId() {
-        return getKey(); 
+        return id;
     }
 
-    
     @Override
     public void setId(int id) {
-        setKey(id); 
+        this.id = id;
     }
 
     
