@@ -36,7 +36,11 @@
                                         <a href="dettaglioOrdine?n=${ordine.key}" class="btn btn-ghost-cyan me-2">Dettagli ordine</a>
                                         <a href="dettaglioProposta?n=${ordine.proposta}" class="btn btn-ghost-cyan me-2">Vai alla proposta</a>
                                         <a href="dettaglioRichiesta?n=${ordine.proposta.richiesta.key}" class="btn btn-ghost-cyan me-2">Vai alla richiesta</a>
-                                        <a href="elencoOrdini?action=recensisciTecnico&n=${ordine.key}" class="btn btn-ghost-yellow me-2">Recensisci tecnico</a>
+                                        <#if isOrdinante?? && isOrdinante && recensisciFlags[ordine.key?string]?has_content && recensisciFlags[ordine.key?string]>
+                                            <a href="elencoOrdini?action=recensisciTecnico&n=${ordine.key}" class="btn btn-ghost-yellow me-2">Recensisci tecnico</a>
+                                        </#if>
+
+
                                     </div>
                                 </div>
                             </div>
