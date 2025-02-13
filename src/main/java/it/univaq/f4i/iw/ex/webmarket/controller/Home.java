@@ -48,20 +48,18 @@ request.setAttribute("medieTecnici", medieTecnici);  // Passiamo la nuova mappa
             String numeroProposte = String.valueOf(datalayer.getPropostaDAO().getProposteByTecnico(tecnico.getId()).size());
             interventiTecnici.put(String.valueOf(tecnico.getId()), numeroProposte); 
         }
-
-        System.out.println(interventiTecnici); // Debug per controllare i dati
         request.setAttribute("interventiTecnici", interventiTecnici);
 
         //notifiche per richieste
 
         //notifiche per proposte
-        //boolean proposte = ((ApplicationDataLayer) request.getAttribute("datalayer")).getPropostaDAO().notificaProposteOrd(userId);
-        //System.out.println(proposte);
-        //request.setAttribute("proposte", proposte);
+        boolean proposte = ((ApplicationDataLayer) request.getAttribute("datalayer")).getPropostaDAO().notificaProposteOrd(userId);
+
+        request.setAttribute("proposte", proposte);
         
         //notifiche per ordini 
-        //boolean ordini = ((ApplicationDataLayer) request.getAttribute("datalayer")).getOrdineDAO().notificaOrdineOrd(userId);
-        //request.setAttribute("ordini", ordini);
+        boolean ordini = ((ApplicationDataLayer) request.getAttribute("datalayer")).getOrdineDAO().notificaOrdineOrd(userId);
+        request.setAttribute("ordini", ordini);
 
         r.activate("home.ftl.html", request, response);
     }
