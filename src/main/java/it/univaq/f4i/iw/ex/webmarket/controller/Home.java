@@ -53,13 +53,13 @@ request.setAttribute("medieTecnici", medieTecnici);  // Passiamo la nuova mappa
         //notifiche per richieste
 
         //notifiche per proposte
-        boolean proposte = ((ApplicationDataLayer) request.getAttribute("datalayer")).getPropostaDAO().notificaProposteOrd(userId);
+        //boolean proposte = ((ApplicationDataLayer) request.getAttribute("datalayer")).getPropostaDAO().notificaProposteOrd(userId);
 
-        request.setAttribute("proposte", proposte);
+        //request.setAttribute("proposte", proposte);
         
         //notifiche per ordini 
-        boolean ordini = ((ApplicationDataLayer) request.getAttribute("datalayer")).getOrdineDAO().notificaOrdineOrd(userId);
-        request.setAttribute("ordini", ordini);
+        //boolean ordini = ((ApplicationDataLayer) request.getAttribute("datalayer")).getOrdineDAO().notificaOrdineOrd(userId);
+        //request.setAttribute("ordini", ordini);
 
         r.activate("home.ftl.html", request, response);
     }

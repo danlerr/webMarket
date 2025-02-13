@@ -2,11 +2,8 @@
 -proposte(tutto)
 -recensione tecnico
 -notifiche
--error.tpl
--showPassword nel login
--gestione errori nel login (quando non metto pass mi da pagina bianca)[basta fare un controllo nella servlet]
--footer fisso in basso 
 -mail
+
 
 -pulizia progetto (file inutili css e js in caso ci siano)
 -pulizia codice 
