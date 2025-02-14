@@ -6,25 +6,34 @@
                     <img src="images/A New Way To Shop Online-3.svg" alt="Logo" class="img-fluid">
                 </div>
                 <div class="d-flex justify-content-center w-100 w-md-50">
-                    <div class="text-center mx-3">
-                        <a href="elencoRichieste" class="btn btn-light custom-btn-large mx-2">
+                    <div class="text-center mx-3 position-relative">
+                        <a href="elencoRichieste" class="btn btn-light custom-btn-large mx-2 position-relative notifica-btn" data-tipo="richieste">
                             <img src="images/richiesta.png" class="img-fluid" style="max-width: 40px;">
+                            <#if richieste?? && richieste>
+                                <span class="pallino notifica-richieste"></span>
+                            </#if>
                         </a>
                         <div class="mt-1">Richieste</div>
-                        <!--notifiche da aggiugnere ai bottoni-->
                     </div>
-                    <div class="text-center mx-3">
-                        <a href="elencoProposte" class="btn btn-light custom-btn-large mx-2">
+                    <div class="text-center mx-3 position-relative">
+                        <a href="elencoProposte" class="btn btn-light custom-btn-large mx-2 position-relative notifica-btn" data-tipo="proposte">
                             <img src="images/proposta.png" class="img-fluid" style="max-width: 40px;">
+                            <#if (proposteOrd?? && proposteOrd) || (proposteTec?? && proposteTec)>
+                                <span class="pallino notifica-proposte"></span>
+                            </#if>
                         </a>
                         <div class="mt-1">Proposte</div>
                     </div>
-                    <div class="text-center mx-3">
-                        <a href="elencoOrdini" class="btn btn-light custom-btn-large mx-2">
+                    <div class="text-center mx-3 position-relative">
+                        <a href="elencoOrdini" class="btn btn-light custom-btn-large mx-2 position-relative notifica-btn" data-tipo="ordini">
                             <img src="images/ordine.png" class="img-fluid" style="max-width: 40px;">
+                            <#if (ordiniOrd?? && ordiniOrd) || (ordiniTec?? && ordiniTec)>
+                                <span class="pallino notifica-ordini"></span>
+                            </#if>
                         </a>
                         <div class="mt-1">Ordini</div>
                     </div>
+            
                 </div>
             </div>
             <!-- Sezione Tecnici più votati -->
@@ -76,3 +85,4 @@
         </div>
     </div>
 </div>
+<script src="scripts/notifiche.js"></script>

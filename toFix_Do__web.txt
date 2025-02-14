@@ -3,7 +3,7 @@
 -recensione tecnico
 -notifiche
 -mail
-
+-ordinamento per data e per stato nella lista delle richieste 
 
 -pulizia progetto (file inutili css e js in caso ci siano)
 -pulizia codice 

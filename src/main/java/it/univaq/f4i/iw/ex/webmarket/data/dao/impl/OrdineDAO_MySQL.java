@@ -20,7 +20,7 @@ import java.util.List;
 
 public class OrdineDAO_MySQL extends DAO implements OrdineDAO {
     
-    private PreparedStatement sOrdine, iOrdine, uOrdine, dOrdine, sOrdiniByOrdinante, sOrdiniByTecnico;
+    private PreparedStatement sOrdine, iOrdine, uOrdine, dOrdine, sOrdiniByOrdinante, sOrdiniByTecnico, ordiniNot_T, ordiniNot_O;
 
     /**
      * Costruttore della classe.
@@ -55,9 +55,14 @@ public class OrdineDAO_MySQL extends DAO implements OrdineDAO {
             sOrdiniByOrdinante = connection.prepareStatement(
                 "SELECT o.* FROM ordine o JOIN proposta p ON o.proposta_id = p.id JOIN richiesta r ON p.richiesta_id = r.id WHERE r.ordinante = ?  ORDER BY CASE WHEN o.stato = 'IN_ATTESA' THEN 1 ELSE 2 END, o.data DESC"
                 );
-
             sOrdiniByTecnico = connection.prepareStatement(
                 "SELECT o.* FROM ordine o JOIN proposta p ON o.proposta_id = p.id JOIN richiesta r ON p.richiesta_id = r.id WHERE r.tecnico = ? ORDER BY CASE WHEN (o.stato = 'RESPINTO_NON_CONFORME' OR o.stato = 'RESPINTO_NON_FUNZIONANTE') THEN 1 ELSE 2 END, o.data DESC"
+                );
+            ordiniNot_T = connection.prepareStatement(
+                 "SELECT EXISTS( SELECT 1 FROM ordine o JOIN proposta p ON o.proposta_id = p.id JOIN richiesta r ON p.richiesta_id = r.id WHERE (o.stato = 'RESPINTO_NON_CONFORME' OR o.stato = 'RESPINTO_NON_FUNZIONANTE') AND r.tecnico = ?) AS notifica_o;"
+                );
+            ordiniNot_O = connection.prepareStatement(
+                 "SELECT EXISTS( SELECT 1 FROM ordine o JOIN proposta p ON o.proposta_id = p.id JOIN richiesta r ON p.richiesta_id = r.id WHERE (o.stato = 'IN_ATTESA') AND r.ordinante = ?) AS notifica_o;"
                 );
 
                 
@@ -80,6 +85,8 @@ public class OrdineDAO_MySQL extends DAO implements OrdineDAO {
             dOrdine.close();
             sOrdiniByOrdinante.close();
             sOrdiniByTecnico.close();
+            ordiniNot_T.close();
+            ordiniNot_O.close();
         } catch (SQLException ex) {
             
         }
@@ -250,5 +257,43 @@ public class OrdineDAO_MySQL extends DAO implements OrdineDAO {
             throw new DataException("Unable to load ordini by tecnico ID", ex);
         }
         return ordini;
+    }
+
+    public boolean notificaO_T(int tecnicoId) throws DataException {
+
+        try {
+            ordiniNot_T.setInt(1, tecnicoId);
+            try (ResultSet rs = ordiniNot_T.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getBoolean("notifica_o");
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DataException("Impossibile controllore le notifiche relative agli ordini(tec)", ex);
+        }
+        return false;
+    }
+    
+    /**
+     * Verifica se ci sono ordini da notificare per un ordinante.
+     * 
+     * @param ordinanteId 
+     * @return true se ci sono ordini da notificare
+     * @throws DataException se si verifica un errore 
+     */
+     @Override
+    public boolean notificaO_O(int ordinanteId) throws DataException {
+
+        try {
+            ordiniNot_O.setInt(1, ordinanteId);
+            try (ResultSet rs = ordiniNot_O.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getBoolean("notifica_o");
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DataException("Impossibile controllore le notifiche relative agli ordini(ord)", ex);
+        }
+        return false;
     }
 }

@@ -22,7 +22,7 @@ import java.util.List;
 
 public class PropostaDAO_MySQL extends DAO implements PropostaDAO {
 
-    private PreparedStatement sProposta, iProposta, uProposta, dProposta, sProposteByOrdinante, sProposteByTecnico,sProposteByRichiesta ;
+    private PreparedStatement sProposta, iProposta, uProposta, dProposta, sProposteByOrdinante, sProposteByTecnico,sProposteByRichiesta, proposteNotT, proposteNotO;
 
     public PropostaDAO_MySQL(DataLayer d) {
         super(d);
@@ -59,8 +59,27 @@ public class PropostaDAO_MySQL extends DAO implements PropostaDAO {
             sProposteByTecnico = connection.prepareStatement(
                 "SELECT p.* FROM proposta p JOIN richiesta r ON p.richiesta_id = r.id WHERE r.tecnico = ? ORDER BY CASE WHEN (p.stato = 'ACCETTATO') THEN 1 ELSE 2 END"
                 );
-                sProposteByRichiesta = connection.prepareStatement(
+            sProposteByRichiesta = connection.prepareStatement(
                 "SELECT * FROM proposta WHERE richiesta_id = ?"
+                );
+            proposteNotT = connection.prepareStatement( 
+                "SELECT EXISTS(" +
+                " SELECT 1 " +
+                " FROM proposta p " +
+                " JOIN richiesta r ON p.richiesta_id = r.id " +
+                " WHERE (p.stato = 'ACCETTATO') " +
+                " AND r.tecnico = ?" +
+                ") AS notifica_p;"
+                );
+                
+            proposteNotO = connection.prepareStatement( 
+                "SELECT EXISTS(" +
+                " SELECT 1 " +
+                " FROM proposta p " +
+                " JOIN richiesta r ON p.richiesta_id = r.id " +
+                " WHERE (p.stato = 'IN_ATTESA') " +
+                " AND r.ordinante = ?" +
+                ") AS notifica_p;"
                 );
                 
 
@@ -77,6 +96,11 @@ public class PropostaDAO_MySQL extends DAO implements PropostaDAO {
             iProposta.close();
             uProposta.close();
             dProposta.close();
+            sProposteByOrdinante.close();
+            sProposteByTecnico.close();
+            sProposteByRichiesta.close();
+            proposteNotT.close();
+            proposteNotO.close();
         } catch (SQLException ex) {
         }
         super.destroy();
@@ -260,5 +284,49 @@ public class PropostaDAO_MySQL extends DAO implements PropostaDAO {
         }
         return proposte;
     }
+    /**
+     * Verifica se ci sono proposte da notificare per un tecnico.
+     * 
+     * @param tecnicoId 
+     * @return true se ci sono proposte d'acquisto da notificare 
+     * @throws DataException se si verifica un errore 
+     */
+    @Override
+    public boolean notificaP_T(int tecnicoId) throws DataException {
+        try {
+            proposteNotT.setInt(1, tecnicoId);
 
+            try (ResultSet rs = proposteNotT.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getBoolean("notifica_p");
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DataException("Impossibile controllore le notifiche relative alle proposte(tec)", ex);
+        }
+        return false;
+    }
+    
+    /**
+     * Verifica se ci sono proposte da notificare per un ordinante.
+     * 
+     * @param ordinanteId 
+     * @return true se ci sono proposte d'acquisto da notificare
+     * @throws DataException se si verifica un errore 
+     */
+    @Override
+    public boolean notificaP_O(int ordinanteId) throws DataException {
+        try {
+            proposteNotO.setInt(1, ordinanteId);
+
+            try (ResultSet rs = proposteNotO.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getBoolean("notifica_p");
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DataException("Impossibile controllore le notifiche relative alle proposte(ord)", ex);
+        }
+        return false;
+    }
 }
