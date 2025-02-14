@@ -29,10 +29,9 @@
                 <tr>
                   <th class="w-1 text-center">Codice</th>
                   <th class="text-center">Categoria</th>
-                  <th class="text-center">Ordinante</th>
                   <th class="text-center">Tecnico</th>
                   <th class="text-center">Data</th>
-                  <th class="text-center">Stato</th>
+                  <th class="text-center" data-sortable="true">Stato</th>
                   
                   <th class="text-end">Azioni</th>
                 </tr>
@@ -52,13 +51,6 @@
                       <span>${r.categoria.nome}</span>
                     </td>
 
-                    <!-- Ordinante  -->
-                    <td class="text-center">
-                      <span>
-                        ${r.ordinante.getUsername()} 
-                      </span>
-                    </td>
-
                     <!-- Tecnico (se assegnato) -->
                     <td class="text-center">
                       <#if r.tecnico??>
@@ -72,7 +64,9 @@
 
                     <!-- Data -->
                     <td class="text-center">
-                      <span>${r.data}</span>
+                      <span data-order="${r.data?string('yyyy-MM-dd')}">
+                        ${r.data?string('dd/MM/yyyy')}
+                      </span>
                     </td>
 
                     <!-- Stato con pallino colorato in base al valore -->
@@ -118,3 +112,10 @@
   </div>
 </div>
 <script src="scripts/notifications.js"></script>
+<!-- jQuery (necessario per DataTables) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="scripts/dataTable.js"></script>
