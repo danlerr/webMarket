@@ -12,6 +12,7 @@ import it.univaq.f4i.iw.framework.data.DataItemProxy;
 import it.univaq.f4i.iw.framework.data.DataLayer;
 import it.univaq.f4i.iw.framework.data.OptimisticLockException;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -411,6 +412,24 @@ public boolean checkCompile(int richiesta_key) throws DataException {
     } catch (SQLException ex) {
         throw new DataException("Errore durante l'esecuzione di checkCompile", ex);
     }
+}
+@Override
+public Richiesta getRichiestaByCodice(String codiceRichiesta) throws DataException {
+    Richiesta richiesta = null;
+    try {
+        String query = "SELECT * FROM richiesta WHERE codice_richiesta = ?";
+        try (PreparedStatement stmt = this.connection.prepareStatement(query)) {
+            stmt.setString(1, codiceRichiesta);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    richiesta = createRichiesta(rs);
+                }
+            }
+        }
+    } catch (SQLException ex) {
+        throw new DataException("Errore durante il recupero della richiesta per codice", ex);
+    }
+    return richiesta;
 }
 
 

@@ -2,6 +2,7 @@ package it.univaq.f4i.iw.ex.webmarket.controller;
 
 import it.univaq.f4i.iw.ex.webmarket.data.dao.impl.ApplicationDataLayer;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Proposta;
+import it.univaq.f4i.iw.ex.webmarket.data.model.Richiesta;
 import it.univaq.f4i.iw.ex.webmarket.data.model.TipologiaUtente;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Utente;
 import it.univaq.f4i.iw.framework.data.DataException;
@@ -15,6 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.List;
+
 
 public class ElencoProposte extends BaseController {
 
@@ -24,22 +27,38 @@ public class ElencoProposte extends BaseController {
 
         
         Utente u = ((ApplicationDataLayer) request.getAttribute("datalayer")).getUtenteDAO().getUtente(user);
-        boolean isOrd = u.getTipologiaUtente().equals(TipologiaUtente.ORDINANTE);
+        // Se l'utente non esiste, reindirizza al login
+        if (u == null) {
+            response.sendRedirect("login");
+            return;
+        }
+        System.out.println("Utente caricato: " + (u != null ? u.getUsername() : "Nessun utente trovato"));
+        request.setAttribute("user", u);
+
+
+        // Controllo se è un Ordinante o un Tecnico
+        boolean isOrd = u.getTipologiaUtente() != null && u.getTipologiaUtente().equals(TipologiaUtente.ORDINANTE);
         request.setAttribute("isOrdinante", isOrd);
 
-        if (isOrd){
-            // Per l'ordinante, recupera le proposte ricevute
-            java.util.List<Proposta> proposte = ((ApplicationDataLayer) request.getAttribute("datalayer")).getPropostaDAO().getProposteByOrdinante(user);
-            request.setAttribute("proposte", proposte);
-        }else{
-            // Per il tecnico, recupera le proposte effettuate.
-            request.setAttribute("proposte", ((ApplicationDataLayer) request.getAttribute("datalayer")).getPropostaDAO().getProposteByTecnico(user));
+        // Recupero le proposte in base al ruolo
+        List<Proposta> proposte;
+        if (isOrd) {
+            proposte = ((ApplicationDataLayer) request.getAttribute("datalayer"))
+                    .getPropostaDAO().getProposteByOrdinante(user);
+        } else {
+            proposte = ((ApplicationDataLayer) request.getAttribute("datalayer"))
+                    .getPropostaDAO().getProposteByTecnico(user);
         }
 
+        // Passo le proposte al template
+        request.setAttribute("proposte", proposte);
 
-        result.activate("leMieproposte.ftl.html", request, response);
+        // ✅ Attivo il template corretto
+        result.activate("leMieProposte.ftl.html", request, response);
     }
 
+
+        
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
         throws ServletException {
@@ -69,5 +88,31 @@ public class ElencoProposte extends BaseController {
     public String getServletInfo() {
         return "Servlet per gestire l'elenco delle proposte";
     }
+
+
+      private void action_visualizzaRichiesta(HttpServletRequest request, HttpServletResponse response, String codiceRichiesta) throws IOException, ServletException, TemplateManagerException, DataException {
+        TemplateResult result = new TemplateResult(getServletContext());
+        
+        // Recupero la richiesta in base al codice
+        Richiesta richiesta = ((ApplicationDataLayer) request.getAttribute("datalayer"))
+        .getRichiestaOrdineDAO().getRichiestaByCodice(codiceRichiesta);
+    
+        
+        // Se la richiesta non esiste, reindirizza a un errore o alla lista delle proposte
+        //if (richiesta == null) {
+           // response.sendRedirect("errore.html"); // O un'altra pagina di errore
+            //return;
+        //}
+        
+        // Passo la richiesta al template
+        request.setAttribute("richiesta", richiesta);
+        
+        // Attivo il template per la visualizzazione della richiesta
+        result.activate("richiesteTecnico.ftl.html", request, response);
+    }
+
+    
+
+
 
 }

@@ -17,6 +17,8 @@ public interface RichiestaDAO {
 
     void deleteRichiestaOrdine(int richiesta_key) throws DataException;
 
+    Richiesta getRichiestaByCodice(String codiceRichiesta) throws DataException;
+
     
     //altri metodi 
     List<Richiesta> getRichiesteByUtente(int utente_key) throws DataException;
