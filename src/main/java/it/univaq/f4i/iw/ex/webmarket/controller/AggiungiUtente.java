@@ -104,26 +104,16 @@ private void action_creaUtente(HttpServletRequest request, HttpServletResponse r
     ((ApplicationDataLayer) request.getAttribute("datalayer")).getUtenteDAO().storeUtente(nuovoUtente);
        try {
         
-        Properties props = new Properties();
-        props.put("mail.smtp.host", "smtp.outlook.com"); 
-        props.put("mail.smtp.port", "587"); 
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
+        Session emailSession = EmailSender.getEmailSession();
 
-        Session session = Session.getInstance(props, new javax.mail.Authenticator() {
-            protected javax.mail.PasswordAuthentication getPasswordAuthentication() {
-                return new javax.mail.PasswordAuthentication("webmarket.univaq@outlook.com", "geagiuliasamanta1");
-            }
-        });
 
-        String subject = "Benvenuto in WebMarket";
-        String body = "Ciao e Benvenuto in WebMarket,\n\n" +
+        String subject = "Benvenuto in Coquette";
+        String body = "Ciao e Benvenuto in Coquette,\n\n" +
                       "Ecco le tue credenziali per accedere:\n" +
                       "Username: " + username + "\n" +
-                      "Password temporanea: " + password + "\n\n" +
-                      "Ti consigliamo di cambiare la tua password al primo accesso.\n\n";
+                      "Password : " + password ;
         
-        EmailSender.sendEmail(session, email, subject, body);
+        EmailSender.sendEmail(emailSession, email, subject, body);
         request.setAttribute("success", "Utente creato con successo e email inviata!");
     } catch (Exception e) {
               request.setAttribute("error", "Utente creato con successo, ma si è verificato un problema durante l'invio dell'email.");
