@@ -89,13 +89,13 @@ public class ElencoProposte extends BaseController {
         return "Servlet per gestire l'elenco delle proposte";
     }
 
-
+/* 
       private void action_visualizzaRichiesta(HttpServletRequest request, HttpServletResponse response, String codiceRichiesta) throws IOException, ServletException, TemplateManagerException, DataException {
         TemplateResult result = new TemplateResult(getServletContext());
         
         // Recupero la richiesta in base al codice
         Richiesta richiesta = ((ApplicationDataLayer) request.getAttribute("datalayer"))
-        .getRichiestaOrdineDAO().getRichiestaByCodice(codiceRichiesta);
+        .getRichiestaOrdineDAO().getRichiesta(codiceRichiesta);
     
         
         // Se la richiesta non esiste, reindirizza a un errore o alla lista delle proposte
@@ -111,6 +111,6 @@ public class ElencoProposte extends BaseController {
         result.activate("dettaglioRichiesta.ftl.html", request, response);
         
     }
+*/
 
-    
 }

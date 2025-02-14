@@ -3,6 +3,7 @@ package it.univaq.f4i.iw.ex.webmarket.controller;
 import it.univaq.f4i.iw.ex.webmarket.data.dao.impl.ApplicationDataLayer;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Proposta;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Richiesta;
+import it.univaq.f4i.iw.ex.webmarket.data.model.TipologiaUtente;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Utente;
 import it.univaq.f4i.iw.ex.webmarket.data.model.impl.PropostaImpl;
 import it.univaq.f4i.iw.ex.webmarket.data.model.impl.StatoProposta;
@@ -22,21 +23,31 @@ import javax.servlet.http.HttpSession;
 
 public class CreaProposta extends BaseController {
 
-    private void action_default(HttpServletRequest request, HttpServletResponse response, int id) throws IOException, ServletException, TemplateManagerException, DataException {
+    private void action_default(HttpServletRequest request, HttpServletResponse response, int n , int userId) throws IOException, ServletException, TemplateManagerException, DataException {
         TemplateResult res = new TemplateResult(getServletContext());
         request.setAttribute("page_title", "Crea proposta");
+        Utente utente = ((ApplicationDataLayer) request.getAttribute("datalayer"))
+        .getUtenteDAO().getUtente(userId);
+        request.setAttribute("user", utente);
 
-        int richiesta_id = Integer.parseInt(request.getParameter("id"));
+        int richiesta_id = Integer.parseInt(request.getParameter("n"));
         
         //retrieve della richiesta
         Richiesta richiesta = ((ApplicationDataLayer) request.getAttribute("datalayer")).getRichiestaOrdineDAO().getRichiesta(richiesta_id);
         request.setAttribute("richiesta", richiesta);
 
-        res.activate("crea_proposta.ftl.html", request, response);
+        res.activate("creaProposta.ftl.html", request, response);
     }
 
-    private void action_createProposta(HttpServletRequest request, HttpServletResponse response, int id) throws IOException, ServletException, TemplateManagerException, DataException {
-        Richiesta richiesta = ((ApplicationDataLayer) request.getAttribute("datalayer")).getRichiestaOrdineDAO().getRichiesta(id);
+    private void action_createProposta(HttpServletRequest request, HttpServletResponse response, int n, int userId) throws IOException, ServletException, TemplateManagerException, DataException {
+        Richiesta richiesta = ((ApplicationDataLayer) request.getAttribute("datalayer")).getRichiestaOrdineDAO().getRichiesta(n);
+        Utente utente = ((ApplicationDataLayer) request.getAttribute("datalayer"))
+        .getUtenteDAO().getUtente(userId);
+         if (utente.getTipologiaUtente().equals(TipologiaUtente.ORDINANTE)) {  
+                response.sendRedirect("elencoRichieste?error=Non+sei+autorizzato");
+                return;
+            }
+        request.setAttribute("user", utente);
 
         String produttore = request.getParameter("produttore");
         String prodotto = request.getParameter("prodotto");
@@ -46,7 +57,7 @@ public class CreaProposta extends BaseController {
             prezzo = Float.parseFloat(request.getParameter("prezzo"));
         } catch (NumberFormatException ex) {
             request.setAttribute("errorMessage", "Il prezzo deve essere un valore numerico valido.");
-            action_default(request, response, id);
+            action_default(request, response, n , userId);
             return;
         }
         String url = request.getParameter("url");
@@ -101,17 +112,18 @@ public class CreaProposta extends BaseController {
         try {
             HttpSession session = SecurityHelpers.checkSession(request);
             int n = SecurityHelpers.checkNumeric(request.getParameter("n"));
+            
 
             if (session == null) {
                 response.sendRedirect("login");
                 return;
             }
-
+            int userId = (int) session.getAttribute("userid");
             String action = request.getParameter("action");
             if (action != null && action.equals("invioProposta")) {
-                action_createProposta(request, response, n);
+                action_createProposta(request, response, n , userId);
             } else {
-                action_default(request, response, n);
+                action_default(request, response, n, userId);
             }
 
         } catch (IOException | TemplateManagerException ex) {

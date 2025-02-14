@@ -1,0 +1,66 @@
+<div class="container-xl my-4">
+    <div class="row">
+      <div class="col-md-6 offset-md-3">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Crea una proposta per la richiesta ${richiesta.codiceRichiesta}</h3>
+          </div>
+          <div class="card-body">
+            
+            <!-- Mostriamo eventuali messaggi di errore -->
+            <#if errorMessage??>
+              <div class="alert alert-danger">${errorMessage}</div>
+            </#if>
+            
+            <div class="mb-3 text-muted">
+              <p><strong>Ordinante richiesta:</strong> ${richiesta.ordinante}</p>
+              <p><strong>Note richiesta:</strong> ${richiesta.note}</p>
+              <p><strong>Data richiesta:</strong> ${richiesta.data}</p>
+            </div>
+    
+            <form action="creaProposta?action=invioProposta&n=${richiesta.key}" method="POST">
+             
+              
+              
+    
+              <div class="mb-3">
+                <label for="produttore" class="form-label">Nome Produttore</label>
+                <input type="text" class="form-control" id="produttore" name="produttore" placeholder="Inserisci il nome del produttore" required>
+              </div>
+    
+              <div class="mb-3">
+                <label for="prodotto" class="form-label">Nome Prodotto</label>
+                <input type="text" class="form-control" id="prodotto" name="prodotto" placeholder="Inserisci il nome del prodotto" required>
+              </div>
+    
+              <div class="mb-3">
+                <label for="codiceProdotto" class="form-label">Codice Prodotto</label>
+                <input type="text" class="form-control" id="codiceProdotto" name="codiceProdotto" placeholder="Inserisci il codice del prodotto" required>
+              </div>
+    
+              <div class="mb-3">
+                <label for="prezzo" class="form-label">Prezzo</label>
+                <input type="number" step="0.01" class="form-control" id="prezzo" name="prezzo" placeholder="Inserisci il prezzo" required>
+              </div>
+    
+              <div class="mb-3">
+                <label for="url" class="form-label">URL</label>
+                <input type="url" class="form-control" id="url" name="url" placeholder="Inserisci l'URL del prodotto" required>
+              </div>
+    
+              <div class="mb-3">
+                <label for="note" class="form-label">Note</label>
+                <textarea class="form-control" id="note" name="note" rows="5" placeholder="Inserisci eventuali note aggiuntive"></textarea>
+              </div>
+    
+              <div class="form-footer d-flex justify-content-between">
+                <a href="dettaglioRichiesta?id=${richiesta.key}" class="btn btn-white">Torna alla richiesta</a>
+                <button type="submit" class="btn btn-cyan">Invia Proposta</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

@@ -58,7 +58,7 @@ public class EmailSender {
 
         return Session.getInstance(props, new javax.mail.Authenticator() {
             protected javax.mail.PasswordAuthentication getPasswordAuthentication() {
-                return new javax.mail.PasswordAuthentication("webmarket.univaq@outlook.com", "your_password_here");
+                return new javax.mail.PasswordAuthentication("coquette.univaq@outlook.com", "Password8");
             }
         });
     }
