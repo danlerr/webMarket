@@ -1,8 +1,8 @@
 
 -proposte(tutto)
--recensione tecnico
 -notifiche
--mail
+-alert
+-mail test
 -ordinamento per data e per stato nella lista delle richieste 
 
 -pulizia progetto (file inutili css e js in caso ci siano)
