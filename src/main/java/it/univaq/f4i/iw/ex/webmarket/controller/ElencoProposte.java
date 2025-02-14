@@ -108,11 +108,9 @@ public class ElencoProposte extends BaseController {
         request.setAttribute("richiesta", richiesta);
         
         // Attivo il template per la visualizzazione della richiesta
-        result.activate("richiesteTecnico.ftl.html", request, response);
+        result.activate("dettaglioRichiesta.ftl.html", request, response);
+        
     }
 
     
-
-
-
 }

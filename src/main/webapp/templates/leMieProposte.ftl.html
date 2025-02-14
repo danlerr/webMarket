@@ -22,7 +22,10 @@
                                         <div class="mt-4 d-flex justify-content-between align-items-center">
                                             <div>
                                                 <strong>Proposta:</strong> <a href="proposta.html?id=${proposta.id}">${proposta.codice}</a> |
- |                                              <strong>Richiesta:</strong> <a href="richiesta.html?codice=${proposta.richiesta.codiceRichiesta}">${proposta.richiesta.codiceRichiesta}</a> |
+ |                                              <strong>Richiesta:</strong>  
+                                                <a href="dettaglioRichiesta?n=${proposta.richiesta.key}">${proposta.richiesta.codiceRichiesta}</a>
+
+ 
                                                 <strong>Prodotto:</strong> ${proposta.codiceProdotto}
                                             </div>
                                             <span class="badge bg-green">Accettata</span>
