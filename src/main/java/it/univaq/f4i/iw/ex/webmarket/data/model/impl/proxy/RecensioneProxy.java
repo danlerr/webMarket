@@ -35,7 +35,7 @@ public class RecensioneProxy extends RecensioneImpl implements DataItemProxy {
      */
     @Override
     public void setKey(Integer key) {
-        super.setId(key);
+        super.setKey(key);
         this.modified = true;
     }
 

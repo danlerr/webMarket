@@ -68,7 +68,7 @@ public class SecurityHelpers {
         }
         
         // Pagine esclusive per l'ordinante
-        if (requestedPage.contains("/crearichiesta")) {
+        if (requestedPage.contains("/crearichiesta") || requestedPage.contains("/recensiscitecnico")) {
             return tipo.equals("ordinante");
         }
         

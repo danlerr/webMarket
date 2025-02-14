@@ -68,10 +68,10 @@ public class RichiestaDAO_MySQL extends DAO implements RichiestaDAO {
                 "WHERE id=? AND version=?"
             );
             sRichiesteSenzaProposte = connection.prepareStatement(
-    "SELECT r.id, r.note, r.stato, r.data, r.codice_richiesta, r.ordinante, r.tecnico, r.categoria " + // spazio aggiunto qui
-    "FROM richiesta r " +
-    "WHERE r.stato = ? AND r.tecnico = ? " +
-    "AND NOT EXISTS (SELECT 1 FROM proposta p WHERE p.richiesta_id = r.id) ORDER BY data ASC"
+            "SELECT r.id, r.note, r.stato, r.data, r.codice_richiesta, r.ordinante, r.tecnico, r.categoria " +
+                "FROM richiesta r " +
+                "WHERE r.stato = ? AND r.tecnico = ? " +
+                "AND NOT EXISTS (SELECT 1 FROM proposta p WHERE p.richiesta_id = r.id AND (p.stato = 'ACCETTATO' or p.stato = 'IN_ATTESA')) ORDER BY data ASC"
 );
 
             

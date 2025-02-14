@@ -31,14 +31,4 @@ public interface RichiestaDAO {
 
     boolean checkCompile(int richiesta_key) throws DataException;
 
-
-
-
-
-
-    
-    
-    
-  
-
 }

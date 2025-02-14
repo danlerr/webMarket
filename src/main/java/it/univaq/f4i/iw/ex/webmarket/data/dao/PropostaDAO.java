@@ -17,4 +17,8 @@ public interface PropostaDAO {
 
     List<Proposta> getProposteByRichiesta(int richiesta_id) throws DataException; 
 
+    boolean notificaP_T(int tecnicoId) throws DataException;
+    
+    boolean notificaP_O(int ordinanteId) throws DataException;
+
 }

@@ -48,20 +48,24 @@ request.setAttribute("medieTecnici", medieTecnici);  // Passiamo la nuova mappa
             String numeroProposte = String.valueOf(datalayer.getPropostaDAO().getProposteByTecnico(tecnico.getId()).size());
             interventiTecnici.put(String.valueOf(tecnico.getId()), numeroProposte); 
         }
-
-        System.out.println(interventiTecnici); // Debug per controllare i dati
         request.setAttribute("interventiTecnici", interventiTecnici);
 
-        //notifiche per richieste
+        //notifiche per richieste (solo per il tecnico | quando ci sono nuove richieste)
+        boolean richieste = !((ApplicationDataLayer) request.getAttribute("datalayer")).getRichiestaOrdineDAO().getRichiesteInAttesa().isEmpty();
+        request.setAttribute("richieste", richieste);
+        //noticìfiche per le proposte per l'ord. 
+        boolean proposte_O = ((ApplicationDataLayer) request.getAttribute("datalayer")).getPropostaDAO().notificaP_O(userId);
+        request.setAttribute("proposteOrd", proposte_O);
+        //notifiche per le proposte per il tecnico 
+        boolean proposte_T = ((ApplicationDataLayer) request.getAttribute("datalayer")).getPropostaDAO().notificaP_T(userId);
+        request.setAttribute("proposteTec", proposte_T);
+        //notifiche per gli ordini per l'ordinante
+        boolean ordini_O = ((ApplicationDataLayer) request.getAttribute("datalayer")).getOrdineDAO().notificaO_O(userId);
+        request.setAttribute("ordiniOrd", ordini_O);
+        //notifiche per gli ordini per il tecnico 
+        boolean ordini_T = ((ApplicationDataLayer) request.getAttribute("datalayer")).getOrdineDAO().notificaO_T(userId);
+        request.setAttribute("ordiniTec", ordini_T);
 
-        //notifiche per proposte
-        //boolean proposte = ((ApplicationDataLayer) request.getAttribute("datalayer")).getPropostaDAO().notificaProposteOrd(userId);
-        //System.out.println(proposte);
-        //request.setAttribute("proposte", proposte);
-        
-        //notifiche per ordini 
-        //boolean ordini = ((ApplicationDataLayer) request.getAttribute("datalayer")).getOrdineDAO().notificaOrdineOrd(userId);
-        //request.setAttribute("ordini", ordini);
 
         r.activate("home.ftl.html", request, response);
     }
