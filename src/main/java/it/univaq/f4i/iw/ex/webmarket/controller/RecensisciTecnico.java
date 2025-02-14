@@ -70,7 +70,7 @@ public class RecensisciTecnico extends BaseController {
                     " per una richiesta precedente. Vuoi aggiornare la recensione?");
         } else {
             request.setAttribute("reviewExists", false);
-            request.setAttribute("message", "Recensisci da 1 a 5 stelle la tua esperienza con il tecnico");
+            request.setAttribute("message", "Recensisci da 1 a 5 stelle la tua esperienza con il tecnico " + tecnico.getUsername() );
         }
         
         // Attiva il template freemarker
