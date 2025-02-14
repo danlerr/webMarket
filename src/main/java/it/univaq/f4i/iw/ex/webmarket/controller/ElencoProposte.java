@@ -90,27 +90,6 @@ public class ElencoProposte extends BaseController {
     }
 
 
-      private void action_visualizzaRichiesta(HttpServletRequest request, HttpServletResponse response, String codiceRichiesta) throws IOException, ServletException, TemplateManagerException, DataException {
-        TemplateResult result = new TemplateResult(getServletContext());
-        
-        // Recupero la richiesta in base al codice
-        Richiesta richiesta = ((ApplicationDataLayer) request.getAttribute("datalayer"))
-        .getRichiestaOrdineDAO().getRichiestaByCodice(codiceRichiesta);
-    
-        
-        // Se la richiesta non esiste, reindirizza a un errore o alla lista delle proposte
-        //if (richiesta == null) {
-           // response.sendRedirect("errore.html"); // O un'altra pagina di errore
-            //return;
-        //}
-        
-        // Passo la richiesta al template
-        request.setAttribute("richiesta", richiesta);
-        
-        // Attivo il template per la visualizzazione della richiesta
-        result.activate("dettaglioRichiesta.ftl.html", request, response);
-        
-    }
-
+     
     
 }
