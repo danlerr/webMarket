@@ -135,8 +135,9 @@ public class DettaglioProposta extends BaseController {
         ((ApplicationDataLayer) request.getAttribute("datalayer")).getRichiestaOrdineDAO().storeRichiesta(richiesta);
 
         String email = richiesta.getOrdinante().getEmail();
+        Ordine ordine = ((ApplicationDataLayer) request.getAttribute("datalayer"))
+        .getOrdineDAO().createOrdine();
 
-        Ordine ordine = new OrdineImpl();
         ordine.setProposta(proposta);
         ordine.setStato(StatoOrdine.IN_ATTESA);
         ordine.setData(new Timestamp(new Date().getTime()));

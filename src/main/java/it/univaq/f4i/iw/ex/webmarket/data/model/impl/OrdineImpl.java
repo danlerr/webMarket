@@ -3,7 +3,8 @@ package it.univaq.f4i.iw.ex.webmarket.data.model.impl;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Ordine;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Proposta;
 import it.univaq.f4i.iw.framework.data.DataItemImpl;
-import java.sql.Date;
+
+import java.util.Date;
 
 // Implementazione concreta dell'interfaccia Ordine
 
