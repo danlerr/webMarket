@@ -111,7 +111,7 @@ public class DettaglioOrdine extends BaseController {
                     + richiesta.getCodiceRichiesta() + "</strong> è stato rifiutato.</p>";
             EmailSender.sendEmail(emailSession, tecnico.getEmail(), subject, body);
         }
-        response.sendRedirect("elencoOrdini?message=Ordine+rifiutato");
+        response.sendRedirect("elencoOrdini?error=Ordine+rifiutato");
     }
 
     @Override

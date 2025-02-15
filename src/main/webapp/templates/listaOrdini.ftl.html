@@ -34,7 +34,7 @@
                                      data-bs-parent="#accordion-example">
                                     <div class="accordion-body pt-0">
                                         <a href="dettaglioOrdine?n=${ordine.key}" class="btn btn-ghost-cyan me-2">Dettagli ordine</a>
-                                        <a href="dettaglioProposta?n=${ordine.proposta}" class="btn btn-ghost-cyan me-2">Vai alla proposta</a>
+                                        <a href="dettaglioProposta?n=${ordine.proposta.key}" class="btn btn-ghost-cyan me-2">Vai alla proposta</a>
                                         <a href="dettaglioRichiesta?n=${ordine.proposta.richiesta.key}" class="btn btn-ghost-cyan me-2">Vai alla richiesta</a>
                                         <#if isOrdinante?? && isOrdinante && recensisciFlags[ordine.key?string]?has_content && recensisciFlags[ordine.key?string]>
                                             <a href="recensisciTecnico?n=${ordine.key}" class="btn btn-ghost-yellow me-2">Recensisci tecnico</a>
