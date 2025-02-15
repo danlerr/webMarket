@@ -1,21 +1,4 @@
-<!doctype html>
-<html lang="it">
-<head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-    <title>Le mie Proposte</title>
 
-    <link rel="icon" href="./favicon.ico" type="image/x-icon"/>
-    <link rel="stylesheet" href="./dist/css/tabler.min.css"/>
-    <link rel="stylesheet" href="./dist/css/tabler-flags.min.css"/>
-    <link rel="stylesheet" href="./dist/css/tabler-socials.min.css"/>
-    <link rel="stylesheet" href="../style/demo.css"/>
-
-    <style>
-        @import url('https://rsms.me/inter/inter.css');
-    </style>
-</head>
-<body>
 
     <div class="page-wrapper">
         <div class="page-header d-print-none">
@@ -26,29 +9,14 @@
                         <h1>Proposta ${proposta.codice}</h1>
                         </td>
 
-                      <!-- Stato della proposta con pallino -->
-                    <td class="text-center">
-                        <#if proposta.statoProposta?string == "ACCETTATO">
-                            <span class="badge bg-success me-7"></span>Accettata
-                        </#if>
-                        <#if proposta.statoProposta?string == "RIFIUTATO">
-                            <span class="badge bg-warning me-7" ></span>Rifiutata
-                        </#if>
-                        <#if proposta.statoProposta?string == "IN_ATTESA">
-                            <span class="badge bg-danger me-7"></span>In attesa
-                        </#if>
-                        <#if proposta.statoProposta?string == "ORDINATO">
-                            <span class="badge bg-primary me-7" ></span>Ordinata
-                        </#if>
-                    </td>
+                     
                
                     
                     
-
                     <#if user.tipologiaUtente == "ORDINANTE" && stato == "IN_ATTESA">
                     <div class="col-auto ms-auto d-print-none d-flex">
-                        <button type="button" class="btn btn-success me-2">Accetta</button>
-                        <button type="button" class="btn btn-danger">Rifiuta</button>
+                        <button type="button" class="btn btn-success me-2">Accetta proposta</button>
+                        <button type="button" class="btn btn-danger">Rifiuta proposta</button>
                     </div>
                 </#if>
                 
@@ -114,6 +82,3 @@
     </div>
 </div>
 
-<script src="./dist/js/tabler.min.js" defer></script>
-</body>
-</html>

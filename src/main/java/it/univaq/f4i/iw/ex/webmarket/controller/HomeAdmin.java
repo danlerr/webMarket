@@ -79,7 +79,7 @@ public class HomeAdmin extends BaseController {
         } else {
             request.setAttribute("error", "ID utente mancante.");
         }
-        response.sendRedirect("homeAdmin");
+        response.sendRedirect("homeAdmin?success=Utente+eliminato+con+successo");
     }
 
     @Override
