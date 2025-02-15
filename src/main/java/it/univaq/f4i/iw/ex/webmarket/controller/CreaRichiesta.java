@@ -109,7 +109,7 @@ public class CreaRichiesta extends BaseController {
                 }
             }
 
-            // *** Invio email a tutti i tecnici *** (Spostato qui, dopo il salvataggio)
+            // *** Invio email a tutti i tecnici 
             try {
                 List<Utente> tecnici = ((ApplicationDataLayer) request.getAttribute("datalayer"))
                         .getUtenteDAO().getAllByRole(TipologiaUtente.TECNICO);

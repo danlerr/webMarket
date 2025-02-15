@@ -45,7 +45,7 @@ public class RecensisciTecnico extends BaseController {
         ApplicationDataLayer dal = (ApplicationDataLayer) request.getAttribute("datalayer");
         Ordine ordine = dal.getOrdineDAO().getOrdine(ordineId);
         if (ordine == null) {
-            response.sendRedirect("elencoOrdini?error=Ordine+non+trovato");
+            response.sendRedirect("error?Ordine+non+trovato");
             return;
         }
         
@@ -89,7 +89,7 @@ public class RecensisciTecnico extends BaseController {
         // Recupera l'id dell'ordine
         String ordineIdStr = request.getParameter("n");
         if (ordineIdStr == null) {
-            response.sendRedirect("elencoOrdini?error=Missing+order+id");
+            response.sendRedirect("error?Missing+order+id");
             return;
         }
         int ordineId = Integer.parseInt(ordineIdStr);

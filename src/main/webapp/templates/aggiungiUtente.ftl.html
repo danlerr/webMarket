@@ -1,21 +1,10 @@
 
 
-<!-- Se il servlet ha settato un messaggio di errore, lo mostriamo -->
-<#if error?exists && error?has_content>
-    <div class="alert alert-danger" role="alert">
-        ${error}
-    </div>
-</#if>
 
-<!-- Se il servlet ha settato un messaggio di successo, lo mostriamo -->
-<#if success?exists && success?has_content>
-    <div class="alert alert-success" role="alert">
-        ${success}
-    </div>
-</#if>
 
 <div class="container-xl my-4">
     <div class="row">
+        
         <div class="col-md-6 offset-md-3">
             <div class="card">
                 <div class="card-header">

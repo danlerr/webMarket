@@ -72,14 +72,13 @@ public class AggiungiUtente extends BaseController {
         String roleParam = request.getParameter("role");
         
         if (username == null || email == null || password == null || confirmPassword == null || roleParam == null) {
-            request.setAttribute("error", "Tutti i campi sono obbligatori.");
-            action_default(request, response);
+            response.sendRedirect("aggiungiUtente?error=Tutti+i+campi+sono+obbligatori");
             return;
         }
 
         if (!password.equals(confirmPassword)) {
-            request.setAttribute("error", "Le password non coincidono.");
-            action_default(request, response);
+            
+            response.sendRedirect("aggiungiUtente?error=Le+password+non+coincidono");
             return;
         }
         
@@ -87,8 +86,9 @@ public class AggiungiUtente extends BaseController {
         Utente existingUser = ((ApplicationDataLayer) request.getAttribute("datalayer")).getUtenteDAO().getUtenteByUsername(username);
 
         if (existingUser != null) {
-            request.setAttribute("error", "Questo username è già utilizzato");
-            action_default(request, response);
+            
+            response.sendRedirect("aggiungiUtente?error=Questo+username+è+già+utilizzato");
+
             return;
         }
 
@@ -114,12 +114,12 @@ public class AggiungiUtente extends BaseController {
                         "Password : " + password ;
             
             EmailSender.sendEmail(emailSession, email, subject, body);
-            request.setAttribute("success", "Utente creato con successo e email inviata!");
+            response.sendRedirect("aggiungiUtente?success=Utente+creato+con+successo+e+mail+inviata");
         } catch (Exception e) {
-                request.setAttribute("error", "Utente creato con successo, ma si è verificato un problema durante l'invio dell'email.");
+            response.sendRedirect("aggiungiUtente?success=Utente+creato+con+successo+ma+si+è+verificato+un+problema+con+la+email");
                 e.printStackTrace();
             }
-        request.setAttribute("success", "Utente creato con successo!");
+            response.sendRedirect("aggiungiUtente?success=Utente+creato+con+successo");
         action_default(request, response);
     }
 
