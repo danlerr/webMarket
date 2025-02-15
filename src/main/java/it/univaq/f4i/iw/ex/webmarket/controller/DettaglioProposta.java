@@ -7,6 +7,7 @@ import it.univaq.f4i.iw.ex.webmarket.data.model.Richiesta;
 import it.univaq.f4i.iw.ex.webmarket.data.model.StatoRichiesta;
 import it.univaq.f4i.iw.ex.webmarket.data.model.TipologiaUtente;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Utente;
+import it.univaq.f4i.iw.ex.webmarket.data.model.impl.StatoProposta;
 import it.univaq.f4i.iw.ex.webmarket.data.model.CaratteristicaRichiesta;
 import it.univaq.f4i.iw.framework.data.DataException;
 import it.univaq.f4i.iw.framework.result.TemplateManagerException;
@@ -50,6 +51,10 @@ if (proposta.getRichiesta() == null) {
     response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Richiesta associata non trovata");
     return;
 }
+
+// Recupera lo stato della proposta e lo passa al template
+        StatoProposta statoProposta = proposta.getStatoProposta();
+        request.setAttribute("stato", statoProposta.toString()); // Converte l'enum in stringa
 
 request.setAttribute("proposta", proposta);
 res.activate("dettaglioProposta.ftl.html", request, response);
