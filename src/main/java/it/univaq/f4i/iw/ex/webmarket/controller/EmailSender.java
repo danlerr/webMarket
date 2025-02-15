@@ -51,14 +51,14 @@ public class EmailSender {
      // Metodo per creare e restituire una sessione email configurata
      public static Session getEmailSession() {
         Properties props = new Properties();
-        props.put("mail.smtp.host", "smtp.outlook.com");
+        props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.port", "587");
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
 
         return Session.getInstance(props, new javax.mail.Authenticator() {
             protected javax.mail.PasswordAuthentication getPasswordAuthentication() {
-                return new javax.mail.PasswordAuthentication("webmarket.univaq@outlook.com", "your_password_here");
+                return new javax.mail.PasswordAuthentication("coquette.univaq@gmail.com", "hxbx oihp brff cuiz");
             }
         });
     }

@@ -1,14 +1,21 @@
 
--proposte(tutto)
--notifiche
--alert
--mail test
--ordinamento per data e per stato nella lista delle richieste 
+-proposte
+    dettaglio proposta
+        crea ordine (tec)
 
+-alert:
+    aggiungi utente V
+    crea richiesta V
+    prendere in carico 
+    compilare proposta
+    accetta/rifiuta proposta 
+    crea ordine 
+    accetta/rifiuta proposta
+    accetta/rifiuta ordine 
+    recensisci tecnico 
 
 -pulizia progetto (file inutili css e js in caso ci siano)
 -pulizia codice 
-
 
 -RESPONSIVE check
 -popolare bene il db

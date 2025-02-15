@@ -37,7 +37,7 @@ public class RecensisciTecnico extends BaseController {
         // Recupera l'id dell'ordine dal parametro "n"
         String ordineIdStr = request.getParameter("n");
         if (ordineIdStr == null) {
-            response.sendRedirect("elencoRichieste?error=Missing+order+id");
+            response.sendRedirect("elencoOrdini?error=Missing+order+id");
             return;
         }
         int ordineId = Integer.parseInt(ordineIdStr);
@@ -45,14 +45,14 @@ public class RecensisciTecnico extends BaseController {
         ApplicationDataLayer dal = (ApplicationDataLayer) request.getAttribute("datalayer");
         Ordine ordine = dal.getOrdineDAO().getOrdine(ordineId);
         if (ordine == null) {
-            response.sendRedirect("elencoRichieste?error=Ordine+non+trovato");
+            response.sendRedirect("elencoOrdini?error=Ordine+non+trovato");
             return;
         }
         
         // Verifica che l'utente loggato sia l'autore della richiesta
         Utente ordinante = ordine.getProposta().getRichiesta().getOrdinante();
         if (ordinante.getId() != userId) {
-            response.sendRedirect("elencoRichieste?error=Non+sei+l'autore+della+richiesta");
+            response.sendRedirect("elencoOrdini?error=Non+sei+l'autore+della+richiesta");
             return;
         }
         
@@ -89,27 +89,27 @@ public class RecensisciTecnico extends BaseController {
         // Recupera l'id dell'ordine
         String ordineIdStr = request.getParameter("n");
         if (ordineIdStr == null) {
-            response.sendRedirect("elencoRichieste?error=Missing+order+id");
+            response.sendRedirect("elencoOrdini?error=Missing+order+id");
             return;
         }
         int ordineId = Integer.parseInt(ordineIdStr);
         
         Ordine ordine = dal.getOrdineDAO().getOrdine(ordineId);
         if (ordine == null) {
-            response.sendRedirect("elencoRichieste?error=Ordine+non+trovato");
+            response.sendRedirect("elencoOrdini?error=Ordine+non+trovato");
             return;
         }
         
         // Verifica che lo stato della richiesta sia RISOLTA
         if (ordine.getProposta().getRichiesta().getStato() != StatoRichiesta.RISOLTA) {
-            response.sendRedirect("elencoRichieste?error=Non+puoi+recensire+il+tecnico+per+questo+ordine");
+            response.sendRedirect("elencoOrdini?error=Non+puoi+recensire+il+tecnico+per+questo+ordine");
             return;
         }
         
         // Verifica che l'utente sia l'autore della richiesta
         Utente ordinante = ordine.getProposta().getRichiesta().getOrdinante();
         if (ordinante.getId() != userId) {
-            response.sendRedirect("elencoRichieste?error=Non+sei+l'autore+della+richiesta");
+            response.sendRedirect("elencoOrdini?error=Non+sei+l'autore+della+richiesta");
             return;
         }
         
@@ -143,7 +143,7 @@ public class RecensisciTecnico extends BaseController {
                     + "<p>Recensito da: " + ordinante.getUsername() + " (" + ordinante.getEmail() + ")</p>";
             
             EmailSender.sendEmail(emailSession, tecnico.getEmail(), subject, body);
-            response.sendRedirect("recensisciTecnico?success=Recensione+aggiornata+con+successo");
+            response.sendRedirect("recensisciTecnico?n=" + ordineId + "&success=Recensione+aggiornata+con+successo");
         } else {
             // Crea una nuova recensione
             Recensione nuovaRecensione = dal.getRecensioneDAO().createRecensione();
@@ -159,7 +159,7 @@ public class RecensisciTecnico extends BaseController {
                     + "<p>Recensito da: " + ordinante.getUsername() + " (" + ordinante.getEmail() + ")</p>";
             
             EmailSender.sendEmail(emailSession, tecnico.getEmail(), subject, body);
-            response.sendRedirect("recensisciTecnico?success=Recensione+inserita+con+successo");
+            response.sendRedirect("recensisciTecnico?n=" + ordineId + "&success=Recensione+effettuata+con+successo");
         }
     }
     
