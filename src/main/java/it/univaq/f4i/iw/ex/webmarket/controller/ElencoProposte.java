@@ -37,12 +37,11 @@ public class ElencoProposte extends BaseController {
 
 
         // Controllo se è un Ordinante o un Tecnico
-        boolean isOrd = u.getTipologiaUtente() != null && u.getTipologiaUtente().equals(TipologiaUtente.ORDINANTE);
-        request.setAttribute("isOrdinante", isOrd);
+       
 
         // Recupero le proposte in base al ruolo
         List<Proposta> proposte;
-        if (isOrd) {
+        if (u.getTipologiaUtente().equals(TipologiaUtente.ORDINANTE)) {
             proposte = ((ApplicationDataLayer) request.getAttribute("datalayer"))
                     .getPropostaDAO().getProposteByOrdinante(user);
         } else {

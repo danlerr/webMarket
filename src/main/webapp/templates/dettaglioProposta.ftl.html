@@ -17,22 +17,24 @@
 </head>
 <body>
 
-<div class="page-wrapper">
-    <div class="page-header d-print-none">
-        <div class="container-xl">
-            <div class="row g-2 align-items-center">
-                <div class="col">
-                    <h1>Proposta ${proposta.codice}</h1>
-                </div>
-                <div class="col-auto ms-auto d-print-none">
-                    <button type="button" class="btn btn-success" onclick="javascript:window.print();">Accetta</button>
-                </div>
-                <div class="col-auto d-print-none">
-                    <button type="button" class="btn btn-danger" onclick="javascript:window.print();">Rifiuta</button>
+    <div class="page-wrapper">
+        <div class="page-header d-print-none">
+            <div class="container-xl">
+                <div class="row g-2 align-items-center">
+                    <div class="col">
+                        <h1>Proposta ${proposta.codice}</h1>
+                        <#if user.tipologiaUtente == "ORDINANTE">
+                        <div class="col-auto ms-auto d-print-none d-flex">
+                            <button type="button" class="btn btn-success me-2">Accetta</button>
+                            <button type="button" class="btn btn-danger">Rifiuta</button>
+                        </div>
+                        </#if>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    
 
     <div class="page-body">
         <div class="container-xl">
@@ -40,12 +42,13 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-6">
-                            <p class="h3">Richiesta ${proposta.getRichiesta.codice}</p>
-                            <p>${proposta.getRichiesta.note}</p>
+                            <p class="h3">Richiesta ${proposta.getRichiesta().codiceRichiesta}</p>
+                            <p>${proposta.getRichiesta().note}</p>
                         </div>
                         <div class="col-6 text-end">
-                            <p class="h3">Presa in carico</p>
-                            <p>${proposta.getTecnico.getUsername}</p> !!!!!!!!!!!!!!!
+                            <p class="h3">Presa in carico da:</p>
+                            <p>${proposta.getRichiesta().tecnico.username}</p> 
+
                         </div>
                     </div>
 
@@ -66,8 +69,12 @@
                         <tr>
                             <td class="text-center"></td>
                             <td>
-                                <p class="strong mb-1">${proposta.prodotto}</p>
-                                <div class="text-secondary"><a href="${prodotto_link}">${proposta.url}</a></div>
+                                <p class="strong mb-1">${proposta.codiceProdotto}</p>
+                                <div class="text-secondary">
+                                    <a href="${proposta.url}" target="_blank" rel="noopener noreferrer">${proposta.url}</a>
+                                </div>
+                                
+                                
                             </td>
                             <td class="text-center">${proposta.produttore}</td>
                             <td class="text-end">${proposta.codiceProdotto}</td>

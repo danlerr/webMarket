@@ -235,7 +235,7 @@ public class PropostaDAO_MySQL extends DAO implements PropostaDAO {
     public List<Proposta> getProposteByOrdinante(int utente_key) throws DataException {
            List<Proposta> proposte = new ArrayList<>();
     try {
-        sProposta.setInt(1, utente_key);
+        sProposteByOrdinante.setInt(1, utente_key);
         try (ResultSet result = sProposteByOrdinante.executeQuery()) {
             while (result.next()) {
                 proposte.add(createProposta(result));

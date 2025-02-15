@@ -24,7 +24,7 @@ public interface Proposta extends DataItem<Integer> {
 
     String getCodice();
 
-    void setCodice(String produttore);
+    void setCodice(String codice);
 
     String getCodiceProdotto();
 
