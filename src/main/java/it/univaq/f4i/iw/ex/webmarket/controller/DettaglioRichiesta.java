@@ -129,7 +129,7 @@ public class DettaglioRichiesta extends BaseController {
         EmailSender.sendEmail(emailSession, ordinante.getEmail(), subject, body);
     }
         // Reindirizza l'utente alla pagina delle richieste
-        response.sendRedirect("elencoRichieste");
+        response.sendRedirect("elencoRichieste?success=Richiesta+presa+in+carico");
     }
 
     @Override
