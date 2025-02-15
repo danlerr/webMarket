@@ -1,5 +1,8 @@
 
--proposte(tutto)
+-proposte
+    dettaglio proposta
+        crea ordine (tec)
+
 -alert:
     aggiungi utente V
     crea richiesta V
