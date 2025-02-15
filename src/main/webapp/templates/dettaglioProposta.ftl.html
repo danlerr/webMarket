@@ -21,14 +21,30 @@
         <div class="page-header d-print-none">
             <div class="container-xl">
                 <div class="row g-2 align-items-center">
-                    <div class="col">
+                    <div class="col d-flex justify-content-between align-items-center">
                         <h1>Proposta ${proposta.codice}</h1>
-                        <#if user.tipologiaUtente == "ORDINANTE">
-                        <div class="col-auto ms-auto d-print-none d-flex">
-                            <button type="button" class="btn btn-success me-2">Accetta</button>
-                            <button type="button" class="btn btn-danger">Rifiuta</button>
+                    
+                        <!-- Stato della proposta con pallino -->
+                        <div class="d-flex align-items-center">
+                            <span class="badge" 
+                                  style="width: 15px; height: 15px; border-radius: 50%; background-color: 
+                                  <#if stato == "ACCETTATO">green</#if>
+                                  <#if stato == "RIFIUTATO">red</#if>
+                                  <#if stato == "IN_ATTESA">yellow</#if>
+                                  <#if stato == "ORDINATO">blue</#if>;">
+                            </span>
+                            <span class="ms-2 fw-bold">${stato}</span> <!-- Nome dello stato -->
                         </div>
-                        </#if>
+                    </div>
+                    
+
+                    <#if user.tipologiaUtente == "ORDINANTE" && stato == "IN_ATTESA">
+                    <div class="col-auto ms-auto d-print-none d-flex">
+                        <button type="button" class="btn btn-success me-2">Accetta</button>
+                        <button type="button" class="btn btn-danger">Rifiuta</button>
+                    </div>
+                </#if>
+                
                     </div>
                 </div>
             </div>
