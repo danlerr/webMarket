@@ -49,6 +49,9 @@ public class ElencoProposte extends BaseController {
                     .getPropostaDAO().getProposteByTecnico(user);
         }
 
+
+        
+
         // Passo le proposte al template
         request.setAttribute("proposte", proposte);
 

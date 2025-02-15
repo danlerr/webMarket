@@ -22,20 +22,27 @@
             <div class="container-xl">
                 <div class="row g-2 align-items-center">
                     <div class="col d-flex justify-content-between align-items-center">
+                        <td class="text-start">
                         <h1>Proposta ${proposta.codice}</h1>
+                        </td>
+
+                      <!-- Stato della proposta con pallino -->
+                    <td class="text-center">
+                        <#if proposta.statoProposta?string == "ACCETTATO">
+                            <span class="badge bg-success me-7"></span>Accettata
+                        </#if>
+                        <#if proposta.statoProposta?string == "RIFIUTATO">
+                            <span class="badge bg-warning me-7" ></span>Rifiutata
+                        </#if>
+                        <#if proposta.statoProposta?string == "IN_ATTESA">
+                            <span class="badge bg-danger me-7"></span>In attesa
+                        </#if>
+                        <#if proposta.statoProposta?string == "ORDINATO">
+                            <span class="badge bg-primary me-7" ></span>Ordinata
+                        </#if>
+                    </td>
+               
                     
-                        <!-- Stato della proposta con pallino -->
-                        <div class="d-flex align-items-center">
-                            <span class="badge" 
-                                  style="width: 15px; height: 15px; border-radius: 50%; background-color: 
-                                  <#if stato == "ACCETTATO">green</#if>
-                                  <#if stato == "RIFIUTATO">red</#if>
-                                  <#if stato == "IN_ATTESA">yellow</#if>
-                                  <#if stato == "ORDINATO">blue</#if>;">
-                            </span>
-                            <span class="ms-2 fw-bold">${stato}</span> <!-- Nome dello stato -->
-                        </div>
-                    </div>
                     
 
                     <#if user.tipologiaUtente == "ORDINANTE" && stato == "IN_ATTESA">
