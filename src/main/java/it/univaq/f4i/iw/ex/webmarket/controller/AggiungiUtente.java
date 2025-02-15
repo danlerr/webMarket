@@ -64,64 +64,64 @@ public class AggiungiUtente extends BaseController {
     }
 }
 
-private void action_creaUtente(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, DataException, TemplateManagerException, NoSuchAlgorithmException, InvalidKeySpecException {
-    String username = request.getParameter("username");
-    String email = request.getParameter("email");
-    String password = request.getParameter("temp-password");
-    String confirmPassword = request.getParameter("confirm-password");
-    String roleParam = request.getParameter("role");
-    
-    if (username == null || email == null || password == null || confirmPassword == null || roleParam == null) {
-        request.setAttribute("error", "Tutti i campi sono obbligatori.");
-        action_default(request, response);
-        return;
-    }
-
-    if (!password.equals(confirmPassword)) {
-        request.setAttribute("error", "Le password non coincidono.");
-        action_default(request, response);
-        return;
-    }
-    
-    // controllo se lo username esiste già nel database
-    Utente existingUser = ((ApplicationDataLayer) request.getAttribute("datalayer")).getUtenteDAO().getUtenteByUsername(username);
-
-    if (existingUser != null) {
-        request.setAttribute("error", "Questo username è già utilizzato");
-        action_default(request, response);
-        return;
-    }
-
-    TipologiaUtente role = TipologiaUtente.valueOf(roleParam.toUpperCase());
-    String hashedPass = SecurityHelpers.getPasswordHashPBKDF2(password);
-
-    Utente nuovoUtente = new UtenteImpl();
-    nuovoUtente.setUsername(username);
-    nuovoUtente.setEmail(email);
-    nuovoUtente.setPassword(hashedPass);
-    nuovoUtente.setTipologiaUtente(role);
-
-    ((ApplicationDataLayer) request.getAttribute("datalayer")).getUtenteDAO().storeUtente(nuovoUtente);
-       try {
+    private void action_creaUtente(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, DataException, TemplateManagerException, NoSuchAlgorithmException, InvalidKeySpecException {
+        String username = request.getParameter("username");
+        String email = request.getParameter("email");
+        String password = request.getParameter("temp-password");
+        String confirmPassword = request.getParameter("confirm-password");
+        String roleParam = request.getParameter("role");
         
-        Session emailSession = EmailSender.getEmailSession();
+        if (username == null || email == null || password == null || confirmPassword == null || roleParam == null) {
+            request.setAttribute("error", "Tutti i campi sono obbligatori.");
+            action_default(request, response);
+            return;
+        }
 
-
-        String subject = "Benvenuto in Coquette";
-        String body = "Ciao e Benvenuto in Coquette,\n\n" +
-                      "Ecco le tue credenziali per accedere:\n" +
-                      "Username: " + username + "\n" +
-                      "Password : " + password ;
+        if (!password.equals(confirmPassword)) {
+            request.setAttribute("error", "Le password non coincidono.");
+            action_default(request, response);
+            return;
+        }
         
-        EmailSender.sendEmail(emailSession, email, subject, body);
-        request.setAttribute("success", "Utente creato con successo e email inviata!");
-    } catch (Exception e) {
-              request.setAttribute("error", "Utente creato con successo, ma si è verificato un problema durante l'invio dell'email.");
-              e.printStackTrace();
-          }
-    request.setAttribute("success", "Utente creato con successo!");
-    action_default(request, response);
-}
+        // controllo se lo username esiste già nel database
+        Utente existingUser = ((ApplicationDataLayer) request.getAttribute("datalayer")).getUtenteDAO().getUtenteByUsername(username);
+
+        if (existingUser != null) {
+            request.setAttribute("error", "Questo username è già utilizzato");
+            action_default(request, response);
+            return;
+        }
+
+        TipologiaUtente role = TipologiaUtente.valueOf(roleParam.toUpperCase());
+        String hashedPass = SecurityHelpers.getPasswordHashPBKDF2(password);
+
+        Utente nuovoUtente = new UtenteImpl();
+        nuovoUtente.setUsername(username);
+        nuovoUtente.setEmail(email);
+        nuovoUtente.setPassword(hashedPass);
+        nuovoUtente.setTipologiaUtente(role);
+
+        ((ApplicationDataLayer) request.getAttribute("datalayer")).getUtenteDAO().storeUtente(nuovoUtente);
+        try {
+            
+            Session emailSession = EmailSender.getEmailSession();
+
+
+            String subject = "Benvenuto in Coquette";
+            String body = "Ciao e Benvenuto in Coquette,\n\n" +
+                        "Ecco le tue credenziali per accedere:\n" +
+                        "Username: " + username + "\n" +
+                        "Password : " + password ;
+            
+            EmailSender.sendEmail(emailSession, email, subject, body);
+            request.setAttribute("success", "Utente creato con successo e email inviata!");
+        } catch (Exception e) {
+                request.setAttribute("error", "Utente creato con successo, ma si è verificato un problema durante l'invio dell'email.");
+                e.printStackTrace();
+            }
+        request.setAttribute("success", "Utente creato con successo!");
+        action_default(request, response);
+    }
 
 
     /**

@@ -55,27 +55,24 @@ public class ElencoRichieste extends BaseController {
         res.activate(template, request, response);
     }
 
-
-
-
-@Override
-protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-    try {
-        HttpSession session = SecurityHelpers.checkSession(request);
-        if (session == null) {
-            response.sendRedirect("login");
-            return;
+    @Override
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+        try {
+            HttpSession session = SecurityHelpers.checkSession(request);
+            if (session == null) {
+                response.sendRedirect("login");
+                return;
+            }
+            int userId = (int) session.getAttribute("userid");
+            
+            // Azione di default: visualizza le richieste
+            action_default(request, response, userId);
+        } catch (IOException | TemplateManagerException ex) {
+            handleError(ex, request, response);
+        } catch (DataException ex) {
+            Logger.getLogger(ElencoRichieste.class.getName()).log(Level.SEVERE, null, ex);
         }
-        int userId = (int) session.getAttribute("userid");
-        
-        // Azione di default: visualizza le richieste
-        action_default(request, response, userId);
-    } catch (IOException | TemplateManagerException ex) {
-        handleError(ex, request, response);
-    } catch (DataException ex) {
-        Logger.getLogger(ElencoRichieste.class.getName()).log(Level.SEVERE, null, ex);
     }
-}
 
     @Override
     public String getServletInfo() {

@@ -70,85 +70,82 @@ public class CreaRichiesta extends BaseController {
 
 
     // Crea la richiesta e le CaratteristicaRichiesta associate (POST)
-private void action_creaRichiesta(HttpServletRequest request, HttpServletResponse response, int userId)
-        throws DataException, IOException {
+    private void action_creaRichiesta(HttpServletRequest request, HttpServletResponse response, int userId)
+            throws DataException, IOException {
 
-    try {
-        Utente utente = ((ApplicationDataLayer) request.getAttribute("datalayer")).getUtenteDAO().getUtente(userId);
-
-        Richiesta richiesta = ((ApplicationDataLayer) request.getAttribute("datalayer"))
-                .getRichiestaOrdineDAO().createRichiesta();
-
-        richiesta.setNote(request.getParameter("note"));
-        richiesta.setStato(it.univaq.f4i.iw.ex.webmarket.data.model.StatoRichiesta.IN_ATTESA);
-        richiesta.setData(new Timestamp(new Date().getTime()));
-        richiesta.setOrdinante(utente);
-        // richiesta.setTecnico(null); // Il tecnico verrà assegnato in un secondo momento (opzionale, ma consigliato)
-        int subcategoryId = Integer.parseInt(request.getParameter("subcategoryId"));
-        Categoria categoria = ((ApplicationDataLayer) request.getAttribute("datalayer"))
-                .getCategoriaDAO().getCategoria(subcategoryId);
-        richiesta.setCategoria(categoria);
-
-        ((ApplicationDataLayer) request.getAttribute("datalayer"))
-                .getRichiestaOrdineDAO().storeRichiesta(richiesta);
-
-        // Crea gli oggetti CaratteristicaRichiesta
-        List<Caratteristica> caratteristiche = ((ApplicationDataLayer) request.getAttribute("datalayer"))
-                .getCaratteristicaDAO().getCaratteristicheByCategoria(subcategoryId);
-
-        for (Caratteristica caratteristica : caratteristiche) {
-            String valoreCaratteristica = request.getParameter("caratteristica-" + caratteristica.getKey());
-            if (valoreCaratteristica != null && !valoreCaratteristica.isEmpty()) {
-                CaratteristicaRichiesta caratteristicaRichiesta = ((ApplicationDataLayer) request.getAttribute("datalayer"))
-                        .getCaratteristicaRichiestaDAO().createCR();
-                caratteristicaRichiesta.setRichiesta(richiesta);
-                caratteristicaRichiesta.setCaratteristica(caratteristica);
-                caratteristicaRichiesta.setValore(valoreCaratteristica);
-                ((ApplicationDataLayer) request.getAttribute("datalayer"))
-                        .getCaratteristicaRichiestaDAO().storeCR(caratteristicaRichiesta);
-            }
-        }
-
-        // *** Invio email a tutti i tecnici *** (Spostato qui, dopo il salvataggio)
         try {
-            List<Utente> tecnici = ((ApplicationDataLayer) request.getAttribute("datalayer"))
-                    .getUtenteDAO().getAllByRole(TipologiaUtente.TECNICO);
+            Utente utente = ((ApplicationDataLayer) request.getAttribute("datalayer")).getUtenteDAO().getUtente(userId);
 
-            if (tecnici != null && !tecnici.isEmpty()) {
-                Session emailSession = EmailSender.getEmailSession();
-                String subject = "Nuova Richiesta in Attesa";
-                String body = "<h1>Nuova Richiesta</h1>"
-                            + "<p>È stata creata una nuova richiesta con codice <strong>" + richiesta.getCodiceRichiesta() + "</strong>.</p>"
-                            + "<p>Controlla la sezione richieste per prenderla in carico!.</p>";
+            Richiesta richiesta = ((ApplicationDataLayer) request.getAttribute("datalayer"))
+                    .getRichiestaOrdineDAO().createRichiesta();
 
-                for (Utente tecnico : tecnici) {
-                    if (tecnico.getEmail() != null && !tecnico.getEmail().isEmpty()) {
-                        EmailSender.sendEmail(emailSession, tecnico.getEmail(), subject, body);
-                    }
+            richiesta.setNote(request.getParameter("note"));
+            richiesta.setStato(it.univaq.f4i.iw.ex.webmarket.data.model.StatoRichiesta.IN_ATTESA);
+            richiesta.setData(new Timestamp(new Date().getTime()));
+            richiesta.setOrdinante(utente);
+            // richiesta.setTecnico(null); // Il tecnico verrà assegnato in un secondo momento (opzionale, ma consigliato)
+            int subcategoryId = Integer.parseInt(request.getParameter("subcategoryId"));
+            Categoria categoria = ((ApplicationDataLayer) request.getAttribute("datalayer"))
+                    .getCategoriaDAO().getCategoria(subcategoryId);
+            richiesta.setCategoria(categoria);
+
+            ((ApplicationDataLayer) request.getAttribute("datalayer"))
+                    .getRichiestaOrdineDAO().storeRichiesta(richiesta);
+
+            // Crea gli oggetti CaratteristicaRichiesta
+            List<Caratteristica> caratteristiche = ((ApplicationDataLayer) request.getAttribute("datalayer"))
+                    .getCaratteristicaDAO().getCaratteristicheByCategoria(subcategoryId);
+
+            for (Caratteristica caratteristica : caratteristiche) {
+                String valoreCaratteristica = request.getParameter("caratteristica-" + caratteristica.getKey());
+                if (valoreCaratteristica != null && !valoreCaratteristica.isEmpty()) {
+                    CaratteristicaRichiesta caratteristicaRichiesta = ((ApplicationDataLayer) request.getAttribute("datalayer"))
+                            .getCaratteristicaRichiestaDAO().createCR();
+                    caratteristicaRichiesta.setRichiesta(richiesta);
+                    caratteristicaRichiesta.setCaratteristica(caratteristica);
+                    caratteristicaRichiesta.setValore(valoreCaratteristica);
+                    ((ApplicationDataLayer) request.getAttribute("datalayer"))
+                            .getCaratteristicaRichiestaDAO().storeCR(caratteristicaRichiesta);
                 }
             }
-        } catch (Exception e) {
-            // Gestisci eventuali errori nell'invio delle email.  Log, ma *non* bloccare il flusso principale.
-              Logger.getLogger(CreaRichiesta.class.getName()).log(Level.SEVERE, "Errore durante l'invio dell'email ai tecnici", e);
-        }
 
-        // SUCCESS: Reindirizza con messaggio di successo
-        response.sendRedirect("elencoRichieste?success=" + URLEncoder.encode("Richiesta creata con successo!", "UTF-8"));
+            // *** Invio email a tutti i tecnici *** (Spostato qui, dopo il salvataggio)
+            try {
+                List<Utente> tecnici = ((ApplicationDataLayer) request.getAttribute("datalayer"))
+                        .getUtenteDAO().getAllByRole(TipologiaUtente.TECNICO);
 
-    } catch (Exception ex) {
-        // ERROR: Gestione *centralizzata* degli errori
-       
-         Logger.getLogger(CreaRichiesta.class.getName()).log(Level.SEVERE, "Errore durante la creazione della richiesta", ex);
+                if (tecnici != null && !tecnici.isEmpty()) {
+                    Session emailSession = EmailSender.getEmailSession();
+                    String subject = "Nuova Richiesta in Attesa";
+                    String body = "<h1>Nuova Richiesta</h1>"
+                                + "<p>È stata creata una nuova richiesta con codice <strong>" + richiesta.getCodiceRichiesta() + "</strong>.</p>"
+                                + "<p>Controlla la sezione richieste per prenderla in carico!.</p>";
 
+                    for (Utente tecnico : tecnici) {
+                        if (tecnico.getEmail() != null && !tecnico.getEmail().isEmpty()) {
+                            EmailSender.sendEmail(emailSession, tecnico.getEmail(), subject, body);
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                // Gestisci eventuali errori nell'invio delle email.  Log, ma *non* bloccare il flusso principale.
+                Logger.getLogger(CreaRichiesta.class.getName()).log(Level.SEVERE, "Errore durante l'invio dell'email ai tecnici", e);
+            }
 
-        // Reindirizza con messaggio di errore
-        response.sendRedirect("elencoRichieste?error=" + URLEncoder.encode("Si è verificato un errore durante la creazione della richiesta: " + ex.getMessage(), "UTF-8"));
+            // SUCCESS: Reindirizza con messaggio di successo
+            response.sendRedirect("elencoRichieste?success=" + URLEncoder.encode("Richiesta creata con successo!", "UTF-8"));
+
+        } catch (Exception ex) {
+            // ERROR: Gestione *centralizzata* degli errori
         
+            Logger.getLogger(CreaRichiesta.class.getName()).log(Level.SEVERE, "Errore durante la creazione della richiesta", ex);
+
+
+            // Reindirizza con messaggio di errore
+            response.sendRedirect("elencoRichieste?error=" + URLEncoder.encode("Si è verificato un errore durante la creazione della richiesta: " + ex.getMessage(), "UTF-8"));
+            
+        }
     }
-}
-
-
-
 
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)

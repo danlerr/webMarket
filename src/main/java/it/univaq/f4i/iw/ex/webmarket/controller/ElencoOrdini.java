@@ -56,9 +56,6 @@ public class ElencoOrdini extends BaseController {
     res.activate("listaOrdini.ftl.html", request, response);
 }
 
-
-
-
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException {
