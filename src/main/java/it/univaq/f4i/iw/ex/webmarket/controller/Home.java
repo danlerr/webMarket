@@ -35,7 +35,7 @@ public class Home extends BaseController {
             medieTecnici.put(key, value);
         }
 
-request.setAttribute("medieTecnici", medieTecnici);  // Passiamo la nuova mappa
+        request.setAttribute("medieTecnici", medieTecnici);  // Passiamo la nuova mappa
 
         List<Utente> tecnici = ((ApplicationDataLayer) request.getAttribute("datalayer")).getUtenteDAO().getAllByRole(TipologiaUtente.TECNICO);
         request.setAttribute("tecnici", tecnici); //da tecnici prendo username e mail 
