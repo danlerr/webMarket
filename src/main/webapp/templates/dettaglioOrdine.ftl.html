@@ -73,7 +73,12 @@
                         <p class="h3">Tecnico: ${tecnico.username}</p>
                     </div>
                     <div class="col-12 my-5">
-                        <h1>Numero proposta: ${ordine.proposta.codice}</h1>
+                        <h1>
+                            <a href="dettaglioProposta?n=${ordine.proposta.key}" class="text-info">
+                                Numero proposta: ${ordine.proposta.codice}
+                            </a>
+                        </h1>
+                        
                     </div>
                 </div>
                 <table class="table table-transparent table-responsive">

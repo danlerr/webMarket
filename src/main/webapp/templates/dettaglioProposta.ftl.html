@@ -6,23 +6,25 @@
                 <div class="row g-2 align-items-center">
                     <div class="col d-flex justify-content-between align-items-center">
                         <td class="text-start">
-                        <h1>Proposta ${proposta.codice}</h1>
+                        <h1>Dettaglio proposta</h1>
                         </td>
 
                      
                
                     
                     
-                    <#if user.tipologiaUtente == "ORDINANTE" && stato == "IN_ATTESA">
-                    <div class="col-auto ms-auto d-print-none d-flex">
-                        <a href= "dettaglioProposta?action=accettaProposta&n=${proposta.key}"class="btn btn-success">Accetta proposta</a>
-                        <a href="#" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-danger">Rifiuta proposta</a>
+                        <#if user.tipologiaUtente == "TECNICO" && stato == "ACCETTATO">
+                        <div class="col-auto ms-auto d-print-none d-flex">
+                            <a href="dettaglioProposta?action=inviaOrdine&n=${proposta.key}" class="btn btn-primary">Invia ordine</a>
+                        </div>
+                    <#elseif user.tipologiaUtente == "ORDINANTE" && stato == "IN_ATTESA">
+                        <div class="col-auto ms-auto d-print-none d-flex">
+                            <a href="dettaglioProposta?action=accettaProposta&n=${proposta.key}" class="btn btn-success me-2">Accetta proposta</a>
+                            <a href="#" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-danger">Rifiuta proposta</a>
 
-                    </div>
-
-
+                        </div>
+                    </#if>
                     
-                </#if>
                 
                     </div>
                 </div>
@@ -35,11 +37,21 @@
         <div class="container-xl">
             <div class="card card-lg">
                 <div class="card-body">
+                  
+
                     <div class="row">
+                        <#if proposta.motivazione?has_content>
+                            <p class="text-danger">
+                                <strong>Motivazione del rifiuto:</strong> ${proposta.motivazione}
+                            </p>   
+                            </#if>
+                        
                         <div class="col-6">
-                            <p class="h3">Richiesta ${proposta.getRichiesta().codiceRichiesta}</p>
-                            <p>${proposta.getRichiesta().note}</p>
+                            
+                            <a href="dettaglioRichiesta?n=${proposta.richiesta.key}" class="text-info" ><strong>Richiesta:</strong>${proposta.richiesta.codiceRichiesta}</a>
+                            <p><strong>Note della richiesta:</strong> ${proposta.getRichiesta().note}</p>
                         </div>
+                        
                         <div class="col-6 text-end">
                             <p class="h3">Presa in carico da:</p>
                             <p>${proposta.getRichiesta().tecnico.username}</p> 
@@ -64,10 +76,17 @@
                         <tr>
                             <td class="text-center"></td>
                             <td>
-                                <p class="strong mb-1">${proposta.codiceProdotto}</p>
+                                <p class="strong mb-1"><strong>Nome prodotto:</strong> ${proposta.prodotto}</p>
+                                <p class="strong mb-1"><strong>Codice prodotto:</strong> ${proposta.codiceProdotto}</p>
+
                                 <div class="text-secondary">
-                                    <a href="${proposta.url}" target="_blank" rel="noopener noreferrer">${proposta.url}</a>
+                                    <a href="${proposta.url}" target="_blank" rel="noopener noreferrer" class="btn btn-info">
+                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-link"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 15l6 -6" /><path d="M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464" /><path d="M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463" /></svg>
+                                        Visualizza prodotto
+                                    </a>
                                 </div>
+                                
+                                
                                 
                                 
                             </td>
@@ -78,8 +97,9 @@
                     </table>
 
                     <div class="text-end mt-4">
-                        <p>${proposta.note!'Nessuna nota inserita'}</p>
+                        <p><strong>Note della proposta:</strong> ${proposta.note!'Nessuna nota inserita'}</p>
                     </div>
+                    
                 </div>
             </div>
         </div>

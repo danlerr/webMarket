@@ -7,6 +7,5 @@
 -README 
 -documentazione 
 una sola proposta + ordinamento richieste per tecnico + fix datatable + ricontrollo redirect
-rivedere dettaglio proposta
-error tpl no return login
-sistemare invia ordine
+
+modello relazionale foto

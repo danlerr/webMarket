@@ -10,7 +10,8 @@
     </head>
     <body class="d-flex align-items-center justify-content-center vh-100 text-center">
         <div>
-            <div><a href="login">Return to Login</a></div>
+            <a href="#" onclick="window.history.back(); return false;">Return to previous page</a>
+
             <h1>Error</h1>
             <p>The system encountered the following error while handling your request:</p>
             <p><b>${error!"Unknown error"}</b></p>
