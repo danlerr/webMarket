@@ -111,7 +111,7 @@ public class DettaglioProposta extends BaseController {
         // Controlla che l'utente sia un tecnico
         if (!utente.getTipologiaUtente().equals(TipologiaUtente.ORDINANTE)) {
             // Se non è un tecnico, reindirizza con un messaggio di errore
-            response.sendRedirect("elencoProposte?error=Non+puoi+rifiutare+la+proposta");
+            response.sendRedirect("elencoProposte?error=Non+sei+autorizzato+a+rifiutare+la+proposta");
             return;
         }
 
@@ -119,8 +119,8 @@ public class DettaglioProposta extends BaseController {
         if (motivazione == null || motivazione.trim().isEmpty()) {
             Proposta proposta = ((ApplicationDataLayer) request.getAttribute("datalayer")).getPropostaDAO().getProposta(n);
             request.setAttribute("proposta", proposta);
-            request.setAttribute("errore", "La motivazione del rifiuto deve essere indicata!");
-            action_default(request, response, n);
+            response.sendRedirect("dettaglioProposta?error=Devi+indicare+la+motivazione+del+rifiuto&n=" + proposta.getKey() );
+            
             return; 
         }
 
@@ -144,7 +144,7 @@ public class DettaglioProposta extends BaseController {
             String body = "Ciao "+username+",\n La informiamo che la sua proposta numero " + proposta.getCodice() +"è stata rifiutata.";
             
             EmailSender.sendEmail(emailSession, email, subject, body);
-            response.sendRedirect("dettaglioProposta?success=Proposta+rifiutata&n =" + proposta.getKey() );
+            response.sendRedirect("dettaglioProposta?success=Proposta+rifiutata&n=" + proposta.getKey() );
         } catch (Exception e) {
             response.sendRedirect("dettaglioProposta?success=Proposta+rifiutata+ma+non+siamo+riusciti+ad+inviare+la+mail&n=" + proposta.getKey() );
                 e.printStackTrace();
@@ -169,7 +169,11 @@ public class DettaglioProposta extends BaseController {
         }
 
         Proposta proposta = ((ApplicationDataLayer) request.getAttribute("datalayer")).getPropostaDAO().getProposta(n);
-
+        // Verifica che lo stato della proposta sia ACCETTATO
+        if (!proposta.getStatoProposta().equals(StatoProposta.ACCETTATO)) {
+        response.sendRedirect("dettaglioProposta?error=Proposta+non+accettata&n=" + proposta.getKey());
+        return;
+        }
         //cambio stato proposta
         proposta.setStatoProposta(StatoProposta.ORDINATO);
         ((ApplicationDataLayer) request.getAttribute("datalayer")).getPropostaDAO().storeProposta(proposta);
@@ -196,7 +200,7 @@ public class DettaglioProposta extends BaseController {
                     + "<p>Controlla la sezione degli ordini!.</p>";
 
         EmailSender.sendEmail(emailSession, email, subject, body);
-        response.sendRedirect("dettaglioOrdine?n=" + ordine.getKey()); 
+        response.sendRedirect("dettaglioOrdine?success=Ordine+creato+con+successo&n=" + ordine.getKey()); 
     }
 
     @Override
