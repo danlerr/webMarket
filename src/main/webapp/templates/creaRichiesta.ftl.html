@@ -1,50 +1,51 @@
 <div class="page container d-flex justify-content-center align-items-center min-vh-100">
   <div class="col-md-6">
-      <div class="card">
-          <div class="card-body">
-              <h2 class="h2 text-center mb-4">Crea una richiesta</h2>
-              <form id="requestForm" action="creaRichiesta?action=creaRichiesta" method="post">
-
-                <div id="ajax-error-message" class="alert alert-danger" style="display: none;"></div>
-
-                  <div class="mb-3">
-                      <label class="form-label">Categoria principale</label>
-                      <select class="form-select" id="category-select" name="categoryId">
-                          <option value="">Seleziona una categoria</option>
-                          <#list categorie as categoria>
-                              <option value="${categoria.key}">${categoria.nome}</option>
-                          </#list>
-                      </select>
-                      <div id="category-error" class="invalid-feedback" style="display: none;"></div>
-                  </div>
-
-                  <div class="mb-3" id="subcategory-group" style="display: none;">
-                      <label class="form-label">Sotto-categoria</label>
-                      <select class="form-select" id="subcategory-select" name="subcategoryId">
-                          <option value="">Seleziona una sottocategoria</option>
-                      </select>
-                      <div id="subcategory-error" class="invalid-feedback" style="display: none;"></div>
-                  </div>
-
-                  <div class="mb-3" id="characteristics-group" style="display: none;">
-                      <label class="form-label">Caratteristiche</label>
-                      <div id="characteristics-container">
-                          </div>
-                  </div>
-
-                  <div class="mb-3">
-                      <label class="form-label">Descrizione</label>
-                      <textarea id="description" name="note" class="form-control" placeholder="Inserisci una descrizione..."></textarea>
-                      <div id="description-error" class="invalid-feedback" style="display: none;"></div>
-                  </div>
-
-                  <div class="form-footer">
-                      <button type="submit" class="btn btn-cyan w-100" id="submitButton" disabled>Invia richiesta</button>
-                  </div>
-              </form>
+    <div class="card">
+      <div class="card-body">
+        <h2 class="h2 text-center mb-4">Crea una richiesta</h2>
+        <form id="requestForm" action="creaRichiesta?action=creaRichiesta" method="post">
+          
+          <div id="ajax-error-message" class="alert alert-danger" style="display: none;"></div>
+          
+          <!-- Categoria principale -->
+          <div class="mb-3">
+            <label class="form-label">Categoria principale</label>
+            <select class="form-select" id="category-select" name="categoryId">
+              <option value="">Seleziona una categoria</option>
+              <#list categorie as categoria>
+                <option value="${categoria.key}">${categoria.nome}</option>
+              </#list>
+            </select>
           </div>
+          
+          <!-- Container per i livelli di sottocategorie -->
+          <div class="mb-3" id="subcategory-container"></div>
+          
+          <!-- Campo nascosto per la categoria finale selezionata -->
+          <input type="hidden" id="finalCategoryId" name="subcategoryId" value="" />
+          
+          <!-- Caratteristiche (mostrate solo se è una categoria foglia) -->
+          <div class="mb-3" id="characteristics-group" style="display: none;">
+            <label class="form-label">Caratteristiche</label>
+            <div id="characteristics-container"></div>
+          </div>
+          
+          <!-- Descrizione -->
+          <div class="mb-3">
+            <label class="form-label">Descrizione</label>
+            <textarea id="description" name="note" class="form-control" placeholder="Inserisci una descrizione..."></textarea>
+            <div id="description-error" class="invalid-feedback" style="display: none;"></div>
+          </div>
+          
+          <!-- Pulsante di submit -->
+          <div class="form-footer">
+            <button type="submit" class="btn btn-cyan w-100" id="submitButton" disabled>Invia richiesta</button>
+          </div>
+          
+        </form>
       </div>
+    </div>
   </div>
 </div>
 
-<script src="scripts/creaRichiesta.js"></script>
+<script src="scripts/categorie.js"></script>
