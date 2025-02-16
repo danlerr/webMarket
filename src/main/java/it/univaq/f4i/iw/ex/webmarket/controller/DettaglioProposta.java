@@ -32,9 +32,10 @@ public class DettaglioProposta extends BaseController {
         TemplateResult res = new TemplateResult(getServletContext());
         request.setAttribute("page_title", "Dettaglio proposta");
 
+
         Utente utente = ((ApplicationDataLayer) request.getAttribute("datalayer"))
                     .getUtenteDAO().getUtente(user);
-            request.setAttribute("user", utente);
+        request.setAttribute("user", utente);
         int propostaId = Integer.parseInt(request.getParameter("n"));
 
         // Recupera la proposta dal database
@@ -62,7 +63,7 @@ public class DettaglioProposta extends BaseController {
         res.activate("dettaglioProposta.ftl.html", request, response);
         }
 
-    private void action_accettaProposta(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException,DataException {
+    private void action_accettaProposta(HttpServletRequest request, HttpServletResponse response, int n) throws IOException, ServletException, TemplateManagerException,DataException {
         
         HttpSession session = SecurityHelpers.checkSession(request);
         int userId = (int) session.getAttribute("userid");
@@ -77,7 +78,7 @@ public class DettaglioProposta extends BaseController {
             return;
         }
 
-        int n = SecurityHelpers.checkNumeric(request.getParameter("n"));
+        
         Proposta proposta = ((ApplicationDataLayer) request.getAttribute("datalayer")).getPropostaDAO().getProposta(n);
         proposta.setStatoProposta(StatoProposta.ACCETTATO);
         ((ApplicationDataLayer) request.getAttribute("datalayer")).getPropostaDAO().storeProposta(proposta);
@@ -90,12 +91,12 @@ public class DettaglioProposta extends BaseController {
             String body = "Ciao "+username+",\n La informiamo che la sua proposta numero " + proposta.getCodice() +"è stata accettata.";
             
             EmailSender.sendEmail(emailSession, email, subject, body);
-            response.sendRedirect("dettaglioProposta?success=Proposta+accettata");
+            response.sendRedirect("dettaglioProposta?success=Proposta+accettata&n=" + proposta.getKey() );
         } catch (Exception e) {
-            response.sendRedirect("dettaglioProposta?success=Proposta+accettata+,+ma+si+è+verificato+un+problema+con+la+email");
+            response.sendRedirect("dettaglioProposta?success=Proposta+accettata+,+ma+si+è+verificato+un+problema+con+la+email&n=" + proposta.getKey() );
                 e.printStackTrace();
             }
-            response.sendRedirect("dettaglioProposta?success=Proposta+accettata");
+            response.sendRedirect("dettaglioProposta?success=Proposta+accettata&n=" + proposta.getKey() );
     }
 
     private void action_rifiutaProposta(HttpServletRequest request, HttpServletResponse response, int n) throws IOException, ServletException, TemplateManagerException, DataException {
@@ -105,6 +106,7 @@ public class DettaglioProposta extends BaseController {
         // Recupera l'utente loggato per verificare il ruolo
         Utente utente = ((ApplicationDataLayer) request.getAttribute("datalayer"))
                 .getUtenteDAO().getUtente(userId);
+                request.setAttribute("user", utente);
 
         // Controlla che l'utente sia un tecnico
         if (!utente.getTipologiaUtente().equals(TipologiaUtente.ORDINANTE)) {
@@ -113,7 +115,7 @@ public class DettaglioProposta extends BaseController {
             return;
         }
 
-        String motivazione = request.getParameter("note");
+        String motivazione = request.getParameter("motivazione");
         if (motivazione == null || motivazione.trim().isEmpty()) {
             Proposta proposta = ((ApplicationDataLayer) request.getAttribute("datalayer")).getPropostaDAO().getProposta(n);
             request.setAttribute("proposta", proposta);
@@ -130,10 +132,7 @@ public class DettaglioProposta extends BaseController {
         ((ApplicationDataLayer) request.getAttribute("datalayer")).getPropostaDAO().storeProposta(proposta);
         
         
-        //cambio stato richiesta
-        Richiesta richiesta = proposta.getRichiesta();
-        richiesta.setStato(StatoRichiesta.PRESA_IN_CARICO);
-        ((ApplicationDataLayer) request.getAttribute("datalayer")).getRichiestaOrdineDAO().storeRichiesta(richiesta);
+        
         
         String email = proposta.getRichiesta().getTecnico().getEmail();
         String username = proposta.getRichiesta().getTecnico().getUsername();
@@ -145,13 +144,13 @@ public class DettaglioProposta extends BaseController {
             String body = "Ciao "+username+",\n La informiamo che la sua proposta numero " + proposta.getCodice() +"è stata rifiutata.";
             
             EmailSender.sendEmail(emailSession, email, subject, body);
-            response.sendRedirect("dettaglioProposta?success=Proposta+rifiutata");
+            response.sendRedirect("dettaglioProposta?success=Proposta+rifiutata&n =" + proposta.getKey() );
         } catch (Exception e) {
-            response.sendRedirect("dettaglioProposta?success=Proposta+rifiutata+,+ma+si+è+verificato+un+problema+con+la+email");
+            response.sendRedirect("dettaglioProposta?success=Proposta+rifiutata+ma+non+siamo+riusciti+ad+inviare+la+mail&n=" + proposta.getKey() );
                 e.printStackTrace();
             }
 
-            response.sendRedirect("dettaglioProposta?success=Proposta+rifiutata");
+            response.sendRedirect("dettaglioProposta?success=Proposta+rifiutata&n=" + proposta.getKey() );
     }
      
     private void action_inviaOrdine(HttpServletRequest request, HttpServletResponse response, int n) throws IOException, ServletException, TemplateManagerException, DataException {
@@ -217,7 +216,7 @@ public class DettaglioProposta extends BaseController {
             String action = request.getParameter("action");
 
             if (action != null && action.equals("accettaProposta")) {
-                action_accettaProposta(request, response);
+                action_accettaProposta(request, response, n);
 
             }else if(action != null && action.equals("rifiutaProposta")) {
                 action_rifiutaProposta(request, response, n);
