@@ -31,7 +31,7 @@
                     <div class="modal-status bg-danger"></div>
                     <div class="modal-body text-center py-4">
                         <h3>Vuoi davvero rifiutare l'ordine?</h3>
-                        <form action="dettaglioOrdine" method="get">
+                        <form action="dettaglioOrdine" method="post">
                             <input type="hidden" name="action" value="rifiutaOrdine">
                             <input type="hidden" name="n" value="${ordine.key}">
                             <div class="form-selectgroup">

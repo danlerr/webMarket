@@ -87,7 +87,7 @@ public class AggiungiUtente extends BaseController {
 
         if (existingUser != null) {
             
-            response.sendRedirect("aggiungiUtente?error=Questo+username+è+già+utilizzato");
+            response.sendRedirect("aggiungiUtente?error=username+utilizzato");
 
             return;
         }
@@ -114,7 +114,7 @@ public class AggiungiUtente extends BaseController {
                         "Password : " + password ;
             
             EmailSender.sendEmail(emailSession, email, subject, body);
-            response.sendRedirect("aggiungiUtente?success=Utente+creato+con+successo+e+mail+inviata");
+            response.sendRedirect("aggiungiUtente?success=Utente+creato+con+successo+e+email+inviata");
         } catch (Exception e) {
             response.sendRedirect("aggiungiUtente?success=Utente+creato+con+successo+ma+si+è+verificato+un+problema+con+la+email");
                 e.printStackTrace();
