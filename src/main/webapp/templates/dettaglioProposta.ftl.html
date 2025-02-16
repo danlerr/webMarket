@@ -37,9 +37,18 @@
         <div class="container-xl">
             <div class="card card-lg">
                 <div class="card-body">
+                  
+
                     <div class="row">
+                        <#if proposta.motivazione?has_content>
+                            <p class="text-danger">
+                                <strong>Motivazione del rifiuto:</strong> ${proposta.motivazione}
+                            </p>   
+                            </#if>
+                        
                         <div class="col-6">
-                            <a href="dettaglioRichiesta?n=${proposta.richiesta.key}" class="text-info" >${proposta.richiesta.codiceRichiesta}</a>
+                            
+                            <a href="dettaglioRichiesta?n=${proposta.richiesta.key}" class="text-info" ><strong>Richiesta:</strong>${proposta.richiesta.codiceRichiesta}</a>
                             <p><strong>Note della richiesta:</strong> ${proposta.getRichiesta().note}</p>
                         </div>
                         

@@ -67,7 +67,7 @@ public class RecensisciTecnico extends BaseController {
             request.setAttribute("reviewExists", true);
             request.setAttribute("oldRating", recensionePrecedente.getValore());
             request.setAttribute("message", "Hai già votato il tecnico " + tecnico.getUsername() +
-                    " per una richiesta precedente. Vuoi aggiornare la recensione?");
+                    " . Vuoi aggiornare la recensione?");
         } else {
             request.setAttribute("reviewExists", false);
             request.setAttribute("message", "Recensisci da 1 a 5 stelle la tua esperienza con il tecnico " + tecnico.getUsername() );
