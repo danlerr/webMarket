@@ -5,8 +5,8 @@ import it.univaq.f4i.iw.ex.webmarket.data.model.Ordine;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Proposta;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Richiesta;
 import it.univaq.f4i.iw.ex.webmarket.data.model.StatoRichiesta;
+import it.univaq.f4i.iw.ex.webmarket.data.model.TipologiaUtente;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Utente;
-import it.univaq.f4i.iw.ex.webmarket.data.model.impl.OrdineImpl;
 import it.univaq.f4i.iw.ex.webmarket.data.model.impl.StatoOrdine;
 import it.univaq.f4i.iw.ex.webmarket.data.model.impl.StatoProposta;
 import it.univaq.f4i.iw.framework.data.DataException;
@@ -62,46 +62,22 @@ public class DettaglioProposta extends BaseController {
         res.activate("dettaglioProposta.ftl.html", request, response);
         }
 
-
-    @Override
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException {
-        try {
-            HttpSession session = SecurityHelpers.checkSession(request);
-            if (session == null) {
-                response.sendRedirect("login");
-                return;
-            }
-            // Recupera l'ID dell'utente dalla sessione
-            int userId = (int) session.getAttribute("userid");
-            String action = request.getParameter("action");
-            if (action != null && action.equals("accettaProposta")) {
-                action_accettaProposta(request, response);
-
-            }else if(action != null && action.equals("rifiutaProposta")) {
-                action_rifiutaProposta(request, response);
-
-            }else if(action != null && action.equals("inviaOrdine"){
-                action_inviaOrdine(request, response, n);
-
-            }else{
-                action_default(request, response, userId);
-            }
-        } catch (IOException | TemplateManagerException ex) {
-            handleError(ex, request, response);
-        } catch (DataException ex) {
-            Logger.getLogger(DettaglioProposta.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    @Override
-    public String getServletInfo() {
-        return "Dettaglio proposta servlet";
-    }
-
     private void action_accettaProposta(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException,DataException {
-        int n;
-        n = SecurityHelpers.checkNumeric(request.getParameter("n"));
+        
+        HttpSession session = SecurityHelpers.checkSession(request);
+        int userId = (int) session.getAttribute("userid");
+        // Recupera l'utente loggato per verificare il ruolo
+        Utente utente = ((ApplicationDataLayer) request.getAttribute("datalayer"))
+                .getUtenteDAO().getUtente(userId);
+
+        // Controlla che l'utente sia un tecnico
+        if (!utente.getTipologiaUtente().equals(TipologiaUtente.ORDINANTE)) {
+            // Se non è un tecnico, reindirizza con un messaggio di errore
+            response.sendRedirect("elencoProposte?error=Non+puoi+accettare+la+proposta");
+            return;
+        }
+
+        int n = SecurityHelpers.checkNumeric(request.getParameter("n"));
         Proposta proposta = ((ApplicationDataLayer) request.getAttribute("datalayer")).getPropostaDAO().getProposta(n);
         proposta.setStatoProposta(StatoProposta.ACCETTATO);
         ((ApplicationDataLayer) request.getAttribute("datalayer")).getPropostaDAO().storeProposta(proposta);
@@ -119,10 +95,80 @@ public class DettaglioProposta extends BaseController {
             response.sendRedirect("dettaglioProposta?success=Proposta+accettata+,+ma+si+è+verificato+un+problema+con+la+email");
                 e.printStackTrace();
             }
-            response.sendRedirect("aggiungiUtente?success=Utente+creato+con+successo");
+            response.sendRedirect("dettaglioProposta?success=Proposta+accettata");
     }
-    
+
+    private void action_rifiutaProposta(HttpServletRequest request, HttpServletResponse response, int n) throws IOException, ServletException, TemplateManagerException, DataException {
+        
+        HttpSession session = SecurityHelpers.checkSession(request);
+        int userId = (int) session.getAttribute("userid");
+        // Recupera l'utente loggato per verificare il ruolo
+        Utente utente = ((ApplicationDataLayer) request.getAttribute("datalayer"))
+                .getUtenteDAO().getUtente(userId);
+
+        // Controlla che l'utente sia un tecnico
+        if (!utente.getTipologiaUtente().equals(TipologiaUtente.ORDINANTE)) {
+            // Se non è un tecnico, reindirizza con un messaggio di errore
+            response.sendRedirect("elencoProposte?error=Non+puoi+rifiutare+la+proposta");
+            return;
+        }
+
+        String motivazione = request.getParameter("note");
+        if (motivazione == null || motivazione.trim().isEmpty()) {
+            Proposta proposta = ((ApplicationDataLayer) request.getAttribute("datalayer")).getPropostaDAO().getProposta(n);
+            request.setAttribute("proposta", proposta);
+            request.setAttribute("errore", "La motivazione del rifiuto deve essere indicata!");
+            action_default(request, response, n);
+            return; 
+        }
+
+        Proposta proposta = ((ApplicationDataLayer) request.getAttribute("datalayer")).getPropostaDAO().getProposta(n);
+        proposta.setStatoProposta(StatoProposta.RIFIUTATO);
+        
+        proposta.setMotivazione(motivazione);
+        
+        ((ApplicationDataLayer) request.getAttribute("datalayer")).getPropostaDAO().storeProposta(proposta);
+        
+        
+        //cambio stato richiesta
+        Richiesta richiesta = proposta.getRichiesta();
+        richiesta.setStato(StatoRichiesta.PRESA_IN_CARICO);
+        ((ApplicationDataLayer) request.getAttribute("datalayer")).getRichiestaOrdineDAO().storeRichiesta(richiesta);
+        
+        String email = proposta.getRichiesta().getTecnico().getEmail();
+        String username = proposta.getRichiesta().getTecnico().getUsername();
+
+        try {
+            Session emailSession = EmailSender.getEmailSession();
+
+            String subject = "Proposta rifiutata";
+            String body = "Ciao "+username+",\n La informiamo che la sua proposta numero " + proposta.getCodice() +"è stata rifiutata.";
+            
+            EmailSender.sendEmail(emailSession, email, subject, body);
+            response.sendRedirect("dettaglioProposta?success=Proposta+rifiutata");
+        } catch (Exception e) {
+            response.sendRedirect("dettaglioProposta?success=Proposta+rifiutata+,+ma+si+è+verificato+un+problema+con+la+email");
+                e.printStackTrace();
+            }
+
+            response.sendRedirect("dettaglioProposta?success=Proposta+rifiutata");
+    }
+     
     private void action_inviaOrdine(HttpServletRequest request, HttpServletResponse response, int n) throws IOException, ServletException, TemplateManagerException, DataException {
+        
+        HttpSession session = SecurityHelpers.checkSession(request);
+        int userId = (int) session.getAttribute("userid");
+        // Recupera l'utente loggato per verificare il ruolo
+        Utente utente = ((ApplicationDataLayer) request.getAttribute("datalayer"))
+                .getUtenteDAO().getUtente(userId);
+
+        // Controlla che l'utente sia un tecnico
+        if (!utente.getTipologiaUtente().equals(TipologiaUtente.TECNICO)) {
+            // Se non è un tecnico, reindirizza con un messaggio di errore
+            response.sendRedirect("elencoProposte?error=Solo+il+tecnico+puo+creare+un+ordine");
+            return;
+        }
+
         Proposta proposta = ((ApplicationDataLayer) request.getAttribute("datalayer")).getPropostaDAO().getProposta(n);
 
         //cambio stato proposta
@@ -153,4 +199,45 @@ public class DettaglioProposta extends BaseController {
         EmailSender.sendEmail(emailSession, email, subject, body);
         response.sendRedirect("dettaglioOrdine?n=" + ordine.getKey()); 
     }
+
+    @Override
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException {
+        try {
+            HttpSession session = SecurityHelpers.checkSession(request);
+            if (session == null) {
+                response.sendRedirect("login");
+                return;
+            }
+            // Recupera l'ID dell'utente dalla sessione
+            int userId = (int) session.getAttribute("userid");
+
+            int n = Integer.parseInt(request.getParameter("n"));
+
+            String action = request.getParameter("action");
+
+            if (action != null && action.equals("accettaProposta")) {
+                action_accettaProposta(request, response);
+
+            }else if(action != null && action.equals("rifiutaProposta")) {
+                action_rifiutaProposta(request, response, n);
+
+            }else if(action != null && action.equals("inviaOrdine")){
+                action_inviaOrdine(request, response, n);
+
+            }else{
+                action_default(request, response, userId);
+            }
+        } catch (IOException | TemplateManagerException ex) {
+            handleError(ex, request, response);
+        } catch (DataException ex) {
+            Logger.getLogger(DettaglioProposta.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
+    public String getServletInfo() {
+        return "Dettaglio proposta servlet";
+    }
+
 }
