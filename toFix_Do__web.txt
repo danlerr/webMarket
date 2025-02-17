@@ -3,9 +3,8 @@
 -pulizia codice 
 
 -RESPONSIVE check
--popolare bene il db
+
 -README 
 -documentazione 
-una sola proposta + ordinamento richieste per tecnico + fix datatable + ricontrollo redirect
 
-modello relazionale foto
+
