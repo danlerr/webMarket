@@ -11,10 +11,7 @@ import it.univaq.f4i.iw.framework.data.DataException;
 import it.univaq.f4i.iw.framework.data.DataItemProxy;
 import it.univaq.f4i.iw.framework.data.DataLayer;
 import it.univaq.f4i.iw.framework.data.OptimisticLockException;
-
 import java.sql.*;
-//import java.util.ArrayList;
-//import java.util.List;
 import java.util.ArrayList;
 import java.util.List;
 

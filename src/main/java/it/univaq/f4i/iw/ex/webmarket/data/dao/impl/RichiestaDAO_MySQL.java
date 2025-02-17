@@ -11,8 +11,6 @@ import it.univaq.f4i.iw.framework.data.DataException;
 import it.univaq.f4i.iw.framework.data.DataItemProxy;
 import it.univaq.f4i.iw.framework.data.DataLayer;
 import it.univaq.f4i.iw.framework.data.OptimisticLockException;
-
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -68,28 +66,28 @@ public class RichiestaDAO_MySQL extends DAO implements RichiestaDAO {
                 "WHERE id=? AND version=?"
             );
             sRichiesteSenzaProposte = connection.prepareStatement(
-    "SELECT r.id, r.note, r.stato, r.data, r.codice_richiesta, r.ordinante, r.tecnico, r.categoria " +
-    "FROM richiesta r " +
-    "WHERE r.stato = ? AND r.tecnico = ? " +
-    "  AND NOT EXISTS (SELECT 1 FROM proposta p " +
-    "                  WHERE p.richiesta_id = r.id AND p.stato <> 'RIFIUTATO') " +
-    "ORDER BY r.data ASC"
-);
+                "SELECT r.id, r.note, r.stato, r.data, r.codice_richiesta, r.ordinante, r.tecnico, r.categoria " +
+                "FROM richiesta r " +
+                "WHERE r.stato = ? AND r.tecnico = ? " +
+                "  AND NOT EXISTS (SELECT 1 FROM proposta p " +
+                "                  WHERE p.richiesta_id = r.id AND p.stato <> 'RIFIUTATO') " +
+                "ORDER BY r.data ASC"
+            );
 
             
             // PreparedStatement per recuperare le richieste prese in carico da un tecnico
             sRichiestePreseInCaricoConProposteByTecnico = connection.prepareStatement(
-    "SELECT r.id, r.note, r.stato, r.data, r.codice_richiesta, r.ordinante, r.tecnico, r.categoria " +
-    "FROM richiesta r " +
-    "WHERE r.stato = ? AND r.tecnico = ? " +
-    "  AND EXISTS (SELECT 1 FROM proposta p " +
-    "              WHERE p.richiesta_id = r.id AND p.stato <> 'RIFIUTATO') " +
-    "ORDER BY r.data ASC"
-);
+                "SELECT r.id, r.note, r.stato, r.data, r.codice_richiesta, r.ordinante, r.tecnico, r.categoria " +
+                "FROM richiesta r " +
+                "WHERE r.stato = ? AND r.tecnico = ? " +
+                "  AND EXISTS (SELECT 1 FROM proposta p " +
+                "              WHERE p.richiesta_id = r.id AND p.stato <> 'RIFIUTATO') " +
+                "ORDER BY r.data ASC"
+            );
 
             // PreparedStatement per recuperare le richieste in attesa 
             sRichiesteInAttesa = connection.prepareStatement("SELECT * FROM richiesta WHERE stato = ?");
-            // Prepariamo la query che conta quante proposte non rifiutate esistono per una certa richiesta
+            // Prepared Statement che conta quante proposte non rifiutate esistono per una certa richiesta
             sCheckCompile = connection.prepareStatement(
                 "SELECT COUNT(*) AS cnt "+
                 "FROM proposta "+ 
@@ -128,7 +126,7 @@ public class RichiestaDAO_MySQL extends DAO implements RichiestaDAO {
             if (sRichiestePreseInCaricoConProposteByTecnico != null && !sRichiestePreseInCaricoConProposteByTecnico.isClosed()) {
                 sRichiestePreseInCaricoConProposteByTecnico.close();
             }
-            if (sRichiesteInAttesa != null && !sRichiesteInAttesa.isClosed()) { // <-- Aggiunto
+            if (sRichiesteInAttesa != null && !sRichiesteInAttesa.isClosed()) { 
                 sRichiesteInAttesa.close();
             }
             if (sCheckCompile != null && !sCheckCompile.isClosed()) {
@@ -394,27 +392,27 @@ public class RichiestaDAO_MySQL extends DAO implements RichiestaDAO {
     }
 }
 
-@Override
-public boolean checkCompile(int richiesta_key) throws DataException {
-    try {
-        // Prepariamo i parametri per la query
-        sCheckCompile.setInt(1, richiesta_key);
-        
-        // Eseguiamo la query
-        try (ResultSet rs = sCheckCompile.executeQuery()) {
-            if (rs.next()) {
-                int count = rs.getInt("cnt");
-                // Se count == 0, non ci sono proposte "attive" (cioè != RIFIUTATO)
-                return (count == 0);
-            } else {
-                // Caso inatteso: nessun risultato
-                return false;
+    @Override
+    public boolean checkCompile(int richiesta_key) throws DataException {
+        try {
+            // Prepariamo i parametri per la query
+            sCheckCompile.setInt(1, richiesta_key);
+            
+            // Eseguiamo la query
+            try (ResultSet rs = sCheckCompile.executeQuery()) {
+                if (rs.next()) {
+                    int count = rs.getInt("cnt");
+                    // Se count == 0, non ci sono proposte "attive" (cioè != RIFIUTATO)
+                    return (count == 0);
+                } else {
+                    // Caso inatteso: nessun risultato
+                    return false;
+                }
             }
+        } catch (SQLException ex) {
+            throw new DataException("Errore durante l'esecuzione di checkCompile", ex);
         }
-    } catch (SQLException ex) {
-        throw new DataException("Errore durante l'esecuzione di checkCompile", ex);
     }
-}
 
 
 

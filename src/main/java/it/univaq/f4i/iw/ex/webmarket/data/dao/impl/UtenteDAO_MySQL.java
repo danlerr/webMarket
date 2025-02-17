@@ -42,7 +42,6 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO {
             super.init();
 
             //precompiliamo tutte le query utilizzate nella classe
-            //precompile all the queries uses in this class
             sUserByID = connection.prepareStatement(
                 "SELECT * FROM utente WHERE id = ?"
                 );
@@ -79,8 +78,7 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO {
      */
     @Override
     public void destroy() throws DataException {
-        //anche chiudere i PreparedStamenent è una buona pratica...
-        //also closing PreparedStamenents is a good practice...
+
         try {
             sUserByID.close();
             sUserByEmail.close();
@@ -140,27 +138,16 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO {
     public Utente getUtente(int user_key) throws DataException {
         Utente u = null;
         //prima vediamo se l'oggetto è già stato caricato
-        //first look for this object in the cache
         if (dataLayer.getCache().has(Utente.class, user_key)) {
             u = dataLayer.getCache().get(Utente.class, user_key);
         } else {
             //altrimenti lo carichiamo dal database
-            //otherwise load it from database
             try {
                 sUserByID.setInt(1, user_key);
                 try ( ResultSet rs = sUserByID.executeQuery()) {
                     if (rs.next()) {
-                        //notare come utilizziamo il costrutture
-                        //"helper" della classe AuthorImpl
-                        //per creare rapidamente un'istanza a
-                        //partire dal record corrente
-                        //note how we use here the helper constructor
-                        //of the AuthorImpl class to quickly
-                        //create an instance from the current record
-
                         u = createUtente(rs);
                         //e lo mettiamo anche nella cache
-                        //and put it also in the cache
                         dataLayer.getCache().add(Utente.class, u);
                     }
                 }
@@ -225,7 +212,6 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO {
         try {
             if (user.getKey() != null && user.getKey() > 0) { //update
                 //non facciamo nulla se l'oggetto è un proxy e indica di non aver subito modifiche
-                //do not store the object if it is a proxy and does not indicate any modification
                 if (user instanceof UtenteProxy && !((UtenteProxy) user).isModified()) {
                     return;
                 }
@@ -252,27 +238,17 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO {
 
 
                 if (iUser.executeUpdate() == 1) {
-                    //per leggere la chiave generata dal database
-                    //per il record appena inserito, usiamo il metodo
+                    //per leggere la chiave generata dal database per il record appena inserito, usiamo il metodo
                     //getGeneratedKeys sullo statement.
-                    //to read the generated record key from the database
-                    //we use the getGeneratedKeys method on the same statement
                     try ( ResultSet keys = iUser.getGeneratedKeys()) {
-                        //il valore restituito è un ResultSet con un record
-                        //per ciascuna chiave generata (uno solo nel nostro caso)
-                        //the returned value is a ResultSet with a distinct record for
-                        //each generated key (only one in our case)
+                        //il valore restituito è un ResultSet con un record per ciascuna chiave generata
+                    
                         if (keys.next()) {
                             //i campi del record sono le componenti della chiave
                             //(nel nostro caso, un solo intero)
-                            //the record fields are the key componenets
-                            //(a single integer in our case)
+                            
                             int key = keys.getInt(1);
-                            //aggiornaimo la chiave in caso di inserimento
-                            //after an insert, uopdate the object key
                             user.setKey(key);
-                            //inseriamo il nuovo oggetto nella cache
-                            //add the new object to the cache
                             dataLayer.getCache().add(Utente.class, user);
                         }
                     }
