@@ -68,12 +68,16 @@ public class RichiestaDAO_MySQL extends DAO implements RichiestaDAO {
                 "WHERE id=? AND version=?"
             );
             sRichiesteSenzaProposte = connection.prepareStatement(
-            "SELECT r.id, r.note, r.stato, r.data, r.codice_richiesta, r.ordinante, r.tecnico, r.categoria " +
-                "FROM richiesta r " +
-                "WHERE r.stato = ? AND r.tecnico = ? " +
-                "AND NOT EXISTS (SELECT 1 FROM proposta p WHERE p.richiesta_id = r.id AND (p.stato = 'ACCETTATO' or p.stato = 'IN_ATTESA')) ORDER BY data ASC"
-);
-
+            "SELECT r.id, r.note, r.stato, r.data, r.codice_richiesta, r.ordinante, r.tecnico, r.categoria " + // Selezioniamo i dettagli della richiesta
+            "FROM richiesta r " + // La tabella principale è 'richiesta'
+            "LEFT JOIN proposta p ON p.richiesta_id = r.id " + // Usiamo un LEFT JOIN con la tabella 'proposta' per ottenere le proposte associate a ciascuna richiesta
+            "WHERE r.stato = ? " + // Filtriamo per lo stato della richiesta (passato come parametro)
+            "  AND r.tecnico = ? " + // Filtriamo per il tecnico associato alla richiesta (passato come parametro)
+            "  AND (p.stato = 'RIFIUTATO' OR p.richiesta_id IS NULL) " + // Includiamo:
+            // 1. Le richieste che hanno almeno una proposta con stato 'RIFIUTATO'
+            // 2. Le richieste che non hanno alcuna proposta associata (p.richiesta_id IS NULL)
+            "ORDER BY r.data ASC" // Ordiniamo i risultati in ordine crescente di data della richiesta
+            );
             
 
             // PreparedStatement per recuperare le richieste prese in carico da un tecnico
@@ -81,7 +85,7 @@ public class RichiestaDAO_MySQL extends DAO implements RichiestaDAO {
                 "SELECT r.id, r.note, r.stato, r.data, r.codice_richiesta, r.ordinante, r.tecnico, r.categoria " +
                 "FROM richiesta r " +
                 "WHERE r.stato = ? AND r.tecnico = ? " +  
-                "AND EXISTS (SELECT 1 FROM proposta p WHERE p.richiesta_id = r.id AND (p.stato = 'ACCETTATO' or p.stato = 'IN_ATTESA')) " + //Richieste con ALMENO una proposta
+                "AND EXISTS (SELECT 1 FROM proposta p WHERE p.richiesta_id = r.id) " + //Richieste con ALMENO una proposta
                 "ORDER BY r.data ASC"
             
                 );          
