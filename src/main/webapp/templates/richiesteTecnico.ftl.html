@@ -16,7 +16,6 @@
                   <th class="text-center">Tecnico</th>
                   <th class="text-center">Data</th>
                   <th class="text-center">Stato</th>
-          
                   <th class="text-end">Dettagli richiesta</th>
                 </tr>
               </thead>
@@ -60,7 +59,6 @@
                           <span class="badge bg-secondary me-1"></span>Sconosciuto
                         </#if>
                       </td>
-                      
                       <td class="text-end">
                         <a href="dettaglioRichiesta?n=${r.key}" class="btn btn-light active">Visualizza</a>
                       </td>
@@ -73,16 +71,13 @@
                     </td>
                   </tr>
                 </#if>
-
                 <!-- SEZIONE PER LE RICHIESTE SENZA PROPOSTE -->
                 <tr>
                   <td colspan="7" class="text-center fw-bold text-danger">
                     <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-down"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14" /><path d="M18 13l-6 6" /><path d="M6 13l6 6" /></svg>
                     Richieste senza proposte o con proposte rifiutate
                   </td>
-                  
                 </tr>
-
                 <!-- RICHIESTE PRESE IN CARICO SENZA PROPOSTE -->
                 <#if (richiestePreseInCaricoSenzaProposte?? && richiestePreseInCaricoSenzaProposte?size > 0)>
                   <#list richiestePreseInCaricoSenzaProposte as r>
@@ -119,7 +114,6 @@
                           <span class="badge bg-secondary me-1"></span>Sconosciuto
                         </#if>
                       </td>
-                      
                       <td class="text-end">
                         <a href="dettaglioRichiesta?n=${r.key}" class="btn btn-light active">Visualizza</a>
                       </td>
@@ -161,7 +155,6 @@
                   <th class="text-center">Tecnico</th>
                   <th class="text-center">Data</th>
                   <th class="text-center">Stato</th>
-                  
                   <th class="text-end">Dettagli richiesta</th>
                 </tr>
               </thead>
@@ -202,7 +195,6 @@
                           <span class="badge bg-secondary me-1"></span>Sconosciuto
                         </#if>
                       </td>
-                      
                       <td class="text-end">
                         <a href="dettaglioRichiesta?n=${r.key}" class="btn btn-light active">Visualizza</a>
                       </td>
@@ -220,6 +212,6 @@
           </div>
         </div>
       </div>
-    </div> <!-- fine row-cards -->
-  </div> <!-- fine container-xl -->
-</div> <!-- fine page-body -->
+    </div> 
+  </div> 
+</div> 

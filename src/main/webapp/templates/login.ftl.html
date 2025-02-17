@@ -1,103 +1,112 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
-<head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Coquette - ${pageName?if_exists}</title>
+    
     <!-- CSS files -->
-    <link rel="stylesheet" type="text/css" href="style/demo.min.css">
-    <link rel="stylesheet" type="text/css" href="style/tabler.min.css">
+    <link rel="stylesheet" type="text/css" href="style/demo.min.css" />
+    <link rel="stylesheet" type="text/css" href="style/tabler.min.css" />
     <style>
-        @import url('https://rsms.me/inter/inter.css');
+      @import url("https://rsms.me/inter/inter.css");
     </style>
-</head>
-<body class="d-flex flex-column vh-100">
+  </head>
+  <body class="d-flex flex-column vh-100">
     <div class="page d-flex align-items-center justify-content-center vh-100">
-        <div class="container container-normal">
-            <div class="row align-items-center g-4">
-                <div class="col-lg-6 d-flex justify-content-center">
-                    <img src="images/logo.svg" alt="Login Image" class="img-fluid">
-                </div>
-                <div class="col-lg-6 d-flex justify-content-center">
-                    <div class="container-tight w-100" style="max-width: 400px;">
-                        <div class="card card-md">
-                            <div class="card-body">
-                                <h2 class="h2 text-center mb-4">Login to your account</h2>
-                                
-                                <!-- Mostra l'eventuale messaggio di errore -->
-                                <#if error??>
-                                    <div class="alert alert-danger" role="alert">
-                                        ${error}
-                                    </div>
-                                </#if>
-                                
-                                <!-- Form per il login -->
-                                <form action="login" method="post" autocomplete="off" novalidate>
-                                    <!-- Campo nascosto per il referrer -->
-                                    <input type="hidden" name="referrer" value="${referrer!}">
-                                    
-                                    <div class="mb-3">
-                                        <label class="form-label">Username</label>
-                                        <input 
-                                            type="text" 
-                                            class="form-control" 
-                                            name="username"
-                                            placeholder="your username"
-                                            autocomplete="off"
-                                            required
-                                        >
-                                    </div>
-                                    
-                                    <div class="mb-2">
-                                        <label class="form-label">Password</label>
-                                        <div class="input-group input-group-flat">
-                                            <input 
-                                                type="password" 
-                                                class="form-control" 
-                                                name="password"
-                                                placeholder="your password"
-                                                autocomplete="off"
-                                                required
-                                            >
-                                            <span class="input-group-text">
-                                                <a href="#" class="link-secondary" title="Show password" data-bs-toggle="tooltip">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                         viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                         class="icon icon-1">
-                                                        <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
-                                                        <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6
-                                                        c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
-                                                    </svg>
-                                                </a>
-                                            </span>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="form-footer">
-                                        <button 
-                                            type="submit" 
-                                            class="btn btn-cyan w-100"
-                                            name="login" 
-                                            value="login"
-                                            disabled
-                                        >
-                                            Sign in
-                                        </button>
-                                    </div>
-                                </form>
-                                <!-- Fine form -->
-                            </div>
-                        </div>
+      <div class="container container-normal">
+        <div class="row align-items-center g-4">
+          <div class="col-lg-6 d-flex justify-content-center">
+            <img src="images/logo.svg" alt="Login Image" class="img-fluid" />
+          </div>
+          <div class="col-lg-6 d-flex justify-content-center">
+            <div class="container-tight w-100" style="max-width: 400px;">
+              <div class="card card-md">
+                <div class="card-body">
+                  <h2 class="h2 text-center mb-4">Login to your account</h2>
+                  
+                  <!-- Mostra l'eventuale messaggio di errore -->
+                  <#if error??>
+                    <div class="alert alert-danger" role="alert">
+                      ${error}
                     </div>
+                  </#if>
+                  
+                  <!-- Form per il login -->
+                  <form action="login" method="post" autocomplete="off" novalidate>
+                    <!-- Campo nascosto per il referrer -->
+                    <input type="hidden" name="referrer" value="${referrer!}" />
+                    
+                    <div class="mb-3">
+                      <label class="form-label">Username</label>
+                      <input 
+                        type="text" 
+                        class="form-control" 
+                        name="username"
+                        placeholder="your username"
+                        autocomplete="off"
+                        required
+                      />
+                    </div>
+                    
+                    <div class="mb-2">
+                      <label class="form-label">Password</label>
+                      <div class="input-group input-group-flat">
+                        <input 
+                          type="password" 
+                          class="form-control" 
+                          name="password"
+                          placeholder="your password"
+                          autocomplete="off"
+                          required
+                        />
+                        <span class="input-group-text">
+                          <a href="#" class="link-secondary" title="Show password" data-bs-toggle="tooltip">
+                            <svg 
+                              xmlns="http://www.w3.org/2000/svg" 
+                              width="24" 
+                              height="24"
+                              viewBox="0 0 24 24" 
+                              fill="none" 
+                              stroke="currentColor"
+                              stroke-width="2" 
+                              stroke-linecap="round" 
+                              stroke-linejoin="round"
+                              class="icon icon-1"
+                            >
+                              <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                              <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6 c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
+                            </svg>
+                          </a>
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <div class="form-footer">
+                      <button 
+                        type="submit" 
+                        class="btn btn-cyan w-100"
+                        name="login" 
+                        value="login"
+                        disabled
+                      >
+                        Sign in
+                      </button>
+                    </div>
+                  </form>
+                  <!-- Fine form -->
                 </div>
+              </div>
             </div>
+          </div>
         </div>
-     </div>
-     <script src="scripts/demo-theme.min.js"></script>
+      </div>
+    </div>
+    
+    <script src="scripts/demo-theme.min.js"></script>
     <script src="scripts/tabler.min.js"></script>
     <script src="scripts/demo.min.js"></script>
     <script src="scripts/login.js"></script>
-</body>
+  </body>
 </html>
