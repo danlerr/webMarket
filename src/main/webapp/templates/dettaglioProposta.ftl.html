@@ -8,11 +8,6 @@
                         <td class="text-start">
                         <h1>Dettaglio proposta</h1>
                         </td>
-
-                     
-               
-                    
-                    
                         <#if user.tipologiaUtente == "TECNICO" && stato == "ACCETTATO">
                         <div class="col-auto ms-auto d-print-none d-flex">
                             <a href="dettaglioProposta?action=inviaOrdine&n=${proposta.key}" class="btn btn-primary">Invia ordine</a>
@@ -21,11 +16,8 @@
                         <div class="col-auto ms-auto d-print-none d-flex">
                             <a href="dettaglioProposta?action=accettaProposta&n=${proposta.key}" class="btn btn-success me-2">Accetta proposta</a>
                             <a href="#" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-danger">Rifiuta proposta</a>
-
                         </div>
                     </#if>
-                    
-                
                     </div>
                 </div>
             </div>
@@ -37,8 +29,6 @@
         <div class="container-xl">
             <div class="card card-lg">
                 <div class="card-body">
-                  
-
                     <div class="row">
                         <#if proposta.motivazione?has_content>
                             <p class="text-danger">
@@ -85,10 +75,6 @@
                                         Visualizza prodotto
                                     </a>
                                 </div>
-                                
-                                
-                                
-                                
                             </td>
                             <td class="text-center">${proposta.produttore}</td>
                             <td class="text-end">${proposta.codiceProdotto}</td>
@@ -115,8 +101,6 @@
             <div class="modal-body text-center py-4">
                 <h3>Inserisci la motivazione del rifiuto</h3>
                 <form action="dettaglioProposta?action=rifiutaProposta&n=${proposta.key}" method="post">
-                    
-                    
                     <!-- Campo testo per la motivazione -->
                     <div class="mb-3">
                         <textarea class="form-control" name="motivazione" rows="5" placeholder="Scrivi qui la motivazione del rifiuto"></textarea>
