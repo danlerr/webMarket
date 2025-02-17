@@ -10,9 +10,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Controllo validità per attivare/disattivare il pulsante di submit
     function checkFormValidity() {
-        const descriptionValue = document.getElementById("description").value.trim();
-        // Se c’è un finalCategoryId (categoria foglia) e la descrizione non è vuota
-        if (finalCategoryInput.value !== "" && descriptionValue !== "") {
+        if (finalCategoryInput.value !== "") {
             document.getElementById("submitButton").disabled = false;
         } else {
             document.getElementById("submitButton").disabled = true;
