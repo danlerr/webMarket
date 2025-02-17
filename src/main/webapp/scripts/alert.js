@@ -1,4 +1,4 @@
-// notification.js
+
 
 function showNotification(message, type = 'success', duration = 5000) {
     // 1. Crea l'elemento HTML della notifica
@@ -21,7 +21,7 @@ function showNotification(message, type = 'success', duration = 5000) {
     
 
 
-    // 4. Nascondi la notifica dopo un certo tempo (senza animazione di fade-out)
+    // 4. Nascondi la notifica dopo un certo tempo 
     setTimeout(() => {
        notificationDiv.remove();
     }, duration);

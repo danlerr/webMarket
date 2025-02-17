@@ -1,11 +1,11 @@
 document.addEventListener("DOMContentLoaded", function() {
-    // Container dove genereremo dinamicamente i <select> per le categorie
+    // Container dove generiamo dinamicamente i <select> per le categorie
     const subcategoryContainer = document.getElementById("subcategory-container");
     // Container per le caratteristiche
     const characteristicsGroup = document.getElementById("characteristics-group");
     const characteristicsContainer = document.getElementById("characteristics-container");
 
-    // Hidden input che conterrà l'ID della categoria finale selezionata
+    // Hidden input che contiene l'ID della categoria finale selezionata
     const finalCategoryInput = document.getElementById("finalCategoryId");
 
     // Controllo validità per attivare/disattivare il pulsante di submit
@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function() {
             })
             .catch(error => {
                 console.error("Errore nel recupero delle sottocategorie:", error);
-                // Mostra qualche messaggio di errore all'utente...
+                
             });
     }
 
@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", function() {
             })
             .catch(error => {
                 console.error("Errore nel recupero delle caratteristiche:", error);
-                // Mostra qualche messaggio di errore all'utente...
+                
             });
     }
 
@@ -97,7 +97,7 @@ document.addEventListener("DOMContentLoaded", function() {
         // Se c'è un <select> successivo al current, rimuovilo (e rimuovi tutti quelli ancora successivi).
         removeSelectsAfter(levelSelect);
 
-        // Crea un nuovo wrapper
+        
         const wrapperDiv = document.createElement("div");
         wrapperDiv.className = "mb-3";
 
@@ -155,7 +155,6 @@ document.addEventListener("DOMContentLoaded", function() {
         const selectsWrappers = [...subcategoryContainer.querySelectorAll(".mb-3")];
         const index = selectsWrappers.findIndex(div => div.contains(currentSelect));
 
-        // Se index === -1 significa che currentSelect non è trovato (forse è null?)
         // Se index >= 0, rimuovi tutti i wrapper successivi
         if (index >= 0) {
             for (let i = selectsWrappers.length - 1; i > index; i--) {
@@ -168,7 +167,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // ------ PARTE INIZIALE: caricamento delle categorie "padre" (quelle top-level) ------
-    // Inizialmente, tu hai già un <select> di "categorie principali" in pagina (id="category-select").
+    // Inizialmente, abbiamo già un <select> di "categorie principali" in pagina (id="category-select").
     const categorySelect = document.getElementById("category-select");
 
     categorySelect.addEventListener("change", function() {
