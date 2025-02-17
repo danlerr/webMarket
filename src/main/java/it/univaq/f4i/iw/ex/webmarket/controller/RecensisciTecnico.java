@@ -89,7 +89,7 @@ public class RecensisciTecnico extends BaseController {
         // Recupera l'id dell'ordine
         String ordineIdStr = request.getParameter("n");
         if (ordineIdStr == null) {
-            response.sendRedirect("error?Missing+order+id");
+            response.sendRedirect("elencoOrdini?error=Missing+order+id");
             return;
         }
         int ordineId = Integer.parseInt(ordineIdStr);
