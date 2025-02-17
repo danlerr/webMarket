@@ -1,62 +1,81 @@
 <div class="page-body">
     <div class="container-xl">
-        <div class="text-center my-4">
-            <h1>Le mie proposte</h1>
+      <!-- Barra di ricerca e filtro stato -->
+      <div class="row my-4">
+        <div class="col-md-6">
+          <input type="text" id="search" class="form-control" placeholder="Cerca per codice proposta">
         </div>
-        <#if proposte?size gt 0>
-            <div class="row g-4">
-                <div class="col-md-9 mx-auto">
-                    <div class="row row-cards">
-                        <#list proposte as proposta>
-                            <div class="card">
-                                <div class="card-body">
-                                    <table class="table">
-                                        <!-- Codice proposta -->
-                                        <td class="text-start ps-0">
-                                            <a href="dettaglioProposta?n=${proposta.key}" class="text-primary">
-                                                Proposta: ${proposta.codice}
-                                            </a>
-                                        </td>
-
-                                        <!-- Stato della proposta con pallino -->
-                                        <td class="text-end">
-                                            <#if proposta.statoProposta?string == "ACCETTATO">
-                                                <span class="badge bg-success me-1"></span>Accettata
-                                            </#if>
-                                            <#if proposta.statoProposta?string == "RIFIUTATO">
-                                                <span class="badge bg-danger me-1"></span>Rifiutata
-                                            </#if>
-                                            <#if proposta.statoProposta?string == "IN_ATTESA">
-                                                <span class="badge bg-warning me-1"></span>In attesa
-                                            </#if>
-                                            <#if proposta.statoProposta?string == "ORDINATO">
-                                                <span class="badge bg-primary me-1"></span>Ordinata
-                                            </#if>
-                                        </td>
-                                    </table>
-
-                                    <div class="mt-4 d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <strong>Categoria:</strong> ${proposta.richiesta.categoria.nome} |
-                                            <strong>Richiesta:</strong>
-                                            <a href="dettaglioRichiesta?n=${proposta.richiesta.key}" class="text-info">
-                                                ${proposta.richiesta.codiceRichiesta}
-                                            </a> |
-                                            <strong>Nome prodotto:</strong> ${proposta.prodotto}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </#list>
+        <div class="col-md-6">
+          <select id="status" class="form-select">
+            <option value="tutti">Filtra per stato</option>
+            <option value="ACCETTATO">Accettata</option>
+            <option value="RIFIUTATO">Rifiutata</option>
+            <option value="IN_ATTESA">In attesa</option>
+            <option value="ORDINATO">Ordinata</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="text-center my-4">
+        <h1>Le mie proposte</h1>
+      </div>
+      
+      <#if proposte?size gt 0>
+        <div class="row g-4">
+          <div class="col-md-9 mx-auto">
+            <div class="row row-cards">
+              <#list proposte as proposta>
+                <!-- Inserisco la classe 'proposta-container' e gli attributi dati per il filtraggio -->
+                <div class="card proposta-container" 
+                     data-codice="${proposta.codice?lower_case}" 
+                     data-stato="${proposta.statoProposta?string}">
+                  <div class="card-body">
+                    <table class="table">
+                      <!-- Codice proposta -->
+                      <td class="text-start ps-0">
+                        <a href="dettaglioProposta?n=${proposta.key}" class="text-primary">
+                          Proposta: ${proposta.codice}
+                        </a>
+                      </td>
+                      <!-- Stato della proposta con pallino -->
+                      <td class="text-end">
+                        <#if proposta.statoProposta?string == "ACCETTATO">
+                          <span class="badge bg-success me-1"></span>Accettata
+                        <#elseif proposta.statoProposta?string == "RIFIUTATO">
+                          <span class="badge bg-danger me-1"></span>Rifiutata
+                        <#elseif proposta.statoProposta?string == "IN_ATTESA">
+                          <span class="badge bg-warning me-1"></span>In attesa
+                        <#elseif proposta.statoProposta?string == "ORDINATO">
+                          <span class="badge bg-primary me-1"></span>Ordinata
+                        </#if>
+                      </td>
+                    </table>
+    
+                    <div class="mt-4 d-flex justify-content-between align-items-center">
+                      <div>
+                        <strong>Categoria:</strong> ${proposta.richiesta.categoria.nome} |
+                        <strong>Richiesta:</strong>
+                        <a href="dettaglioRichiesta?n=${proposta.richiesta.key}" class="text-info">
+                          ${proposta.richiesta.codiceRichiesta}
+                        </a> |
+                        <strong>Nome prodotto:</strong> ${proposta.prodotto}
+                      </div>
                     </div>
+                  </div>
                 </div>
+              </#list>
             </div>
-        <#else>
-            <div class="row g-4">
-                <div class="col-md-9 mx-auto">
-                    <p class="text-center">Nessuna proposta</p>
-                </div>
-            </div>
-        </#if>
+          </div>
+        </div>
+      <#else>
+        <div class="row g-4">
+          <div class="col-md-9 mx-auto">
+            <p class="text-center">Nessuna proposta</p>
+          </div>
+        </div>
+      </#if>
     </div>
-</div>
+  </div>
+  
+  <script src="scripts/proposte.js"></script>
+  
