@@ -1,27 +1,12 @@
 # Coquette
 
-Descrizione breve del progetto.
+## Installazione e Avvio
 
-## Indice
-- [Descrizione](#descrizione)
-- [Installazione](#installazione)
-- [Contributi](#contributi)
+Per eseguire il progetto, segui questi passaggi:
 
-## Descrizione
+1. **Scarica il repository** e aprilo in un IDE compatibile con Maven.  
+2. **Avvia l’applicazione** con **JavaEE 7** su **Apache Tomcat 9**.  
+3. **Configura il database MySQL**:  
+   - Esegui il file **`database.sql`** per creare il database e popolarlo con i dati iniziali.  
 
-Descrizione più dettagliata del progetto.
-
-## Installazione
-
-Istruzioni passo per passo su come installare il progetto.
-
-1. **Clona il repository**
-    ```bash
-    git clone https://github.com/tuo-username/____.git
-    ```
-
-2. **Installa le dipendenze**
-    ...
-
-3. **Configura l'ambiente** (se necessario, ad esempio variabili d'ambiente, database, ecc.)
-     ...
+Una volta completati questi passaggi, l’applicazione sarà pronta all'uso.
