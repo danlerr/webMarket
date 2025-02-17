@@ -75,6 +75,7 @@ public class RecensioneDAO_MySQL extends DAO implements RecensioneDAO {
                 "SELECT r.destinatario AS tecnico_id, AVG(r.valore) AS media_voti " +
                 "FROM recensione r " +
                 "GROUP BY r.destinatario " +
+                "HAVING AVG(r.valore) >= 4 " +
                 "ORDER BY media_voti DESC" // 
             );
 

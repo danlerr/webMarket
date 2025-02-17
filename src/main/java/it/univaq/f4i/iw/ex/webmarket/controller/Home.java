@@ -8,7 +8,9 @@ import it.univaq.f4i.iw.framework.result.TemplateManagerException;
 import it.univaq.f4i.iw.framework.result.TemplateResult;
 import it.univaq.f4i.iw.framework.security.SecurityHelpers;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.ServletException;
@@ -25,21 +27,45 @@ public class Home extends BaseController {
         request.setAttribute("user", u);
         request.setAttribute("page_title", "Dashboard");
         
-        Map<String, String> medieTecnici = new HashMap<>();
-        Map<Integer, Double> medieTecniciOriginali = ((ApplicationDataLayer) request.getAttribute("datalayer")).getRecensioneDAO().getMedieRecensioniTecnici();
-        request.setAttribute("medieTecnici", medieTecnici);
-        // Converto la mappa da Integer -> Double a String -> String
-        for (Map.Entry<Integer, Double> entry : medieTecniciOriginali.entrySet()) {
-            String key = String.valueOf(entry.getKey());  // chiave Integer -> String
-            String value = String.format("%.1f", entry.getValue());  //  Double -> String con una sola cifra decimale
-            medieTecnici.put(key, value);
+        // Recupero le medie dei tecnici dalla query SQL
+Map<Integer, Double> medieTecniciOriginali = ((ApplicationDataLayer) request.getAttribute("datalayer"))
+        .getRecensioneDAO().getMedieRecensioniTecnici();
+
+// Creiamo una lista di entry per ordinare in modo decrescente
+List<Map.Entry<Integer, Double>> listaOrdinata = new ArrayList<>(medieTecniciOriginali.entrySet());
+
+// Ordina la lista in base al valore (media dei voti) in ordine decrescente
+listaOrdinata.sort((entry1, entry2) -> entry2.getValue().compareTo(entry1.getValue()));
+
+// Creiamo una mappa ordinata e formattata
+Map<String, String> medieTecnici = new LinkedHashMap<>();
+
+// Filtro solo i tecnici con media >= 4 e li aggiungiamo alla mappa
+for (Map.Entry<Integer, Double> entry : listaOrdinata) {
+    if (entry.getValue() >= 4) {  // Filtriamo i tecnici con media maggiore o uguale a 4
+        String key = String.valueOf(entry.getKey());  // Converti la chiave Integer in String
+        String value = String.format("%.1f", entry.getValue());  // Formatta il valore con una cifra decimale
+        medieTecnici.put(key, value);
+    }
+}
+
+// Passiamo la mappa medieTecnici alla request per poterla usare nel template FreeMarker
+request.setAttribute("medieTecnici", medieTecnici);
+
+        // Recupero la lista di tutti i tecnici (senza escludere quelli con rating basso, dato che sono già filtrati nelle medie)
+        List<Utente> tecnici = ((ApplicationDataLayer) request.getAttribute("datalayer")).getUtenteDAO().getAllByRole(TipologiaUtente.TECNICO);
+
+        // Filtriamo i tecnici per includere solo quelli che hanno una media > 4
+        List<Utente> tecniciFiltrati = new ArrayList<>();
+        for (Utente tecnico : tecnici) {
+            String tecnicoId = String.valueOf(tecnico.getId());
+            if (medieTecnici.containsKey(tecnicoId)) {
+                tecniciFiltrati.add(tecnico);
+            }
         }
 
-        request.setAttribute("medieTecnici", medieTecnici);  // Passiamo la nuova mappa
-
-        List<Utente> tecnici = ((ApplicationDataLayer) request.getAttribute("datalayer")).getUtenteDAO().getAllByRole(TipologiaUtente.TECNICO);
-        request.setAttribute("tecnici", tecnici); //da tecnici prendo username e mail 
-
+        // Passiamo i tecnici filtrati alla request
+        request.setAttribute("tecnici", tecniciFiltrati);
         //Map<Integer, Integer> proposteTecnici = new HashMap<>();
         Map<String, String> interventiTecnici = new HashMap<>();
         ApplicationDataLayer datalayer = (ApplicationDataLayer) request.getAttribute("datalayer");

@@ -16,11 +16,7 @@
           Effettua richiesta
         </a>
       </div>
-      
-      
-      
       <div id="notification-container"></div>
-
       <div class="col-12">
         <div class="card">
           <div class="table-responsive">
@@ -32,12 +28,10 @@
                   <th class="text-center">Tecnico</th>
                   <th class="text-center">Data</th>
                   <th class="text-center" data-sortable="true">Stato</th>
-                  
                   <th class="text-end">Azioni</th>
                 </tr>
               </thead>
               <tbody>
-                
                 <#-- Ciclo su tutte le richieste passate dalla Servlet -->
                 <#list richieste as r>
                   <tr>
@@ -45,13 +39,9 @@
                     <td class="text-center">
                       <span class="text-secondary">${r.codiceRichiesta}</span>
                     </td>
-
-                    <!-- Categoria (eventualmente r.categoria.nome se Categoria è un oggetto) -->
                     <td class="text-center">
                       <span>${r.categoria.nome}</span>
                     </td>
-
-                    <!-- Tecnico (se assegnato) -->
                     <td class="text-center">
                       <#if r.tecnico??>
                         <span>
@@ -61,14 +51,12 @@
                         <span>Nessun tecnico assegnato</span>
                       </#if>
                     </td>
-
                     <!-- Data -->
                     <td class="text-center">
                       <span data-order="${r.data?string('yyyy-MM-dd')}">
                         ${r.data?string('dd/MM/yyyy')}
                       </span>
                     </td>
-
                     <!-- Stato con pallino colorato in base al valore -->
                     <td class="text-center">
                       <#if r.stato?string == "RISOLTA">
@@ -83,9 +71,6 @@
                         <span class="badge bg-secondary me-1"></span>Sconosciuto
                       </#if>
                     </td>
-
-                   
-
                     <!--  link a pagina di dettaglio -->
                     <td class="text-end">
                       <span class="dropdown">
@@ -95,14 +80,10 @@
                   </tr>
                 </#list>
               <#if !richieste?? || richieste?size == 0>
-
-              
-   
                 <!-- Imposta colspan uguale al numero di colonne della tabella -->
                  <td colspan="7" class="text-center">Nessuna richiesta trovata</td>
                </tr>
               </#if>
-
               </tbody>
             </table>
           </div>
@@ -111,6 +92,7 @@
     </div>
   </div>
 </div>
+<#if richieste?has_content>
 <!-- jQuery (necessario per DataTables) -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!-- DataTables CSS -->
@@ -118,3 +100,4 @@
 <!-- DataTables JS -->
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="scripts/dataTable.js"></script>
+</#if>
