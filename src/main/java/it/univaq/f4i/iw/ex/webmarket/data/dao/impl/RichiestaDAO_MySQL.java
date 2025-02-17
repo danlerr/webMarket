@@ -81,7 +81,7 @@ public class RichiestaDAO_MySQL extends DAO implements RichiestaDAO {
                 "SELECT r.id, r.note, r.stato, r.data, r.codice_richiesta, r.ordinante, r.tecnico, r.categoria " +
                 "FROM richiesta r " +
                 "WHERE r.stato = ? AND r.tecnico = ? " +  
-                "AND EXISTS (SELECT 1 FROM proposta p WHERE p.richiesta_id = r.id) " + //Richieste con ALMENO una proposta
+                "AND EXISTS (SELECT 1 FROM proposta p WHERE p.richiesta_id = r.id AND (p.stato = 'ACCETTATO' or p.stato = 'IN_ATTESA')) " + //Richieste con ALMENO una proposta
                 "ORDER BY r.data ASC"
             
                 );          
