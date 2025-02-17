@@ -2,7 +2,6 @@ package it.univaq.f4i.iw.ex.webmarket.controller;
 
 import it.univaq.f4i.iw.ex.webmarket.data.dao.impl.ApplicationDataLayer;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Proposta;
-import it.univaq.f4i.iw.ex.webmarket.data.model.Richiesta;
 import it.univaq.f4i.iw.ex.webmarket.data.model.TipologiaUtente;
 import it.univaq.f4i.iw.ex.webmarket.data.model.Utente;
 import it.univaq.f4i.iw.framework.data.DataException;
@@ -32,14 +31,14 @@ public class ElencoProposte extends BaseController {
             response.sendRedirect("login");
             return;
         }
-        System.out.println("Utente caricato: " + (u != null ? u.getUsername() : "Nessun utente trovato"));
+        
         request.setAttribute("user", u);
 
 
-        // Controllo se è un Ordinante o un Tecnico
+        // Controlliamo se è un Ordinante o un Tecnico
        
 
-        // Recupero le proposte in base al ruolo
+        // Recuperiamo le proposte in base al ruolo
         List<Proposta> proposte;
         if (u.getTipologiaUtente().equals(TipologiaUtente.ORDINANTE)) {
             proposte = ((ApplicationDataLayer) request.getAttribute("datalayer"))
@@ -52,10 +51,10 @@ public class ElencoProposte extends BaseController {
 
         
 
-        // Passo le proposte al template
+        // Passiamo le proposte al template
         request.setAttribute("proposte", proposte);
 
-        // ✅ Attivo il template corretto
+        
         result.activate("leMieProposte.ftl.html", request, response);
     }
 
@@ -74,7 +73,7 @@ public class ElencoProposte extends BaseController {
         // Recupero l'ID dalla sessione
         int userId = (int) session.getAttribute("userid");
         
-        //ho aggiunto id perchè dobbiamo filtrare le proposte che ha fatto/ ricevuto l'utente interessato
+        
         action_default(request, response, userId);
 
     } catch (IOException | TemplateManagerException ex) {

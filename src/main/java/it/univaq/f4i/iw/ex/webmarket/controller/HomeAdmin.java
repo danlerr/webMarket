@@ -67,7 +67,7 @@ public class HomeAdmin extends BaseController {
             try {
                 int userId = Integer.parseInt(userIdParam);
                 ApplicationDataLayer datalayer = (ApplicationDataLayer) request.getAttribute("datalayer");
-                // Prova ad eliminare l'utente
+                
                 datalayer.getUtenteDAO().deleteUtente(userId);
 
                 request.setAttribute("success", "Utente eliminato con successo!");

@@ -42,15 +42,15 @@ public class DettaglioProposta extends BaseController {
         Proposta proposta = ((ApplicationDataLayer) request.getAttribute("datalayer"))
                 .getPropostaDAO().getProposta(propostaId);
 
-        // Se la proposta non esiste, reindirizza o mostra errore
+        // Se la proposta non esiste
         if (proposta == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "Proposta non trovata");
             return;
         }
 
-        // Se la richiesta associata è nulla, evita errori
+        
         if (proposta.getRichiesta() == null) {
-            System.out.println("⚠️ Errore: La proposta non ha una richiesta associata!");
+            
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Richiesta associata non trovata");
             return;
         }
@@ -71,9 +71,9 @@ public class DettaglioProposta extends BaseController {
         Utente utente = ((ApplicationDataLayer) request.getAttribute("datalayer"))
                 .getUtenteDAO().getUtente(userId);
 
-        // Controlla che l'utente sia un tecnico
+        
         if (!utente.getTipologiaUtente().equals(TipologiaUtente.ORDINANTE)) {
-            // Se non è un tecnico, reindirizza con un messaggio di errore
+            
             response.sendRedirect("elencoProposte?error=Non+puoi+accettare+la+proposta");
             return;
         }
@@ -108,9 +108,9 @@ public class DettaglioProposta extends BaseController {
                 .getUtenteDAO().getUtente(userId);
                 request.setAttribute("user", utente);
 
-        // Controlla che l'utente sia un tecnico
+       
         if (!utente.getTipologiaUtente().equals(TipologiaUtente.ORDINANTE)) {
-            // Se non è un tecnico, reindirizza con un messaggio di errore
+            
             response.sendRedirect("elencoProposte?error=Non+sei+autorizzato+a+rifiutare+la+proposta");
             return;
         }
@@ -174,11 +174,11 @@ public class DettaglioProposta extends BaseController {
         response.sendRedirect("dettaglioProposta?error=Proposta+non+accettata&n=" + proposta.getKey());
         return;
         }
-        //cambio stato proposta
+        //cambiamo lo  stato della proposta
         proposta.setStatoProposta(StatoProposta.ORDINATO);
         ((ApplicationDataLayer) request.getAttribute("datalayer")).getPropostaDAO().storeProposta(proposta);
 
-        //cambio stato richiesta
+        //cambiamo lo stato stato della richiesta
         Richiesta richiesta = proposta.getRichiesta();
         richiesta.setStato(StatoRichiesta.ORDINATA);
         ((ApplicationDataLayer) request.getAttribute("datalayer")).getRichiestaOrdineDAO().storeRichiesta(richiesta);

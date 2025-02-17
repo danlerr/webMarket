@@ -28,7 +28,7 @@ import java.util.logging.Logger;
 
 public class CreaRichiesta extends BaseController {
 
-    // Mostra la pagina iniziale con le categorie radice
+    // Mostra la pagina iniziale con le categorie principali
     private void action_default(HttpServletRequest request, HttpServletResponse response, int userId)
             throws IOException, ServletException, TemplateManagerException, DataException {
         request.setAttribute("categorie",
@@ -42,7 +42,7 @@ public class CreaRichiesta extends BaseController {
         r.activate("creaRichiesta.ftl.html", request, response);
     }
 
-    // Carica le sottocategorie tramite AJAX
+    // action per caricare le sottocategorie (tramite AJAX)
     private void action_getSubcategories(HttpServletRequest request, HttpServletResponse response)
             throws DataException, IOException {
         int parentCategoryId = SecurityHelpers.checkNumeric(request.getParameter("parentCategoryId"));
@@ -55,7 +55,7 @@ public class CreaRichiesta extends BaseController {
         response.getWriter().write(objectMapper.writeValueAsString(subcategories));
     }
 
-    // Carica le caratteristiche tramite AJAX
+    // action per caricare le caratteristiche (tramite AJAX)
     private void action_getCaratteristiche(HttpServletRequest request, HttpServletResponse response)
             throws DataException, IOException {
         int subcategoryId = SecurityHelpers.checkNumeric(request.getParameter("subcategoryId"));
@@ -128,7 +128,7 @@ public class CreaRichiesta extends BaseController {
                     }
                 }
             } catch (Exception e) {
-                // Gestisci eventuali errori nell'invio delle email.  Log, ma *non* bloccare il flusso principale.
+                // Gestisci eventuali errori nell'invio delle email.  
                 Logger.getLogger(CreaRichiesta.class.getName()).log(Level.SEVERE, "Errore durante l'invio dell'email ai tecnici", e);
             }
 
@@ -136,7 +136,7 @@ public class CreaRichiesta extends BaseController {
             response.sendRedirect("elencoRichieste?success=" + URLEncoder.encode("Richiesta creata con successo!", "UTF-8"));
 
         } catch (Exception ex) {
-            // ERROR: Gestione *centralizzata* degli errori
+            
         
             Logger.getLogger(CreaRichiesta.class.getName()).log(Level.SEVERE, "Errore durante la creazione della richiesta", ex);
 

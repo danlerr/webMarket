@@ -33,7 +33,7 @@ public class DettaglioOrdine extends BaseController {
         request.setAttribute("tecnico", tecnico);    
         
 
-        //user nella sessione (coincide o con ordinante o con tecnico)
+        
         Utente utente = dl.getUtenteDAO().getUtente(userId);
         request.setAttribute("user", utente);
 

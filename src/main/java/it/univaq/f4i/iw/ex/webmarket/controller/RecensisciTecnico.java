@@ -56,7 +56,7 @@ public class RecensisciTecnico extends BaseController {
             return;
         }
         
-        // Recupera il tecnico associato all'ordine
+        
         Utente tecnico = ordine.getProposta().getRichiesta().getTecnico();
         request.setAttribute("tecnico", tecnico);
         request.setAttribute("ordine", ordine);

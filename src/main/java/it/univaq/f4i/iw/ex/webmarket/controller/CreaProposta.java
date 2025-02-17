@@ -68,7 +68,7 @@ public class CreaProposta extends BaseController {
             note = request.getParameter("note");
         }
 
-        // Creo una nuova proposta
+        // Creazione una nuova proposta
         Proposta proposta = new PropostaImpl();
         proposta.setProduttore(produttore);
         proposta.setProdotto(prodotto);
@@ -102,7 +102,7 @@ public class CreaProposta extends BaseController {
 
         
 
-        // Reindirizzo alla pagina di dettaglio della proposta
+        
         response.sendRedirect("dettaglioProposta?n=" + proposta.getKey() + "&success=Proposta+creata+con+successo");
     }
 

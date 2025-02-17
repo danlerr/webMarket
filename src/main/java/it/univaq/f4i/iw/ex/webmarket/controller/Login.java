@@ -57,7 +57,7 @@ public class Login extends BaseController {
                         response.sendRedirect(referrer);
 
                     } else if (referrer != null) {
-                        System.out.println("Referrer non autorizzato, redirigo alla homepage.");
+                        
                         response.sendRedirect(redirectPage);
                     }else {
                         response.sendRedirect(redirectPage);

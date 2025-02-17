@@ -49,7 +49,7 @@ for (Map.Entry<Integer, Double> entry : listaOrdinata) {
     }
 }
 
-// Passiamo la mappa medieTecnici alla request per poterla usare nel template FreeMarker
+// Passiamo la mappa medieTecnici alla request per poterla usare nel template 
 request.setAttribute("medieTecnici", medieTecnici);
 
         // Recupero la lista di tutti i tecnici (senza escludere quelli con rating basso, dato che sono già filtrati nelle medie)
@@ -79,7 +79,7 @@ request.setAttribute("medieTecnici", medieTecnici);
         //notifiche per richieste (solo per il tecnico | quando ci sono nuove richieste)
         boolean richieste = !((ApplicationDataLayer) request.getAttribute("datalayer")).getRichiestaOrdineDAO().getRichiesteInAttesa().isEmpty();
         request.setAttribute("richieste", richieste);
-        //noticìfiche per le proposte per l'ord. 
+        //notifiche per le proposte per l'ord. 
         boolean proposte_O = ((ApplicationDataLayer) request.getAttribute("datalayer")).getPropostaDAO().notificaP_O(userId);
         request.setAttribute("proposteOrd", proposte_O);
         //notifiche per le proposte per il tecnico 

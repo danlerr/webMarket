@@ -13,7 +13,6 @@ import it.univaq.f4i.iw.framework.security.SecurityHelpers;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.mail.Session;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

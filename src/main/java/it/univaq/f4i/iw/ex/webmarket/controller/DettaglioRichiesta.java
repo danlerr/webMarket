@@ -31,7 +31,7 @@ public class DettaglioRichiesta extends BaseController {
 
     int richiestaId = Integer.parseInt(request.getParameter("n"));
 
-    // Recupera la richiesta dal database utilizzando il DAO
+    // Recupera la richiesta dal database 
     Richiesta richiesta = ((ApplicationDataLayer) request.getAttribute("datalayer"))
             .getRichiestaOrdineDAO().getRichiesta(richiestaId);
     request.setAttribute("richiesta", richiesta);
@@ -58,7 +58,7 @@ public class DettaglioRichiesta extends BaseController {
         request.setAttribute("showPrendiInCaricoButton", false);
     }
 
-    //BISOGNA VEDERE QUESTA PARTE PERCHE NON SEMPRE COMPARE IL BOTTONE COMPILA PROPOSTA
+    
     if (utente.getTipologiaUtente().equals(TipologiaUtente.TECNICO)
         && richiesta.getTecnico() != null
         && richiesta.getTecnico().getId() == user) {
@@ -67,7 +67,7 @@ public class DettaglioRichiesta extends BaseController {
         .getRichiestaOrdineDAO().checkCompile(richiestaId);
         
         if (canCompile) {
-            // Imposta un flag a true, in modo da mostrarlo in Freemarker
+            // Imposta un flag a true, in modo da mostrarlo 
             request.setAttribute("showCompilaPropostaButton", true);
         } else {
             request.setAttribute("showCompilaPropostaButton", false);

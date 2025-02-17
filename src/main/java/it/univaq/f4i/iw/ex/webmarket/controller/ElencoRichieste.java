@@ -21,7 +21,7 @@ public class ElencoRichieste extends BaseController {
 
         TemplateResult res = new TemplateResult(getServletContext());
 
-        // Recupera l'utente per determinare la sua tipologia
+        // Recupera l'utente 
         Utente utente = ((ApplicationDataLayer) request.getAttribute("datalayer")).getUtenteDAO().getUtente(user);
         request.setAttribute("user", utente);
 
@@ -51,7 +51,7 @@ public class ElencoRichieste extends BaseController {
             response.sendRedirect("homeAdmin");
             return;
         }
-        // Attivazione del template scelto con i dati impostati
+        
         res.activate(template, request, response);
     }
 
